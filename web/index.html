@@ -3,14 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Simple web application</title>
+    <style>
+        #modal{
+            padding: 50px;
+            position: fixed; top: 50%; left: 50%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-top: 6px;
+            margin-bottom: 16px;
+        }
+    </style>
 </head>
 <body>
+	<div id = "modal">
+        <form id="login" action="/journals" method="POST">
+            <h1>Authorization</h1>
+                <label for="username"></label>
+                <input id="username" type="text" placeholder="Login" required>
 
-<form action="/input" method="POST">
-    <p><b>Input something:</b></p>
-    <input name="input">
-    <p><input type="submit"  value="Send"></p>
-</form>
+                <label for="password"></label>
+                <input id="password" type="password" placeholder="Password" required>
 
+                <input type="submit" id="submit" value="Sign in">
+                <a href="/sign_up" target = "_blank">Registration</a>
+        </form>
+    </div>
+        <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0]
+            + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
 </body>
 </html>
