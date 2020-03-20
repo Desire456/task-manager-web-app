@@ -1,4 +1,4 @@
-package servlets;
+package org.netcracker.students.servlets;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

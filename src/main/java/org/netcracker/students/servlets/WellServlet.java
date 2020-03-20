@@ -1,4 +1,4 @@
-package servlets;
+package org.netcracker.students.servlets;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/journals")
-public class JournalsPageServlet extends HttpServlet {
-    public static final String PATH_TO_VIEW = "view/journals.jsp";
+@WebServlet("/well")
+public class WellServlet extends HttpServlet {
+    private static final String PATH_TO_VIEW = "view/well.jsp";
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(PATH_TO_VIEW);

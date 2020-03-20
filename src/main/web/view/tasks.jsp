@@ -1,4 +1,4 @@
-<%@ page import="model.Task" %>
+<%@ page import="org.netcracker.students.model.Task" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="java.time.LocalDateTime" %><%--
 Created by IntelliJ IDEA.

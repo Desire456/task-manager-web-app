@@ -1,4 +1,4 @@
-package utils;
+package org.netcracker.students.controller.utils;
 
 /**
  * Class generating id for comfortable iteration
