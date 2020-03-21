@@ -9,7 +9,7 @@ Simple Web Application for task managment.
   
 ## Additional information  
 
-See ours [issues](https://github.com/Desire456/task-manager-web-app) for check development process.
+See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for check development process.
 
 ### Issue priority
 
