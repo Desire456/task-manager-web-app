@@ -13,23 +13,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 @WebServlet("/add")
 public class AddJournalServlet extends HttpServlet {
+    private static final String PARAMETER_NAME_OF_JOURNAL = "name";
+    private static final String PARAMETER_DESCRIPTION_OF_JOURNAL = "description";
+    private static final String ACCESS_MODIFIER = "private";
+    private static final String ATTRIBUTE_NAME = "journals";
+    private static final String PATH_TO_VIEW = "view/journals.jsp";
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JournalsController journalsController = JournalsController.getInstance();
         XMLConverter xmlConverter = XMLConverter.getInstance();
-        String name = req.getParameter("name");
-        String description = req.getParameter("description");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
-        String date = LocalDateTime.now().format(formatter);
+        String name = req.getParameter(PARAMETER_NAME_OF_JOURNAL);
+        String description = req.getParameter(PARAMETER_DESCRIPTION_OF_JOURNAL);
         journalsController.addJournal(new Journal(IdGenerator.getInstance().getId(), name,
-                "private", LocalDateTime.now(), description));
-        req.setAttribute("journals",
-                journalsController.getAll());
-        req.getRequestDispatcher("view/journals.jsp").forward(req, resp);
+                ACCESS_MODIFIER, LocalDateTime.now(), description));
+        String allJournals = xmlConverter.toXML(new Journals(journalsController.getAll()));
+        req.setAttribute(ATTRIBUTE_NAME,
+                allJournals);
+        req.getRequestDispatcher(PATH_TO_VIEW).forward(req, resp);
     }
 }

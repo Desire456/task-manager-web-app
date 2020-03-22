@@ -24,7 +24,7 @@
 </head>
 <body>
 	<div id = "modal">
-        <form id="login" action="/journals" method = "get">
+        <form id="login" action="${pageContext.request.contextPath}/journals" method = "get">
             <h1>Task Manager</h1>
                 <input name="login" type="text" placeholder="Login" required>
 

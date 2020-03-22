@@ -32,7 +32,8 @@ table tbody tr:hover {background: #e8f6ff;}
 #addWindow {
     display: none;
     border: 3px solid black;
-    padding: 50px;
+    background: white;
+    padding : 50px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -68,3 +69,4 @@ table tbody tr:hover {background: #e8f6ff;}
 }
 
 .close:hover { background: #00d9ff; }
+
