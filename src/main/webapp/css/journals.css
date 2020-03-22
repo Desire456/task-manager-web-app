@@ -4,7 +4,7 @@ body {
 }
 
 .modal {
-    position: absolute;
+    position: fixed;
     width: 50%;
     margin-left: 25%;
 }
@@ -18,17 +18,14 @@ table {
     border: 3px solid grey;
     width: 100%; border-collapse: collapse;
 }
+
+
 table th, td {border: 1px solid grey;}
 table thead tr {font-weight: bold; border-top: 1px solid #e8e9eb;}
 table tr {border-bottom: 1px solid #e8e9eb;}
 table tbody tr:hover {background: #e8f6ff;}
-.button {
-    font-size: 15px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    padding: 8px 28px;
-    background-color: #e7e7e7;
-    color: black;
-}
+
+
 #addWindow {
     display: none;
     border: 3px solid black;
@@ -46,6 +43,30 @@ table tbody tr:hover {background: #e8f6ff;}
     margin: 50px 45% 0;
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+}
+
+.button {
+    font-size: 15px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    padding: 8px 28px;
+    background-color: #e7e7e7;
+    color: black;
+}
+
+.button:hover {
+    font-size: 15px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    padding: 8px 28px;
+    background-color: #00aacc;
+    color: #ffffff;
+}
+
+.button:disabled {
+    font-size: 15px;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    padding: 8px 28px;
+    background-color: #cccccc;
+    color: #666666;
 }
 
 

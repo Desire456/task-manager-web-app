@@ -12,12 +12,12 @@ import java.io.IOException;
 public class JournalsPageServlet extends HttpServlet {
     public static final String PATH_TO_VIEW = "view/journals.jsp";
     public static final String ATTRIBUTE_NAME = "journals";
-    public static final String ATTRIBUTE_VALUE =  "null";
+
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(PATH_TO_VIEW);
-        req.setAttribute(ATTRIBUTE_NAME, ATTRIBUTE_VALUE);
+        req.setAttribute(ATTRIBUTE_NAME, null);
         requestDispatcher.forward(req, resp);
     }
 }
