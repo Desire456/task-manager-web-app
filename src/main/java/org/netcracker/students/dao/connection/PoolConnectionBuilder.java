@@ -1,6 +1,4 @@
-package org.netcracker.students.dao;
-
-import org.netcracker.students.dao.interfaces.ConnectionBuilder;
+package org.netcracker.students.dao.connection;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;

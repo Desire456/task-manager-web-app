@@ -1,4 +1,4 @@
-package org.netcracker.students.dao.interfaces;
+package org.netcracker.students.dao.connection;
 
 import java.sql.Connection;
 import java.sql.SQLException;
