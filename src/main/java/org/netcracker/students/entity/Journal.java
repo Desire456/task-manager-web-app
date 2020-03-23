@@ -5,11 +5,11 @@ import java.sql.Timestamp;
 
 public class Journal {
     private int journalId;
+    private int userId;
     private String name;
     private String description;
-    private boolean isPrivate;
     private Date creationDate; //date
-    private int userId;
+    private boolean isPrivate;
 
     public Journal(){}
 

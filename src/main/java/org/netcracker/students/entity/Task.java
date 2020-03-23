@@ -4,12 +4,13 @@ import java.sql.Date;
 
 public class Task {
     private int taskId;
+    private int journalId;
     private String name;
     private String description;
     private String status;
     private Date plannedDate;
     private Date dateOfDone;
-    private int journalId;
+
 
     public Task(){}
 
