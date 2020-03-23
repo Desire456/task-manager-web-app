@@ -12,7 +12,7 @@ public class PostgreSQLDAOManager implements DAOManager {
     private Connection connection;
 
     private PostgreSQLDAOManager(String path){
-
+//
     }
 
     private PostgreSQLDAOManager(){}
