@@ -63,18 +63,18 @@ To change this template use File | Settings | File Templates.
     </div>
 
     <div class="window" id="editWindow">
-        <form action="/edit" id="editForm" method="POST">
+        <form action="${pageContext.request.contextPath}/edit" method="POST">
             <span class="close">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
-            <input type="hidden" name="id" id = "editId" value = "">
+            <input type="hidden" name="id" id="editId" value="">
             <br>
             <button type="submit">Edit</button>
         </form>
     </div>
 
     <div class="window" id="addWindow">
-        <form action="/add" method="POST">
+        <form action="${pageContext.request.contextPath}/add" method="POST">
             <span class="close">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
@@ -83,20 +83,40 @@ To change this template use File | Settings | File Templates.
         </form>
     </div>
 
+
     <script>
         let addWindow = document.getElementById("addWindow");
         let editWindow = document.getElementById("editWindow");
         let addButton = document.getElementById("addButt");
         let editButton = document.getElementById("editButt");
+        let deleteButton = document.getElementById("deleteButt");
         let closeButton = document.getElementsByClassName("close");
 
         editButton.onclick = function () {
             editWindow.style.display = "block";
-            document.getElementById("editId").value = getCheckJournal();
+            document.getElementById("editId").value = getCheckJournal()[0].value;
         }
 
         addButton.onclick = function () {
             addWindow.style.display = "block";
+        }
+
+        deleteButton.onclick = function () {
+            if(confirm("Are you really want to delete?")) {
+                let form = document.createElement('form');
+                form.action = '/delete';
+                form.method = 'POST';
+
+                form.innerHTML = '<input type = "hidden" name="ids" id = "deleteIds" value="123">';
+                let strIds = "";
+                let ids = getCheckJournal();
+                for (let i = 0; i < ids.length; ++i) {
+                    strIds+=ids[i].value + " ";
+                }
+                document.body.append(form);
+                document.getElementById("deleteIds").value = strIds;
+                form.submit();
+            }
         }
 
         closeButton[0].onclick = function () {
@@ -112,7 +132,7 @@ To change this template use File | Settings | File Templates.
         function setCheck() {
             let generalCheckbox = document.getElementById("generalCheckbox");
             let checkboxes = document.getElementsByClassName("checkbox");
-            let countChecked = 0;
+            let countChecked;
             if (generalCheckbox.checked) {
                 for (let i = 0; i < checkboxes.length; ++i) {
                     checkboxes[i].checked = true;
@@ -158,11 +178,13 @@ To change this template use File | Settings | File Templates.
 
         function getCheckJournal() {
             let checkboxes = document.getElementsByClassName("checkbox");
+            let checkedCheckboxes = [];
             for (let i = 0; i < checkboxes.length; ++i) {
                 if (checkboxes[i].checked) {
-                    return checkboxes[i].getAttribute("value");
+                    checkedCheckboxes.push(checkboxes[i]);
                 }
             }
+            return checkedCheckboxes;
         }
 
     </script>

@@ -40,11 +40,22 @@ public class JournalsController {
         this.controllersGetter.removeController(id);
     }
 
+    public void removeJournal(String ids) {
+        int id = 0;
+        for(int i = 0; i < ids.length() - 1; i+=2) {
+            id = Character.getNumericValue(ids.charAt(i));
+            this.removeJournal(id + 1);
+        }
+    }
+
+
+
     public void changeJournal(int id, Journal newJournal) {
         this.journals.put(id, newJournal);
         this.controllersGetter.removeController(id);
         this.controllersGetter.addController(new TasksController(id, newJournal));
     }
+
 
     public ArrayList<Journal> getAll() {
         return new ArrayList<>(this.journals.values());
