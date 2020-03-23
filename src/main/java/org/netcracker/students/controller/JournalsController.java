@@ -41,7 +41,7 @@ public class JournalsController {
     }
 
     public void changeJournal(int id, Journal newJournal) {
-        this.journals.replace(id, newJournal);
+        this.journals.put(id, newJournal);
         this.controllersGetter.removeController(id);
         this.controllersGetter.addController(new TasksController(id, newJournal));
     }

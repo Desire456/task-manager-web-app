@@ -34,9 +34,11 @@ To change this template use File | Settings | File Templates.
         <% if (request.getAttribute("journals") != null) { %>
         <x:parse xml="${requestScope.journals}" var="output"/>
         <x:forEach select="$output/journals/journal" var="journal">
+            <x:set var="id" select="$journal/id"/>
             <tr>
                 <th>
-                    <input type="checkbox" class="checkbox" onchange="setGeneralCheckbox()">
+                    <input type="checkbox" value="<x:out select = "$id"/>" class="checkbox"
+                           onchange="setGeneralCheckbox()">
                 </th>
                 <td>
                     <x:out select="$journal/name"/>
@@ -55,48 +57,57 @@ To change this template use File | Settings | File Templates.
 
 
     <div class="actions">
-        <input type="button" class="button" value="Add" id="add">
+        <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
     </div>
 
+    <div class="window" id="editWindow">
+        <form action="/edit" id="editForm" method="POST">
+            <span class="close">X</span>
+            Name: <input type="text" name="name" required>
+            Description: <input type="text" name="description" required>
+            <input type="hidden" name="id" id = "editId" value = "">
+            <br>
+            <button type="submit">Edit</button>
+        </form>
+    </div>
 
-    <div id="addWindow">
+    <div class="window" id="addWindow">
         <form action="/add" method="POST">
-            <div id="addWindowContent">
-                <span class="close">X</span>
-                Name: <input type="text" name="name" id="name" required>
-                Description: <input type="text" name="description" id="description" required>
-                <br>
-                <button type="submit" id="submitAdd">Add</button>
-            </div>
+            <span class="close">X</span>
+            Name: <input type="text" name="name" required>
+            Description: <input type="text" name="description" required>
+            <br>
+            <button type="submit">Add</button>
         </form>
     </div>
 
     <script>
         let addWindow = document.getElementById("addWindow");
-        let addButton = document.getElementById("add");
-        let closeButton = document.getElementsByClassName("close")[0];
+        let editWindow = document.getElementById("editWindow");
+        let addButton = document.getElementById("addButt");
+        let editButton = document.getElementById("editButt");
+        let closeButton = document.getElementsByClassName("close");
 
-        function close(event) {
-            if (event.target === addWindow) {
-                addWindow.style.display = "none";
-            }
+        editButton.onclick = function () {
+            editWindow.style.display = "block";
+            document.getElementById("editId").value = getCheckJournal();
         }
 
         addButton.onclick = function () {
             addWindow.style.display = "block";
         }
 
-        closeButton.onclick = function () {
+        closeButton[0].onclick = function () {
+            editWindow.style.display = "none";
+        }
+
+
+        closeButton[1].onclick = function () {
             addWindow.style.display = "none";
         }
 
-        window.onclick = function (event) {
-            if (event.target == addWindow) {
-                addWindow.style.display = "none";
-            }
-        }
 
         function setCheck() {
             let generalCheckbox = document.getElementById("generalCheckbox");
@@ -143,6 +154,15 @@ To change this template use File | Settings | File Templates.
                 }
             }
             setDisabledAttribute(countChecked);
+        }
+
+        function getCheckJournal() {
+            let checkboxes = document.getElementsByClassName("checkbox");
+            for (let i = 0; i < checkboxes.length; ++i) {
+                if (checkboxes[i].checked) {
+                    return checkboxes[i].getAttribute("value");
+                }
+            }
         }
 
     </script>

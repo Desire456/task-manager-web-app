@@ -26,7 +26,7 @@ table tr {border-bottom: 1px solid #e8e9eb;}
 table tbody tr:hover {background: #e8f6ff;}
 
 
-#addWindow {
+.window {
     display: none;
     border: 3px solid black;
     background: white;
@@ -39,7 +39,7 @@ table tbody tr:hover {background: #e8f6ff;}
     transform: translate(-50%, -50%);
 }
 
-#addWindow button {
+.window  button {
     margin: 50px 45% 0;
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;

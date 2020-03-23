@@ -40,6 +40,7 @@ public class Journal implements Serializable {
     }
 
 
+
     public Journal() {
         tasks = new HashMap<Integer, Task>();
     }
