@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+    <Resource
+            driverClassName="org.postgresql.Driver"
+            maxActive="10"
+            maxIdle="2"
+            maxWait="5000"
+            name="jdbc/taskManger"
+            username="admin"
+            password="admin"
+            type="javax.sql.DataSource"
+            url="jdbc:postgresql://localhost/task_manager"
+            validationQuery="SELECT 1">
+    </Resource>
+</Context>
