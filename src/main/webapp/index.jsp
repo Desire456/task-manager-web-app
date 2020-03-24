@@ -24,7 +24,7 @@
 </head>
 <body>
 	<div id = "modal">
-        <form id="login" action="${pageContext.request.contextPath}/journals" method = "get">
+        <form id="login" action="${pageContext.request.contextPath}/journals" method = "POST">
             <h1>Task Manager</h1>
                 <input name="login" type="text" placeholder="Login" required>
 
@@ -32,7 +32,7 @@
                 <input id="password" type="password" placeholder="Password" required>
 
                 <input type="submit" id="submit" value="Sign in">
-                <a href="/sign_up" >Registration</a>
+                <a href="${pageContext.request.contextPath}/sign_up" >Registration</a>
         </form>
     </div>
 </body>

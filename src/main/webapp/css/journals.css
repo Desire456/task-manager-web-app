@@ -23,7 +23,7 @@ table {
 table th, td {border: 1px solid grey;}
 table thead tr {font-weight: bold; border-top: 1px solid #e8e9eb;}
 table tr {border-bottom: 1px solid #e8e9eb;}
-table tbody tr:hover {background: #e8f6ff;}
+table tbody tr:hover {cursor: pointer; text-decoration: underline; background: #e8f6ff;}
 
 
 .window {

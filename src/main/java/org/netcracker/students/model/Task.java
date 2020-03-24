@@ -2,7 +2,12 @@ package org.netcracker.students.model;
 
 
 import org.netcracker.students.controller.utils.IdGenerator;
+import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -10,20 +15,23 @@ import java.time.LocalDateTime;
  * Task class, which have a name, description, date of complete, planned date and status
  */
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class Task implements Serializable {
+
+    private int id;
     private String name;
     private String description;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime plannedDate;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime dateOfDone;
     private String status;
     private int journalId;
 
-    private int id;
 
-
-    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+    public Task(int id, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
         this.id = id;
-        this.journalId = journalId;
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;

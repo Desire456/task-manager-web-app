@@ -1,12 +1,11 @@
 package org.netcracker.students.controller;
 
 import org.netcracker.students.model.Journal;
-import org.netcracker.students.model.Status;
 import org.netcracker.students.model.Task;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -16,24 +15,35 @@ import java.util.List;
  */
 
 public class TasksController {
-    private int id;
-    private Journal journal;
+    private HashMap<Integer, Journal> journals;
 
-    public TasksController(int id, Journal journal) {
-        this.id = id;
-        this.journal = journal;
+    private static TasksController instance;
+
+    public static synchronized TasksController getInstance() {
+        if (instance == null) {
+            instance = new TasksController();
+        }
+        return instance;
+    }
+
+    private TasksController() {
+        this.journals = new HashMap<>();
     }
 
 
-    public int getId() {
-        return id;
+    void addJournal(int id, Journal journal) {
+        this.journals.put(id, journal);
+    }
+
+    void deleteJournal(int id) {
+        this.journals.remove(id);
     }
 
     /**
      * Function deleted all notifications for real journal is tasks
      */
-    public Journal getJournal() {
-        return journal;
+    public Journal getJournal(int id) {
+        return journals.get(id);
     }
 
     /**
@@ -42,8 +52,8 @@ public class TasksController {
      * @return desired task
      */
 
-    public Task getTask(int id) {
-        return journal.getTask(id);
+    public Task getTask(int journalId, int taskId) {
+        return this.journals.get(journalId).getTask(taskId);
     }
 
     /**
@@ -52,34 +62,34 @@ public class TasksController {
      * @param task - new task
      */
 
-    public void addTask(Task task) {
-        journal.addTask(task);
+    public void addTask(int journalId, Task task) {
+        this.journals.get(journalId).addTask(task);
     }
 
     /**
      * Delete function by id
      */
 
-    public void deleteTask(int id) {
-        journal.deleteTask(id);
+    public void deleteTask(int journalId, int taskId) {
+        this.journals.get(journalId).deleteTask(taskId);
     }
 
     /**
      * Change function by id
      *
-     * @param task2 - new task
+     * @param newTask - new task
      */
 
-    public void changeTask(int id, Task task2) {
-        journal.changeTask(id, task2);
+    public void changeTask(int journalId, int taskId, Task newTask) {
+        this.journals.get(journalId).changeTask(taskId, newTask);
     }
 
     /**
      * Function for cancelling task by id
      */
 
-    public void cancelTask(int id) {
-        journal.getTask(id).setStatus("CANCELED");
+    public void cancelTask(int journalId, int taskId) {
+        this.journals.get(journalId).getTask(taskId).setStatus("CANCELED");
     }
 
 
@@ -87,8 +97,8 @@ public class TasksController {
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll() {
-        return Collections.unmodifiableList(journal.getAll());
+    public List<Task> getAll(int journalId) {
+        return Collections.unmodifiableList(this.journals.get(journalId).getAll());
     }
 
     public void restoreTasks(Journal journal) {
@@ -99,29 +109,22 @@ public class TasksController {
                     task.setStatus("OVERDUE");
                 }
             }
-            this.addTask(task);
+            this.getJournal(journal.getId()).addTask(task);
         }
-
     }
 
-    public void cancelTask(ArrayList<Integer> ids) {
+    public void cancelTask(int journalId, ArrayList<Integer> ids) {
         for (int i : ids) {
-            this.cancelTask(i);
+            this.cancelTask(journalId, i);
         }
     }
 
-    public void deleteTask(ArrayList<Integer> ids) {
+    public void deleteTask(int journalId, ArrayList<Integer> ids) {
         for (int i : ids) {
-            this.deleteTask(i);
+            this.deleteTask(journalId, i);
         }
     }
 
-    public void setJournal(Journal journal) {
-        this.journal = journal;
-    }
 
 
-    public boolean isTaskInJournal(Task task) {
-        return journal.isTaskInJournal(task);
-    }
 }

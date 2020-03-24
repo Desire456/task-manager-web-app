@@ -17,8 +17,6 @@ To change this template use File | Settings | File Templates.
     <title>Journals page</title>
 </head>
 <body>
-
-
 <div class="modal">
     <table>
         <caption>Table of Journals</caption>
@@ -36,25 +34,35 @@ To change this template use File | Settings | File Templates.
         <x:forEach select="$output/journals/journal" var="journal">
             <x:set var="id" select="$journal/id"/>
             <tr>
-                <th>
-                    <input type="checkbox" value="<x:out select = "$id"/>" class="checkbox"
+                <th style="cursor:default">
+                    <input type="checkbox" value="<x:out select="$id"/>" class="checkbox"
                            onchange="setGeneralCheckbox()">
                 </th>
-                <td>
+                <td onclick="goToJournal(<x:out select="$id"/>)">
                     <x:out select="$journal/name"/>
                 </td>
-                <td>
+                <td onclick="goToJournal(<x:out select="$id"/>)">
                     <x:out select="$journal/description"/>
                 </td>
-                <td>
+                <td onclick="goToJournal(<x:out select="$id"/>)">
                     <x:out select="$journal/creationDate"/>
                 </td>
             </tr>
-        </x:forEach>
-        <%}%>
+            <div class="window">
+                <form action="${pageContext.request.contextPath}/editJournal" method="POST">
+                    <span class="close">X</span>
+                    Name: <input type="text" name="name" id="editName" value="<x:out select="$journal/name"/>" required>
+                    Description: <input type="text" name="description" id="editDescription"
+                                        value="<x:out select="$journal/description"/>" required>
+                    <input type="hidden" name="id" class = "editId" value="">
+                    <br>
+                    <button type="submit">Edit</button>
+                </form>
+            </div>
+            </x:forEach>
+            <%}%>
         </tbody>
     </table>
-
 
     <div class="actions">
         <input type="button" id="addButt" class="button" value="Add">
@@ -62,23 +70,13 @@ To change this template use File | Settings | File Templates.
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
     </div>
 
-    <div class="window" id="editWindow">
-        <form action="${pageContext.request.contextPath}/edit" method="POST">
-            <span class="close">X</span>
-            Name: <input type="text" name="name" required>
-            Description: <input type="text" name="description" required>
-            <input type="hidden" name="id" id="editId" value="">
-            <br>
-            <button type="submit">Edit</button>
-        </form>
-    </div>
-
     <div class="window" id="addWindow">
-        <form action="${pageContext.request.contextPath}/add" method="POST">
+        <form action="${pageContext.request.contextPath}/addJournal" method="POST" onsubmit="return checkParameter()">
             <span class="close">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
-            <br>
+            <br><br><br><br>
+            Access Modifier: <input type="text" name="accessModifier" id = "accessId" required>
             <button type="submit">Add</button>
         </form>
     </div>
@@ -86,15 +84,18 @@ To change this template use File | Settings | File Templates.
 
     <script>
         let addWindow = document.getElementById("addWindow");
-        let editWindow = document.getElementById("editWindow");
         let addButton = document.getElementById("addButt");
         let editButton = document.getElementById("editButt");
         let deleteButton = document.getElementById("deleteButt");
-        let closeButton = document.getElementsByClassName("close");
+        let closeButtons = document.getElementsByClassName("close");
 
         editButton.onclick = function () {
-            editWindow.style.display = "block";
-            document.getElementById("editId").value = getCheckJournal()[0].value;
+            let id = getCheckJournal()[0].value;
+            document.getElementsByClassName("editId")[id].value = id;
+            document.getElementsByClassName("window")[id].style.display = "block";
+            closeButtons[id].onclick = function () {
+                document.getElementsByClassName("window")[id].style.display = "none";
+            }
         }
 
         addButton.onclick = function () {
@@ -102,16 +103,16 @@ To change this template use File | Settings | File Templates.
         }
 
         deleteButton.onclick = function () {
-            if(confirm("Are you really want to delete?")) {
+            if (confirm("Are you really want to delete?")) {
                 let form = document.createElement('form');
-                form.action = '/delete';
+                form.action = '/deleteJournal';
                 form.method = 'POST';
 
-                form.innerHTML = '<input type = "hidden" name="ids" id = "deleteIds" value="123">';
+                form.innerHTML = '<input type = "hidden" name="ids" id = "deleteIds" value="">';
                 let strIds = "";
                 let ids = getCheckJournal();
                 for (let i = 0; i < ids.length; ++i) {
-                    strIds+=ids[i].value + " ";
+                    strIds += ids[i].value + " ";
                 }
                 document.body.append(form);
                 document.getElementById("deleteIds").value = strIds;
@@ -119,13 +120,26 @@ To change this template use File | Settings | File Templates.
             }
         }
 
-        closeButton[0].onclick = function () {
-            editWindow.style.display = "none";
+
+        closeButtons[closeButtons.length - 1].onclick = function () {
+            addWindow.style.display = "none";
+        }
+        function checkParameter() {
+            let accessModifier = document.getElementById("accessId").value;
+            if (accessModifier !== "private" && accessModifier !== "public") {
+                alert("Value of access modifier is only 'public' or 'private'");
+                return false;
+            }
+            else return true;
         }
 
-
-        closeButton[1].onclick = function () {
-            addWindow.style.display = "none";
+        function goToJournal(id) {
+            if (confirm("Are you really want to open this journal?")) {
+                let request = new XMLHttpRequest();
+                request.open("POST", "/tasks");
+                request.send(id);
+                window.location.href = 'tasks';
+            }
         }
 
 
