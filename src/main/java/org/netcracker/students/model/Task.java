@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  * Task class, which have a name, description, date of complete, planned date and status
  */
 
-public class Task implements Serializable {
+public class    Task implements Serializable {
     private String name;
     private String description;
     private LocalDateTime plannedDate;

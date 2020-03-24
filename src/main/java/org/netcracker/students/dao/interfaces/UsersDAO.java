@@ -1,12 +1,14 @@
 package org.netcracker.students.dao.interfaces;
 
-import org.netcracker.students.entity.User;
 
+import org.netcracker.students.model.User;
+
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
 public interface UsersDAO {
-    public User create(String login, String password, String role) throws SQLException;
+    public User create(String login, String password, String role, Date dateOfRegistration) throws SQLException;
 
     public User read(int id) throws SQLException;
 
