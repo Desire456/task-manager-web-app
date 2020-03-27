@@ -125,6 +125,13 @@ public class TasksController {
         }
     }
 
+    public void deleteTask(int journalId, String ids) {
+        int id = 0;
+        for (int i = 0; i < ids.length() - 1; i += 2) {
+            id = Character.getNumericValue(ids.charAt(i));
+            this.deleteTask(journalId, id);
+        }
+    }
 
 
 }

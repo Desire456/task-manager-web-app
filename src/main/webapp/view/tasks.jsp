@@ -1,4 +1,5 @@
-<%--
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %><%--
 Created by IntelliJ IDEA.
 User: user
 Date: 28.02.2020
@@ -8,11 +9,18 @@ To change this template use File | Settings | File Templates.
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 
+<%
+    String dateTimeFormat = "yyyy-MM-dd HH:mm";
+    LocalDateTime dateTimeNow = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+    String formatDateTimeNow = dateTimeNow.format(formatter);
+    formatDateTimeNow = formatDateTimeNow.replace(" ", "T");
+%>
 
 
-<html>
+<html lang="en">
 <head>
-    <link rel="stylesheet" href="../css/journals.css">
+    <link rel="stylesheet" href="../css/style.css">
     <meta charset="UTF-8"/>
     <title>Tasks page</title>
 </head>
@@ -56,6 +64,21 @@ To change this template use File | Settings | File Templates.
                     <x:out select="$task/status"/>
                 </td>
             </tr>
+            <div class="window" id = "editWindow<x:out select="$id"/>">
+                <form action="${pageContext.request.contextPath}/editTask" method="POST">
+                    <span class="close" id = "close<x:out select="$id"/>">X</span>
+                    Name: <input type="text" name="name" id="editName" value="<x:out select="$task/name"/>" required>
+                    Description: <input type="text" name="description" id="editDescription"
+                                        value="<x:out select="$task/description"/>" required>
+                    <input type="hidden" name="id" id = "editId<x:out select="$id"/>" value="">
+                    <input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>
+                    <br><br><br><br>
+                    Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
+                                         name="plannedDate" id="editPlannedDate"
+                                         value="<x:out select = "$task/formattedPlannedDate"/>" required>
+                    <button type="submit">Edit</button>
+                </form>
+            </div>
         </x:forEach>
         <%}%>
         </tbody>
@@ -68,23 +91,15 @@ To change this template use File | Settings | File Templates.
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
     </div>
 
-    <div class="window" id="editWindow">
-        <form action="${pageContext.request.contextPath}/editTask" method="POST">
-            <span class="close">X</span>
-            Name: <input type="text" name="name" required>
-            Description: <input type="text" name="description" required>
-            <input type="hidden" name="id" id="editId" value="">
-            <br>
-            <button type="submit">Edit</button>
-        </form>
-    </div>
 
     <div class="window" id="addWindow">
         <form action="${pageContext.request.contextPath}/addTask" method="POST">
-            <span class="close">X</span>
+            <span class="close" id = "addClose">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
-            <br>
+            <input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>
+            <br><br><br><br>
+            Planned date: <input type="datetime-local" name="plannedDate" min=<%=formatDateTimeNow%> required>
             <button type="submit">Add</button>
         </form>
     </div>
@@ -97,11 +112,20 @@ To change this template use File | Settings | File Templates.
     let addButton = document.getElementById("addButt");
     let editButton = document.getElementById("editButt");
     let deleteButton = document.getElementById("deleteButt");
-    let closeButton = document.getElementsByClassName("close");
 
     editButton.onclick = function () {
-        editWindow.style.display = "block";
-        document.getElementById("editId").value = getCheckJournal()[0].value;
+        let id = getCheckTask()[0].value;
+        document.getElementById("editId" + id).value = id;
+        document.getElementById("editWindow" + id).style.display = "block";
+        let closeButton = document.getElementById("close" + id);
+        closeButton.onclick = function () {
+            document.getElementById("editWindow" + id).style.display = "none";
+        }
+    }
+
+    let closeButtonAdd = document.getElementById("addClose");
+    closeButtonAdd.onclick = function () {
+        addWindow.style.display = "none";
     }
 
     addButton.onclick = function () {
@@ -115,8 +139,9 @@ To change this template use File | Settings | File Templates.
             form.method = 'POST';
 
             form.innerHTML = '<input type = "hidden" name="ids" id = "deleteIds" value="">';
+            form.innerHTML += '<input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>';
             let strIds = "";
-            let ids = getCheckJournal();
+            let ids = getCheckTask();
             for (let i = 0; i < ids.length; ++i) {
                 strIds += ids[i].value + " ";
             }
@@ -124,15 +149,6 @@ To change this template use File | Settings | File Templates.
             document.getElementById("deleteIds").value = strIds;
             form.submit();
         }
-    }
-
-    closeButton[0].onclick = function () {
-        editWindow.style.display = "none";
-    }
-
-
-    closeButton[1].onclick = function () {
-        addWindow.style.display = "none";
     }
 
 
@@ -183,7 +199,7 @@ To change this template use File | Settings | File Templates.
         setDisabledAttribute(countChecked);
     }
 
-    function getCheckJournal() {
+    function getCheckTask() {
         let checkboxes = document.getElementsByClassName("checkbox");
         let checkedCheckboxes = [];
         for (let i = 0; i < checkboxes.length; ++i) {

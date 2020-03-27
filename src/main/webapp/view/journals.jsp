@@ -12,7 +12,7 @@ To change this template use File | Settings | File Templates.
 
 <html>
 <head>
-    <link rel="stylesheet" href="../css/journals.css">
+    <link rel="stylesheet" href="../css/style.css">
     <meta charset="UTF-8"/>
     <title>Journals page</title>
 </head>
@@ -38,7 +38,7 @@ To change this template use File | Settings | File Templates.
                     <input type="checkbox" value="<x:out select="$id"/>" class="checkbox"
                            onchange="setGeneralCheckbox()">
                 </th>
-                <td onclick="goToJournal(<x:out select="$id"/>)">
+                <td onclick="return goToJournal(<x:out select="$id"/>)">
                     <x:out select="$journal/name"/>
                 </td>
                 <td onclick="goToJournal(<x:out select="$id"/>)">
@@ -48,13 +48,13 @@ To change this template use File | Settings | File Templates.
                     <x:out select="$journal/creationDate"/>
                 </td>
             </tr>
-            <div class="window">
+            <div class="window" id ="editWindow<x:out select="$id"/>">
                 <form action="${pageContext.request.contextPath}/editJournal" method="POST">
-                    <span class="close">X</span>
+                    <span class = "close" id = "close<x:out select="$id"/>">X</span>
                     Name: <input type="text" name="name" id="editName" value="<x:out select="$journal/name"/>" required>
                     Description: <input type="text" name="description" id="editDescription"
                                         value="<x:out select="$journal/description"/>" required>
-                    <input type="hidden" name="id" class = "editId" value="">
+                    <input type="hidden" name="id" id = "editId<x:out select="$id"/>" value="">
                     <br>
                     <button type="submit">Edit</button>
                 </form>
@@ -72,7 +72,7 @@ To change this template use File | Settings | File Templates.
 
     <div class="window" id="addWindow">
         <form action="${pageContext.request.contextPath}/addJournal" method="POST" onsubmit="return checkParameter()">
-            <span class="close">X</span>
+            <span class="close" id = "addClose">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
             <br><br><br><br>
@@ -87,14 +87,14 @@ To change this template use File | Settings | File Templates.
         let addButton = document.getElementById("addButt");
         let editButton = document.getElementById("editButt");
         let deleteButton = document.getElementById("deleteButt");
-        let closeButtons = document.getElementsByClassName("close");
 
         editButton.onclick = function () {
             let id = getCheckJournal()[0].value;
-            document.getElementsByClassName("editId")[id].value = id;
-            document.getElementsByClassName("window")[id].style.display = "block";
-            closeButtons[id].onclick = function () {
-                document.getElementsByClassName("window")[id].style.display = "none";
+            document.getElementById("editId" + id).value = id;
+            document.getElementById("editWindow" + id).style.display = "block";
+            let closeButton = document.getElementById("close" + id);
+            closeButton.onclick = function () {
+                document.getElementById("editWindow" + id).style.display = "none";
             }
         }
 
@@ -120,10 +120,12 @@ To change this template use File | Settings | File Templates.
             }
         }
 
-
-        closeButtons[closeButtons.length - 1].onclick = function () {
+        let addCloseButton = document.getElementById("addClose");
+        addCloseButton.onclick = function () {
             addWindow.style.display = "none";
         }
+
+
         function checkParameter() {
             let accessModifier = document.getElementById("accessId").value;
             if (accessModifier !== "private" && accessModifier !== "public") {
@@ -135,10 +137,13 @@ To change this template use File | Settings | File Templates.
 
         function goToJournal(id) {
             if (confirm("Are you really want to open this journal?")) {
-                let request = new XMLHttpRequest();
-                request.open("POST", "/tasks");
-                request.send(id);
-                window.location.href = 'tasks';
+                let form = document.createElement('form');
+                form.action = '/tasks';
+                form.method = 'POST';
+                form.innerHTML = '<input type = "hidden" name="journalId" id = "journalId" value="">';
+                document.body.append(form);
+                document.getElementById("journalId").value = id;
+                form.submit();
             }
         }
 

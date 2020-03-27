@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Task class, which have a name, description, date of complete, planned date and status
@@ -27,6 +28,7 @@ public class Task implements Serializable {
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime dateOfDone;
     private String status;
+    private String formattedPlannedDate;
     private int journalId;
 
 
@@ -36,6 +38,7 @@ public class Task implements Serializable {
         this.description = description;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
+        this.formattedPlannedDate = this.formatDate(plannedDate);
         this.status = status;
     }
 
@@ -135,5 +138,12 @@ public class Task implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    private String formatDate(LocalDateTime localDateTime) {
+        String dateTimeFormat = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        String formatDateTimeNow = localDateTime.format(formatter);
+        return formatDateTimeNow.replace(" ", "T");
     }
 }
