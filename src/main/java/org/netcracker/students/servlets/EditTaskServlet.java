@@ -6,6 +6,7 @@ import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.factories.TaskFactory;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 
@@ -32,8 +33,9 @@ public class EditTaskServlet extends HttpServlet {
         int taskId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
-        tasksController.changeTask(journalId + 1, taskId + 2, new Task(taskId + 2, name, description,
-                parsedPlannedDate, null, ServletConstants.STATUS_PLANNED));
+        TaskFactory taskFactory = new TaskFactory();
+        tasksController.changeTask(journalId + 1, taskId + 2, taskFactory.createTask(taskId + 2, name,
+                description, parsedPlannedDate, ServletConstants.STATUS_PLANNED));
         String allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
                 allTasks);

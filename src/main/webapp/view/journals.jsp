@@ -22,23 +22,25 @@ To change this template use File | Settings | File Templates.
         <caption>Table of Journals</caption>
         <thead>
         <tr>
-            <th><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Creation date</th>
+            <th data-type="checkbox" style="cursor: default">
+                <input type="checkbox" id="generalCheckbox" onchange="setCheck()">
+            </th>
+            <th data-type="text" class = "sorted">Name</th>
+            <th data-type="text" class = "sorted">Description</th>
+            <th data-type="date" class = "sorted">Creation date</th>
         </tr>
         </thead>
-        <tbody id="tableBody">
+        <tbody>
         <% if (request.getAttribute("journals") != null) { %>
         <x:parse xml="${requestScope.journals}" var="output"/>
         <x:forEach select="$output/journals/journal" var="journal">
             <x:set var="id" select="$journal/id"/>
             <tr>
-                <th style="cursor:default">
+                <td style="cursor:default; text-align:center">
                     <input type="checkbox" value="<x:out select="$id"/>" class="checkbox"
                            onchange="setGeneralCheckbox()">
-                </th>
-                <td onclick="return goToJournal(<x:out select="$id"/>)">
+                </td>
+                <td onclick="goToJournal(<x:out select="$id"/>)">
                     <x:out select="$journal/name"/>
                 </td>
                 <td onclick="goToJournal(<x:out select="$id"/>)">
@@ -48,20 +50,20 @@ To change this template use File | Settings | File Templates.
                     <x:out select="$journal/creationDate"/>
                 </td>
             </tr>
-            <div class="window" id ="editWindow<x:out select="$id"/>">
+        </tbody>
+            <div class="window" id="editWindow<x:out select="$id"/>">
                 <form action="${pageContext.request.contextPath}/editJournal" method="POST">
-                    <span class = "close" id = "close<x:out select="$id"/>">X</span>
-                    Name: <input type="text" name="name" id="editName" value="<x:out select="$journal/name"/>" required>
-                    Description: <input type="text" name="description" id="editDescription"
+                    <span class="close" id="close<x:out select="$id"/>">X</span>
+                    Name: <input type="text" name="name" value="<x:out select="$journal/name"/>" required>
+                    Description: <input type="text" name="description"
                                         value="<x:out select="$journal/description"/>" required>
-                    <input type="hidden" name="id" id = "editId<x:out select="$id"/>" value="">
+                    <input type="hidden" name="id" id="editId<x:out select="$id"/>" value="">
                     <br>
                     <button type="submit">Edit</button>
                 </form>
             </div>
-            </x:forEach>
-            <%}%>
-        </tbody>
+        </x:forEach>
+        <%}%>
     </table>
 
     <div class="actions">
@@ -72,17 +74,72 @@ To change this template use File | Settings | File Templates.
 
     <div class="window" id="addWindow">
         <form action="${pageContext.request.contextPath}/addJournal" method="POST" onsubmit="return checkParameter()">
-            <span class="close" id = "addClose">X</span>
+            <span class="close" id="addClose">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
             <br><br><br><br>
-            Access Modifier: <input type="text" name="accessModifier" id = "accessId" required>
+            Access Modifier: <input type="text" name="accessModifier" id="accessId" required>
             <button type="submit">Add</button>
         </form>
     </div>
 
 
     <script>
+        const table = document.querySelector("table");
+        let colIndex = -1;
+
+
+        const sortTable = function (index, type, isSorted) {
+            if (type === 'checkbox') return;
+            const tbody = table.querySelector('tbody');
+            const parseDate = function(rowData) {
+                let mas = rowData.split(' ');
+                return mas[20].split('-').reverse().join('-').concat(' ' + mas[21]);
+            };
+            const compare = function (rowA, rowB) {
+                const rowDataA = rowA.cells[index].innerHTML;
+                const rowDataB = rowB.cells[index].innerHTML;
+
+                switch (type) {
+                    case 'text':
+                        const dataA = rowDataA.toString();
+                        const dataB = rowDataB.toString();
+                        if (dataA < dataB) return -1;
+                        else if (dataA > dataB) return 1;
+                        return 0;
+                        break;
+                    case 'date':
+                        const dateA = parseDate(rowDataA);
+                        const dateB = parseDate(rowDataB);
+                        return new Date(dateA).getTime() - new Date(dateB).getTime();
+                        break;
+                }
+            };
+
+            let rows = [].slice.call(tbody.rows);
+            rows.sort(compare);
+
+            if (isSorted) rows.reverse();
+
+            table.removeChild(tbody);
+            for (let i = 0; i < rows.length; ++i) {
+                tbody.appendChild(rows[i]);
+            }
+
+            table.appendChild(tbody);
+        };
+
+        table.addEventListener('click', (e) => {
+            const el = e.target;
+            if (el.nodeName !== 'TH') return;
+
+            const index = el.cellIndex;
+            const type = el.getAttribute('data-type');
+
+            sortTable(index, type, colIndex === index);
+            colIndex = (colIndex === index) ? -1 : index;
+        });
+
         let addWindow = document.getElementById("addWindow");
         let addButton = document.getElementById("addButt");
         let editButton = document.getElementById("editButt");
@@ -96,11 +153,11 @@ To change this template use File | Settings | File Templates.
             closeButton.onclick = function () {
                 document.getElementById("editWindow" + id).style.display = "none";
             }
-        }
+        };
 
         addButton.onclick = function () {
             addWindow.style.display = "block";
-        }
+        };
 
         deleteButton.onclick = function () {
             if (confirm("Are you really want to delete?")) {
@@ -118,12 +175,12 @@ To change this template use File | Settings | File Templates.
                 document.getElementById("deleteIds").value = strIds;
                 form.submit();
             }
-        }
+        };
 
         let addCloseButton = document.getElementById("addClose");
         addCloseButton.onclick = function () {
             addWindow.style.display = "none";
-        }
+        };
 
 
         function checkParameter() {
@@ -131,8 +188,7 @@ To change this template use File | Settings | File Templates.
             if (accessModifier !== "private" && accessModifier !== "public") {
                 alert("Value of access modifier is only 'public' or 'private'");
                 return false;
-            }
-            else return true;
+            } else return true;
         }
 
         function goToJournal(id) {

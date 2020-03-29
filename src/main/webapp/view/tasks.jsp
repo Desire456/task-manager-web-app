@@ -30,12 +30,12 @@ To change this template use File | Settings | File Templates.
         <caption>Table of tasks</caption>
         <thead>
         <tr>
-            <th><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Planned date</th>
-            <th>Date of done</th>
-            <th>Status</th>
+            <th data-type = "checkbox"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
+            <th data-type = "text">Name</th>
+            <th data-type = "text">Description</th>
+            <th data-type = "date">Planned date</th>
+            <th data-type = "date">Date of done</th>
+            <th data-type = "text">Status</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -106,6 +106,60 @@ To change this template use File | Settings | File Templates.
 </div>
 </body>
 <script>
+    const table = document.querySelector("table");
+    let colIndex = -1;
+
+
+    const sortTable = function (index, type, isSorted) {
+        if (type === 'checkbox') return;
+        const tbody = table.querySelector('tbody');
+        const parseDate = function(rowData) {
+            let mas = rowData.split(' ');
+            return mas[20].split('-').reverse().join('-').concat(' ' + mas[21]);
+        };
+        const compare = function (rowA, rowB) {
+            const rowDataA = rowA.cells[index].innerHTML;
+            const rowDataB = rowB.cells[index].innerHTML;
+
+            switch (type) {
+                case 'text':
+                    const dataA = rowDataA.toString();
+                    const dataB = rowDataB.toString();
+                    if (dataA < dataB) return -1;
+                    else if (dataA > dataB) return 1;
+                    return 0;
+                    break;
+                case 'date':
+                    const dateA = parseDate(rowDataA);
+                    const dateB = parseDate(rowDataB);
+                    return new Date(dateA).getTime() - new Date(dateB).getTime();
+                    break;
+            }
+        };
+
+        let rows = [].slice.call(tbody.rows);
+        rows.sort(compare);
+
+        if (isSorted) rows.reverse();
+
+        table.removeChild(tbody);
+        for (let i = 0; i < rows.length; ++i) {
+            tbody.appendChild(rows[i]);
+        }
+
+        table.appendChild(tbody);
+    };
+
+    table.addEventListener('click', (e) => {
+        const el = e.target;
+        if (el.nodeName !== 'TH') return;
+
+        const index = el.cellIndex;
+        const type = el.getAttribute('data-type');
+
+        sortTable(index, type, colIndex === index);
+        colIndex = (colIndex === index) ? -1 : index;
+    });
 
     let addWindow = document.getElementById("addWindow");
     let editWindow = document.getElementById("editWindow");

@@ -4,6 +4,7 @@ import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
 
 import javax.servlet.ServletException;
@@ -23,7 +24,8 @@ public class AddJournalServlet extends HttpServlet {
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         String accessModifier = req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER);
-        journalsController.addJournal(new Journal(IdGenerator.getInstance().getId(), name,
+        JournalFactory journalFactory = new JournalFactory();
+        journalsController.addJournal(journalFactory.createJournal(IdGenerator.getInstance().getId(), name,
                 accessModifier, LocalDateTime.now(), description));
         String allJournals = xmlParser.toXML(new Journals(journalsController.getAll()));
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
