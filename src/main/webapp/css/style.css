@@ -14,6 +14,8 @@ body {
     margin-left: 25%;
 }
 
+
+
 table {
     border: 3px solid grey;
     width: 100%; border-collapse: collapse;
@@ -21,9 +23,9 @@ table {
 
 
 table th, td {border: 1px solid grey;}
-table thead tr {font-weight: bold; border-top: 1px solid #e8e9eb;}
+table thead tr {font-weight: bold; cursor: pointer; border-top: 1px solid #e8e9eb;}
 table tr {border-bottom: 1px solid #e8e9eb;}
-table tbody tr:hover {background: #e8f6ff;}
+table tbody tr:hover {cursor: pointer; text-decoration: underline; background: #e8f6ff;}
 
 
 .window {
@@ -55,7 +57,7 @@ table tbody tr:hover {background: #e8f6ff;}
 
 .button:hover {
     font-size: 15px;
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     padding: 8px 28px;
     background-color: #00aacc;
     color: #ffffff;
@@ -89,5 +91,7 @@ table tbody tr:hover {background: #e8f6ff;}
     box-shadow: 1px 1px 3px #000;
 }
 
-.close:hover { background: #00d9ff; }
-
+.close:hover {
+    cursor: pointer;
+    background: #00d9ff;
+}

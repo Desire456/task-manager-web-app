@@ -10,10 +10,9 @@ import java.io.IOException;
 
 @WebServlet("/well")
 public class WellServlet extends HttpServlet {
-    private static final String PATH_TO_VIEW = "view/well.jsp";
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(PATH_TO_VIEW);
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_WELL);
         requestDispatcher.forward(req, resp);
     }
 }
