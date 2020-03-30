@@ -30,6 +30,10 @@ public class TaskFactory {
         return new Task(id, name, description, plannedDate, status);
     }
 
+    public Task createTask(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+        return new Task(id, journalId, name, description, plannedDate, dateOfDone, status);
+    }
+
     /**
      * Copy constructor
      *

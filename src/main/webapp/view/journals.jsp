@@ -9,7 +9,6 @@ To change this template use File | Settings | File Templates.
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 
-
 <html>
 <head>
     <link rel="stylesheet" href="../css/style.css">
@@ -25,9 +24,9 @@ To change this template use File | Settings | File Templates.
             <th data-type="checkbox" style="cursor: default">
                 <input type="checkbox" id="generalCheckbox" onchange="setCheck()">
             </th>
-            <th data-type="text" class = "sorted">Name</th>
-            <th data-type="text" class = "sorted">Description</th>
-            <th data-type="date" class = "sorted">Creation date</th>
+            <th data-type="text">Name</th>
+            <th data-type="text">Description</th>
+            <th data-type="date">Creation date</th>
         </tr>
         </thead>
         <tbody>

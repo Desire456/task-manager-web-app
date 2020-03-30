@@ -32,8 +32,9 @@ public class Task implements Serializable {
     private int journalId;
 
 
-    public Task(int id, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
         this.id = id;
+        this.journalId = journalId;
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
@@ -44,9 +45,11 @@ public class Task implements Serializable {
 
     public Task(Task task) {
         id = task.id;
+        journalId = task.journalId;
         name = task.name;
         description = task.description;
         plannedDate = task.plannedDate;
+        formattedPlannedDate = task.formattedPlannedDate;
         dateOfDone = task.dateOfDone;
         status = task.status;
     }
