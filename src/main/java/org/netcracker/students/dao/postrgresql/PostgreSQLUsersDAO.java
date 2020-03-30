@@ -2,7 +2,7 @@ package org.netcracker.students.dao.postrgresql;
 
 import org.netcracker.students.controller.utils.UserIdGenerator;
 import org.netcracker.students.dao.interfaces.UsersDAO;
-import org.netcracker.students.entity.User;
+import org.netcracker.students.model.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,25 +14,29 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     public PostgreSQLUsersDAO(){
     }
 
+
     @Override
-    public User create(String login, String password, String role) throws SQLException {
+    public User create(String login, String password, String role, Date dateOfRegistration) throws SQLException {
         String sql = "INSERT INTO users VALUES (?, ?, ?, ?)";
+        String RETURN_USER_SQL = "SELECT * FROM users WHERE login = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setInt(1, UserIdGenerator.getInstance().getId());
-            preparedStatement.setString(2, login);
-            preparedStatement.setString(3, password);
-            preparedStatement.setString(4, role);
+            preparedStatement.setString(1, login);
+            preparedStatement.setString(2, password);
+            preparedStatement.setString(3, role);
+            preparedStatement.setDate(4, dateOfRegistration);
             preparedStatement.execute();
-            //add creating User
+        }
+        try(PreparedStatement preparedStatement = connection.prepareStatement(RETURN_USER_SQL)){
+            preparedStatement.setString(1, login);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()){
+                User user = new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
+                return user;
+            }
         }
         return null;
     }
-
-    /*по необходимости удалить, после разрешить вопросы с датой регистрацией и существовании этой штуки в бд и так далее
-    public User create(String login, String password, String role, Date dateOfRegistration) throws SQLException {
-        String sql = "INSERT INTO users VALUES (?, ?, ?, ?)";
-        return null;
-    }*/
 
     @Override
     public User read(int id) throws SQLException {
@@ -41,8 +45,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                User user = new User(resultSet.getInt(1), resultSet.getString(2),
-                        resultSet.getString(3), resultSet.getString(4)); //todo скорее всего тут нужна фабрика, как сделали для тасок и использовать подобные фабрики везде в DAO при создании новых экземпляров
+                User user = new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getDate(5).toLocalDate()); //todo скорее всего тут нужна фабрика, как сделали для тасок и использовать подобные фабрики везде в DAO при создании новых экземпляров
                 return user;
             }
         }
@@ -56,7 +60,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(1, user.getLogin());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getRole());
-            preparedStatement.setInt(4, user.getUserId());
+            preparedStatement.setInt(4, user.getId());
             preparedStatement.execute();
         }
     }
@@ -65,7 +69,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     public void delete(User user) throws SQLException {
         String sql = "DELETE FROM users WHERE user_id = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setInt(1, user.getUserId());
+            preparedStatement.setInt(1, user.getId());
             preparedStatement.execute();
         }
     }
@@ -77,8 +81,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<User>();
             while(resultSet.next()){
-                User user = new User(resultSet.getInt(1), resultSet.getString(2),
-                        resultSet.getString(3), resultSet.getString(4));
+                User user = new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
                 users.add(user);
             }
             return users;
@@ -93,8 +97,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                User user = new User(resultSet.getInt(1), resultSet.getString(2),
-                        resultSet.getString(3), resultSet.getString(4));
+                User user = new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
                 return user;
             }
         }
@@ -110,8 +114,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<User>();
             while(resultSet.next()){
-                User user = new User(resultSet.getInt(1), resultSet.getString(2),
-                        resultSet.getString(3), resultSet.getString(4));
+                User user = new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
                 users.add(user);
             }
             return users;

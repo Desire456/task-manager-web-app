@@ -1,6 +1,7 @@
 package org.netcracker.students.dao.interfaces;
 
-import org.netcracker.students.entity.Journal;
+
+import org.netcracker.students.model.Journal;
 
 import java.sql.Date;
 import java.sql.SQLException;
