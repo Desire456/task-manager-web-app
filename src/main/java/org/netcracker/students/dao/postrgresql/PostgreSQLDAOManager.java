@@ -8,7 +8,6 @@ import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
