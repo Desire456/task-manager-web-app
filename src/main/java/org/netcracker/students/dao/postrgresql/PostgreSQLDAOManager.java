@@ -37,17 +37,21 @@ public class PostgreSQLDAOManager implements DAOManager {
     }
 
     @Override
-    public TasksDAO getTasksDao() {
-        return null; //todo доделать
+    public TasksDAO getTasksDao() throws SQLException {
+        return new PostgreSQLTasksDAO(getConnection());
     }
 
     @Override
     public JournalDAO getJournalDao() {
-        return null;
+        return new PostgreSQLJournalDAO();
     }
 
     @Override
     public UsersDAO getUsersDao() {
-        return null;
+        return new PostgreSQLUsersDAO();
+    }
+
+    private void executeSqlStartScript(String path) {
+        //todo Илья, вот здесь скрипт нужно запускать как я понимаю
     }
 }
