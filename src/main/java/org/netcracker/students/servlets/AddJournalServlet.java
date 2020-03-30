@@ -2,9 +2,10 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.IdGenerator;
-import org.netcracker.students.controller.utils.XMLConverter;
+import org.netcracker.students.controller.utils.xml.Journals;
+import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
-import org.netcracker.students.model.Journals;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,25 +15,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-@WebServlet("/add")
+@WebServlet("/addJournal")
 public class AddJournalServlet extends HttpServlet {
-    private static final String PARAMETER_NAME_OF_JOURNAL = "name";
-    private static final String PARAMETER_DESCRIPTION_OF_JOURNAL = "description";
-    private static final String ACCESS_MODIFIER = "private";
-    private static final String ATTRIBUTE_NAME = "journals";
-    private static final String PATH_TO_VIEW = "view/journals.jsp";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         JournalsController journalsController = JournalsController.getInstance();
-        XMLConverter xmlConverter = XMLConverter.getInstance();
-        String name = req.getParameter(PARAMETER_NAME_OF_JOURNAL);
-        String description = req.getParameter(PARAMETER_DESCRIPTION_OF_JOURNAL);
-        journalsController.addJournal(new Journal(IdGenerator.getInstance().getId(), name,
-                ACCESS_MODIFIER, LocalDateTime.now(), description));
-        String allJournals = xmlConverter.toXML(new Journals(journalsController.getAll()));
-        req.setAttribute(ATTRIBUTE_NAME,
+        XMLParser xmlParser = XMLParser.getInstance();
+        String name = req.getParameter(ServletConstants.PARAMETER_NAME);
+        String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
+        String accessModifier = req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER);
+        JournalFactory journalFactory = new JournalFactory();
+        journalsController.addJournal(journalFactory.createJournal(IdGenerator.getInstance().getId(), name,
+                accessModifier, LocalDateTime.now(), description));
+        String allJournals = xmlParser.toXML(new Journals(journalsController.getAll()));
+        req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
-        req.getRequestDispatcher(PATH_TO_VIEW).forward(req, resp);
+        req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE).forward(req, resp);
     }
 }

@@ -2,32 +2,43 @@ package org.netcracker.students.model;
 
 
 import org.netcracker.students.controller.utils.IdGenerator;
+import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Task class, which have a name, description, date of complete, planned date and status
  */
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class Task implements Serializable {
-    private String name;
-    private String description;
-    private LocalDateTime plannedDate;
-    private LocalDateTime dateOfDone;
-    private String status;
-    private int journalId;
 
     private int id;
+    private String name;
+    private String description;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime plannedDate;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime dateOfDone;
+    private String status;
+    private String formattedPlannedDate;
+    private int journalId;
 
 
-    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+    public Task(int id, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
         this.id = id;
-        this.journalId = journalId;
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
+        this.formattedPlannedDate = this.formatDate(plannedDate);
         this.status = status;
     }
 
@@ -127,5 +138,12 @@ public class Task implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    private String formatDate(LocalDateTime localDateTime) {
+        String dateTimeFormat = "yyyy-MM-dd HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        String formatDateTimeNow = localDateTime.format(formatter);
+        return formatDateTimeNow.replace(" ", "T");
     }
 }

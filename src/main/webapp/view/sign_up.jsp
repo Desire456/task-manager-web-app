@@ -40,7 +40,7 @@
 <body>
 <div class = "container">
     <h1>Registration</h1>
-    <form  action = "/well" method = "POST" onsubmit="return checkPass()">
+    <form  action = "${pageContext.request.contextPath}/well" method = "POST" onsubmit="return checkPass()">
         <label for="username">Create your login</label>
         <input id="username" type="text" name = "username" pattern ="(?=.*[A-Za-z0-9]).{6,20}"
                title = "Must contain from 6 to 20 characters" required>

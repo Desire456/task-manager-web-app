@@ -1,26 +1,24 @@
-package org.netcracker.students.controller.utils;
-
-import org.netcracker.students.exceptions.PropertyParserInitException;
+package org.netcracker.students.controller.utils.xml;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 
-public class XMLConverter {
+public class XMLParser {
 
-    private static XMLConverter instance;
+    private static XMLParser instance;
     private static final String NULL_EXCEPTION_MESSAGE = "The object you want to convert to XML is null";
 
 
-    public static synchronized XMLConverter getInstance() {
+    public static synchronized XMLParser getInstance() {
         if (instance == null) {
-            instance = new XMLConverter();
+            instance = new XMLParser();
         }
         return instance;
     }
 
-    private XMLConverter() {
+    private XMLParser() {
     }
 
 

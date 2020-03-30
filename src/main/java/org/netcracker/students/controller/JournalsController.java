@@ -3,9 +3,10 @@ package org.netcracker.students.controller;
 import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.model.Journal;
 
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class JournalsController {
     private static JournalsController instance;
@@ -18,11 +19,11 @@ public class JournalsController {
     }
 
     private HashMap<Integer, Journal> journals;
-    private ControllersGetter controllersGetter;
+    private TasksController tasksController;
 
     private JournalsController() {
         this.journals = new HashMap<>();
-        this.controllersGetter = ControllersGetter.getInstance();
+        this.tasksController = TasksController.getInstance();
     }
 
     public Journal getJournal(int id) {
@@ -32,32 +33,32 @@ public class JournalsController {
     public void addJournal(Journal journal) {
         int id = IdGenerator.getInstance().getId();
         this.journals.put(id, journal);
-        this.controllersGetter.addController(new TasksController(id, journal));
+        this.tasksController.addJournal(id, journal);
     }
 
     public void removeJournal(int id) {
         this.journals.remove(id);
-        this.controllersGetter.removeController(id);
+        this.tasksController.deleteJournal(id);
     }
 
     public void removeJournal(String ids) {
         int id = 0;
-        for(int i = 0; i < ids.length() - 1; i+=2) {
+        for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
             this.removeJournal(id + 1);
+            this.tasksController.deleteJournal(id);
         }
     }
 
 
-
     public void changeJournal(int id, Journal newJournal) {
         this.journals.put(id, newJournal);
-        this.controllersGetter.removeController(id);
-        this.controllersGetter.addController(new TasksController(id, newJournal));
+        this.tasksController.deleteJournal(id);
+        this.tasksController.addJournal(id, newJournal);
     }
 
 
-    public ArrayList<Journal> getAll() {
-        return new ArrayList<>(this.journals.values());
+    public List<Journal> getAll() {
+        return Collections.unmodifiableList(new ArrayList<>(this.journals.values()));
     }
 }

@@ -12,5 +12,6 @@
 </head>
 <body>
 <h3>Thanks you. Now you can use our web application!</h3>
+<a href = "${pageContext.request.contextPath}/">Home page</a>
 </body>
 </html>

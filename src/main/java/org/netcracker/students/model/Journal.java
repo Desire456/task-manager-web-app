@@ -25,13 +25,12 @@ public class Journal implements Serializable {
     private int userId;
     private String accessModifier;
     private String name;
-
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
     private String description;
 
     public Journal(int id, String name, String accessModifier, LocalDateTime creationDate, String description) {
-        tasks = new HashMap<Integer, Task>();
+        tasks = new HashMap<>();
         this.id = id;
         this.accessModifier = accessModifier;
         this.name = name;
@@ -43,6 +42,16 @@ public class Journal implements Serializable {
 
     public Journal() {
         tasks = new HashMap<Integer, Task>();
+    }
+
+    public Journal(Journal journal) {
+        tasks = new HashMap<>();
+        this.id = journal.id;
+        this.accessModifier = journal.accessModifier;
+        this.name = journal.name;
+        this.creationDate = journal.creationDate;
+        this.description = journal.description;
+        this.userId = journal.userId;
     }
 
     public int getId() {
@@ -176,7 +185,7 @@ public class Journal implements Serializable {
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll() {
+    public ArrayList<Task> getAll() {
         Task[] arr = tasks.values().toArray(new Task[0]);
         return new ArrayList<>(Arrays.asList(arr));
     }
