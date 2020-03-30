@@ -7,8 +7,13 @@ import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class PostgreSQLDAOManager implements DAOManager {
     private static PostgreSQLDAOManager instance;
@@ -55,6 +60,15 @@ public class PostgreSQLDAOManager implements DAOManager {
     }
 
     private void executeSqlStartScript(String path) {
-        //todo Илья, вот здесь скрипт нужно запускать как я понимаю
+        try{
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("src\\main\\java\\org.netcracker.students\\dao\\script.sql"));
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                Statement statement = connectionBuilder.getConnect().createStatement();
+                statement.execute(line);
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
