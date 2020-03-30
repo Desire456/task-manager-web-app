@@ -15,10 +15,13 @@ public class PostgreSQLDAOManager implements DAOManager {
     ConnectionBuilder connectionBuilder;
 
     private PostgreSQLDAOManager(String path) throws SQLException {
-        connectionBuilder = new PoolConnectionBuilder(path);
+        connectionBuilder = new PoolConnectionBuilder();
+        executeSqlStartScript(path);
     }
 
-    private PostgreSQLDAOManager(){}
+    private PostgreSQLDAOManager(){
+        connectionBuilder = new PoolConnectionBuilder();
+    }
 
     public static PostgreSQLDAOManager getInstance(){
         if (instance == null)

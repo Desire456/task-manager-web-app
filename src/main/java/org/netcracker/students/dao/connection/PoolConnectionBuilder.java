@@ -11,10 +11,10 @@ public class PoolConnectionBuilder implements ConnectionBuilder {
 
     private DataSource dataSource;
 
-    public PoolConnectionBuilder(String path) {
+    public PoolConnectionBuilder() {
         try{
             Context ctx = new InitialContext();
-            dataSource = (DataSource) ctx.lookup(path);
+            dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/taskManager");
         } catch (NamingException e) {
             e.printStackTrace();
         }
