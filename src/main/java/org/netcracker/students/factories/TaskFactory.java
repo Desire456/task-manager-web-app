@@ -5,6 +5,7 @@ package org.netcracker.students.factories;
 import org.netcracker.students.model.Status;
 import org.netcracker.students.model.Task;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
@@ -26,11 +27,11 @@ public class TaskFactory {
      * @return new task with specified arguments
      */
 
-    public Task createTask(int id, String name, String description, LocalDateTime plannedDate, String status) {
+    public Task createTask(int id, String name, String description, LocalDate plannedDate, String status) {
         return new Task(id, name, description, plannedDate, status);
     }
 
-    public Task createTask(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+    public Task createTask(int id, int journalId, String name, String description, LocalDate plannedDate, LocalDate dateOfDone, String status) {
         return new Task(id, journalId, name, description, plannedDate, dateOfDone, status);
     }
 

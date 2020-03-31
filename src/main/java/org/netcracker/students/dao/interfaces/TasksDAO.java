@@ -14,9 +14,11 @@ public interface TasksDAO {
 
     public void update(Task task) throws SQLException;
 
-    public void delete(Task task) throws SQLException;
+    public void delete(int id) throws SQLException;
 
     public List<Task> getAll() throws SQLException;
+
+    public List<Task> getAll(int journalId) throws SQLException;
 
     public List<Task> getSortedByCriteria(int journalId, String column, String criteria) throws SQLException;
 

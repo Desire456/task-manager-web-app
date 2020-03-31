@@ -1,3 +1,9 @@
+<%@ page import="org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager" %>
+<%@ page import="java.sql.SQLException" %>
+<%
+    PostgreSQLDAOManager postgreSQLDAOManager = PostgreSQLDAOManager.getInstance();
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +20,7 @@
             transform: translate(-50%, -50%);
         }
 
-        input,button {
+        input, button {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;

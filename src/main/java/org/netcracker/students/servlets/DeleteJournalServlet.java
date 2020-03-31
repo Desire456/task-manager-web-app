@@ -18,7 +18,7 @@ public class DeleteJournalServlet extends HttpServlet {
         JournalsController journalsController = JournalsController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
-        journalsController.removeJournal(ids);
+        journalsController.deleteJournal(ids);
         String allJournals = xmlParser.toXML(new Journals(journalsController.getAll()));
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);

@@ -1,7 +1,13 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.interfaces.DAOManager;
+import org.netcracker.students.dao.interfaces.TasksDAO;
+import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
+
+import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,7 +21,7 @@ import java.util.List;
  */
 
 public class TasksController {
-    private HashMap<Integer, Journal> journals;
+    private TasksDAO tasksDAO;
 
     private static TasksController instance;
 
@@ -27,24 +33,30 @@ public class TasksController {
     }
 
     private TasksController() {
-        this.journals = new HashMap<>();
+        DAOManager daoManager = PostgreSQLDAOManager.getInstance();
+        try {
+            this.tasksDAO = daoManager.getTasksDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 
-    void addJournal(int id, Journal journal) {
+    /*void addJournal(int id, Journal journal) {
+        tasksDAO.
         this.journals.put(id, journal);
     }
 
     void deleteJournal(int id) {
         this.journals.remove(id);
-    }
+    }*/
 
     /**
      * Function deleted all notifications for real journal is tasks
      */
-    public Journal getJournal(int id) {
+   /* public Journal getJournal(int id) {
         return journals.get(id);
-    }
+    }*/
 
     /**
      * Getter function by id
@@ -52,8 +64,8 @@ public class TasksController {
      * @return desired task
      */
 
-    public Task getTask(int journalId, int taskId) {
-        return this.journals.get(journalId).getTask(taskId);
+    public Task getTask(int journalId, int taskId) throws SQLException {
+        return tasksDAO.read(taskId);
     }
 
     /**
@@ -62,16 +74,17 @@ public class TasksController {
      * @param task - new task
      */
 
-    public void addTask(int journalId, Task task) {
-        this.journals.get(journalId).addTask(task);
+    public void addTask(Task task) throws SQLException {
+        tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Date.valueOf(task.getPlannedDate()),
+                Date.valueOf(task.getDateOfDone()), task.getJournalId());
     }
 
     /**
      * Delete function by id
      */
 
-    public void deleteTask(int journalId, int taskId) {
-        this.journals.get(journalId).deleteTask(taskId);
+    public void deleteTask(int taskId) throws SQLException {
+        tasksDAO.delete(taskId);
     }
 
     /**
@@ -80,28 +93,28 @@ public class TasksController {
      * @param newTask - new task
      */
 
-    public void changeTask(int journalId, int taskId, Task newTask) {
-        this.journals.get(journalId).changeTask(taskId, newTask);
+    public void changeTask(Task newTask) throws SQLException {
+        tasksDAO.update(newTask);
     }
 
     /**
      * Function for cancelling task by id
      */
 
-    public void cancelTask(int journalId, int taskId) {
+    /*public void cancelTask(int journalId, int taskId) {
         this.journals.get(journalId).getTask(taskId).setStatus("CANCELED");
-    }
+    }*/
 
 
     /**
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll(int journalId) {
-        return Collections.unmodifiableList(this.journals.get(journalId).getAll());
+    public List<Task> getAll(int journalId) throws SQLException {
+        return tasksDAO.getAll(journalId);
     }
 
-    public void restoreTasks(Journal journal) {
+    /*public void restoreTasks(Journal journal) {
         List<Task> tasks = journal.getAll();
         for (Task task : tasks) {
             if (task.getDateOfDone() == null) {
@@ -111,15 +124,15 @@ public class TasksController {
             }
             this.getJournal(journal.getId()).addTask(task);
         }
-    }
+    }*/
 
-    public void cancelTask(int journalId, ArrayList<Integer> ids) {
+    /*public void cancelTask(int journalId, ArrayList<Integer> ids) {
         for (int i : ids) {
             this.cancelTask(journalId, i);
         }
-    }
+    }*/
 
-    public void deleteTask(int journalId, ArrayList<Integer> ids) {
+   /* public void deleteTask(int journalId, ArrayList<Integer> ids) {
         for (int i : ids) {
             this.deleteTask(journalId, i);
         }
@@ -131,7 +144,7 @@ public class TasksController {
             id = Character.getNumericValue(ids.charAt(i));
             this.deleteTask(journalId, id);
         }
-    }
+    }*/
 
 
 }

@@ -2,11 +2,12 @@ package org.netcracker.students.model;
 
 
 import org.netcracker.students.controller.utils.IdGenerator;
-import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
+import org.netcracker.students.controller.utils.xml.LocalDateAdapter;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -25,11 +26,11 @@ public class Journal implements Serializable {
     private int userId;
     private String accessModifier;
     private String name;
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
-    private LocalDateTime creationDate;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    private LocalDate creationDate;
     private String description;
 
-    public Journal(int id, String name, String accessModifier, LocalDateTime creationDate, String description) {
+    public Journal(int id, String name, String accessModifier, LocalDate creationDate, String description) {
         tasks = new HashMap<>();
         this.id = id;
         this.accessModifier = accessModifier;
@@ -86,11 +87,11 @@ public class Journal implements Serializable {
         this.name = name;
     }
 
-    public LocalDateTime getCreationDate() {
+    public LocalDate getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDateTime creationDate) {
+    public void setCreationDate(LocalDate creationDate) {
         this.creationDate = creationDate;
     }
 

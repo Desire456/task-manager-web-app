@@ -44,9 +44,11 @@
         <label for="username">Create your login</label>
         <input id="username" type="text" name = "username" pattern ="(?=.*[A-Za-z0-9]).{6,20}"
                title = "Must contain from 6 to 20 characters" required>
+        <label>
+            Your role<input type = "text" name = "role" required>
+        </label>
         <label for="password">Create your password</label>
         <input id="password" type="password" name="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
-
         <label for="passCh">Retype your password</label>
         <input id="passCh" type="password" name = "passCh" required>
         <input type="submit" value="Sign up">

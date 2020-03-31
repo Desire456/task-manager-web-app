@@ -5,11 +5,10 @@
             maxActive="10"
             maxIdle="2"
             maxWait="5000"
-            name="jdbc/taskManger"
-            username="admin"
-            password="admin"
+            name="jdbc/taskManager"
+            username="postgres"
+            password="zipzap1337"
             type="javax.sql.DataSource"
             url="jdbc:postgresql://localhost/task_manager"
-            validationQuery="SELECT 1">
-    </Resource>
+            validationQuery="SELECT 1"/>
 </Context>

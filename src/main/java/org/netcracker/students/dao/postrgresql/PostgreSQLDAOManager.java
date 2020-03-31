@@ -18,13 +18,14 @@ public class PostgreSQLDAOManager implements DAOManager {
     private static PostgreSQLDAOManager instance;
     ConnectionBuilder connectionBuilder;
 
-    private PostgreSQLDAOManager(String path) throws SQLException {
+    private PostgreSQLDAOManager(String path) {
         connectionBuilder = new PoolConnectionBuilder();
         executeSqlStartScript(path);
     }
 
     private PostgreSQLDAOManager(){
         connectionBuilder = new PoolConnectionBuilder();
+        executeSqlStartScript();
     }
 
     public static PostgreSQLDAOManager getInstance(){
@@ -49,18 +50,31 @@ public class PostgreSQLDAOManager implements DAOManager {
     }
 
     @Override
-    public JournalDAO getJournalDao() {
-        return new PostgreSQLJournalDAO();
+    public JournalDAO getJournalDao() throws SQLException {
+        return new PostgreSQLJournalDAO(getConnection());
     }
 
     @Override
-    public UsersDAO getUsersDao() {
-        return new PostgreSQLUsersDAO();
+    public UsersDAO getUsersDao() throws SQLException {
+        return new PostgreSQLUsersDAO(getConnection());
     }
 
     private void executeSqlStartScript(String path) {
         try{
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("src\\main\\java\\org.netcracker.students\\dao\\script.sql"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("Z:\\IntelliJ IDEA 2019.3.3\\netcracker\\web-application\\src\\main\\java\\org\\netcracker\\students\\dao\\script.sql"));
+            String line;
+            while((line = bufferedReader.readLine()) != null){
+                Statement statement = connectionBuilder.getConnect().createStatement();
+                statement.execute(line);
+            }
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void executeSqlStartScript() {
+        try{
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("Z:\\IntelliJ IDEA 2019.3.3\\netcracker\\web-application\\src\\main\\java\\org\\netcracker\\students\\dao\\script.sql"));
             String line;
             while((line = bufferedReader.readLine()) != null){
                 Statement statement = connectionBuilder.getConnect().createStatement();

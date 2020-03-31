@@ -1,11 +1,12 @@
 package org.netcracker.students.controller;
 
-import org.netcracker.students.controller.utils.IdGenerator;
+import org.netcracker.students.dao.interfaces.DAOManager;
+import org.netcracker.students.dao.interfaces.JournalDAO;
+import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.model.Journal;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 public class JournalsController {
@@ -18,47 +19,53 @@ public class JournalsController {
         return instance;
     }
 
-    private HashMap<Integer, Journal> journals;
     private TasksController tasksController;
+    private JournalDAO journalDAO;
 
     private JournalsController() {
-        this.journals = new HashMap<>();
         this.tasksController = TasksController.getInstance();
+        DAOManager DAOManager = PostgreSQLDAOManager.getInstance();
+        try {
+            this.journalDAO = DAOManager.getJournalDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public Journal getJournal(int id) {
-        return this.journals.get(id);
+    public Journal getJournal(int id) throws SQLException {
+        return this.journalDAO.read(id);
     }
 
-    public void addJournal(Journal journal) {
-        int id = IdGenerator.getInstance().getId();
-        this.journals.put(id, journal);
-        this.tasksController.addJournal(id, journal);
+    public void addJournal(Journal journal) throws SQLException {
+        Journal newJournal = journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
+                Date.valueOf(journal.getCreationDate()), journal.getAccessModifier());
+        //this.tasksController.addJournal(newJournal.getId(), newJournal);
     }
 
-    public void removeJournal(int id) {
-        this.journals.remove(id);
-        this.tasksController.deleteJournal(id);
+    public void deleteJournal(int id) throws SQLException {
+        journalDAO.delete(id);
+       // this.tasksController.deleteJournal(id);
     }
 
-    public void removeJournal(String ids) {
+    public void deleteJournal(String ids) throws SQLException {
         int id = 0;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
-            this.removeJournal(id + 1);
-            this.tasksController.deleteJournal(id);
+            this.deleteJournal(id + 1);
+            //this.tasksController.deleteJournal(id);
         }
     }
 
 
-    public void changeJournal(int id, Journal newJournal) {
-        this.journals.put(id, newJournal);
-        this.tasksController.deleteJournal(id);
-        this.tasksController.addJournal(id, newJournal);
+    public void changeJournal(Journal newJournal) throws SQLException {
+        journalDAO.update(newJournal);
+        int journalId = newJournal.getId();
+        //this.tasksController.deleteJournal(journalId);
+        //this.tasksController.addJournal(journalId, newJournal);
     }
 
 
-    public List<Journal> getAll() {
-        return Collections.unmodifiableList(new ArrayList<>(this.journals.values()));
+    public List<Journal> getAll(int userId) throws SQLException {
+        return journalDAO.getAll(userId);
     }
 }

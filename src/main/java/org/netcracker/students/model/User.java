@@ -10,10 +10,11 @@ public class User {
     private String role;
     private LocalDate dateOfRegistration;
 
-    public User(int id, String login, String password) {
-        this.id = id;
+    public User(String login, String password, String role, LocalDate dateOfRegistration) {
         this.login = login;
         this.password = password;
+        this.role = role;
+        this.dateOfRegistration = dateOfRegistration;
     }
 
     public User(int id, String login, String password, String role, LocalDate dateOfRegistration){

@@ -14,11 +14,13 @@ public interface UsersDAO {
 
     public void update(User user) throws SQLException;
 
-    public void delete(User user) throws SQLException;
+    public void delete(int userId) throws SQLException;
 
     public List<User> getAll() throws SQLException;
 
     public User getByLoginAndPassword(String login, String password) throws SQLException;
+
+    public User getByLogin(String login) throws SQLException;
 
     public List<User> getSortedByCriteria(String column, String criteria) throws SQLException;
 }

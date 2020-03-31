@@ -1,7 +1,7 @@
 package org.netcracker.students.dao.postrgresql;
 
-import org.netcracker.students.controller.utils.UserIdGenerator;
 import org.netcracker.students.dao.interfaces.UsersDAO;
+import org.netcracker.students.factories.UserFactory;
 import org.netcracker.students.model.User;
 
 import java.sql.*;
@@ -11,13 +11,14 @@ import java.util.List;
 public class PostgreSQLUsersDAO implements UsersDAO {
     private Connection connection;
 
-    public PostgreSQLUsersDAO(){
+    public PostgreSQLUsersDAO(Connection connection) {
+        this.connection = connection;
     }
 
 
     @Override
     public User create(String login, String password, String role, Date dateOfRegistration) throws SQLException {
-        String sql = "INSERT INTO users VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users VALUES (default, ?, ?, ?, ?)";
         String RETURN_USER_SQL = "SELECT * FROM users WHERE login = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
             preparedStatement.setString(1, login);
@@ -66,10 +67,10 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     }
 
     @Override
-    public void delete(User user) throws SQLException {
+    public void delete(int userId) throws SQLException {
         String sql = "DELETE FROM users WHERE user_id = ?";
         try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
-            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setInt(1, userId);
             preparedStatement.execute();
         }
     }
@@ -97,9 +98,23 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()){
-                User user = new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                return new User(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
                         resultSet.getString(4), resultSet.getDate(5).toLocalDate());
-                return user;
+            }
+        }
+        return null;
+    }
+
+    public User getByLogin(String login) throws SQLException {
+        String sql = "SELECT * FROM users WHERE login = ?";
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement. setString(1, login);
+            ResultSet resultSet = preparedStatement. executeQuery();
+            List<User> users = new ArrayList<User>();
+            UserFactory userFactory = new UserFactory();
+            if (resultSet.next()){
+                return userFactory.createUser(resultSet.getInt(1),resultSet.getString(2),resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
             }
         }
         return null;
