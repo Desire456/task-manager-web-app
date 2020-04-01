@@ -48,10 +48,10 @@ public class JournalsController {
     }
 
     public void deleteJournal(String ids) throws SQLException {
-        int id = 0;
+        int id;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
-            this.deleteJournal(id + 1);
+            this.deleteJournal(id);
             //this.tasksController.deleteJournal(id);
         }
     }

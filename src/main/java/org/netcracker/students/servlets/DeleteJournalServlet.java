@@ -9,7 +9,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/deleteJournal")
 public class DeleteJournalServlet extends HttpServlet {
@@ -18,8 +20,19 @@ public class DeleteJournalServlet extends HttpServlet {
         JournalsController journalsController = JournalsController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
-        journalsController.deleteJournal(ids);
-        String allJournals = xmlParser.toXML(new Journals(journalsController.getAll()));
+        try {
+            journalsController.deleteJournal(ids);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        HttpSession httpSession = req.getSession();
+        int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
+        String allJournals = null;
+        try {
+            allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE).forward(req, resp);

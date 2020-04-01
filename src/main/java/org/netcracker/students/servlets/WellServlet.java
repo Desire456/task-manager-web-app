@@ -19,7 +19,7 @@ import java.time.LocalDate;
 public class WellServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter(ServletConstants.PARAMETER_USER_NAME);
+        String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
         String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
         String role = req.getParameter(ServletConstants.PARAMETER_ROLE);
         LocalDate dateOfRegistration = LocalDate.now();

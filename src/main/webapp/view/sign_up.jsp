@@ -42,7 +42,7 @@
     <h1>Registration</h1>
     <form  action = "${pageContext.request.contextPath}/well" method = "POST" onsubmit="return checkPass()">
         <label for="username">Create your login</label>
-        <input id="username" type="text" name = "username" pattern ="(?=.*[A-Za-z0-9]).{6,20}"
+        <input id="username" type="text" name = "login" pattern ="(?=.*[A-Za-z0-9]).{6,20}"
                title = "Must contain from 6 to 20 characters" required>
         <label>
             Your role<input type = "text" name = "role" required>

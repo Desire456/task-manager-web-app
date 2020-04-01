@@ -12,7 +12,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 
 @WebServlet("/editJournal")
 public class EditJournalServlet extends HttpServlet {
@@ -23,11 +25,28 @@ public class EditJournalServlet extends HttpServlet {
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         int id = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
-        Journal oldJournal = journalsController.getJournal(id + 1);
+        System.out.println(id);
         JournalFactory journalFactory = new JournalFactory();
-        journalsController.changeJournal(id + 1, journalFactory.createJournal(id + 1,
-                name, ServletConstants.PARAMETER_ACCESS_MODIFIER, oldJournal.getCreationDate(), description));
-        String allJournals = xmlParser.toXML(new Journals(journalsController.getAll()));
+        Journal oldJournal = null;
+        try {
+            oldJournal = journalsController.getJournal(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        HttpSession httpSession = req.getSession();
+        int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
+        try {
+            journalsController.changeJournal(journalFactory.createJournal(id, name, description, userId,
+                    oldJournal.getCreationDate(), ServletConstants.PARAMETER_ACCESS_MODIFIER));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String allJournals = null;
+        try {
+            allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE).forward(req, resp);

@@ -1,19 +1,19 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.XMLParser;
 import org.netcracker.students.factories.JournalFactory;
-import org.netcracker.students.model.Journal;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 @WebServlet("/addJournal")
 public class AddJournalServlet extends HttpServlet {
@@ -25,9 +25,16 @@ public class AddJournalServlet extends HttpServlet {
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         String accessModifier = req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER);
         JournalFactory journalFactory = new JournalFactory();
-        journalsController.addJournal(journalFactory.createJournal(IdGenerator.getInstance().getId(), name,
-                accessModifier, LocalDateTime.now(), description));
-        String allJournals = xmlParser.toXML(new Journals(journalsController.getAll()));
+        HttpSession httpSession = req.getSession();
+        int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
+        String allJournals = null;
+        try {
+            journalsController.addJournal(journalFactory.createJournal(name, description,
+                    userId, LocalDate.now(), accessModifier));
+            allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE).forward(req, resp);

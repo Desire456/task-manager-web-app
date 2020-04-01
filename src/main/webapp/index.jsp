@@ -41,7 +41,6 @@
     <form id="login" action="${pageContext.request.contextPath}/journals" method="POST">
         <h1>Task Manager</h1>
         <input name="login" type="text" placeholder="Login" required>
-
         <label for="password"></label>
         <input id="password" type="password" placeholder="Password" required>
 

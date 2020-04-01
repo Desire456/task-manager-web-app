@@ -30,15 +30,25 @@ public class Journal implements Serializable {
     private LocalDate creationDate;
     private String description;
 
-    public Journal(int id, String name, String accessModifier, LocalDate creationDate, String description) {
+    public Journal(int id, String name, String description, int userId,
+                   LocalDate creationDate, String accessModifier) {
         tasks = new HashMap<>();
         this.id = id;
         this.accessModifier = accessModifier;
+        this.userId = userId;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
     }
 
+    public Journal(String name, String description, int userId, LocalDate creationDate, String accessModifier) {
+        tasks = new HashMap<>();
+        this.name = name;
+        this.description = description;
+        this.userId = userId;
+        this.creationDate = creationDate;
+        this.accessModifier = accessModifier;
+    }
 
 
     public Journal() {
@@ -152,7 +162,7 @@ public class Journal implements Serializable {
      * @return desired task
      */
 
-    public Task getTaskByDate(LocalDateTime date) {
+    public Task getTaskByDate(LocalDate date) {
         Task res = null;
         for (int i = 0; i < tasks.size(); ++i) {
             if (date == tasks.get(i).getPlannedDate()) res = tasks.get(i);

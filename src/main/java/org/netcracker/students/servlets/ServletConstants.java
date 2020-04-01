@@ -4,11 +4,12 @@ public class ServletConstants {
     public static final String PARAMETER_NAME = "name";
     public static final String PARAMETER_DESCRIPTION = "description";
     public static final String PARAMETER_ACCESS_MODIFIER = "accessModifier";
-    public static final String PARAMETER_USER_NAME = "username";
+    public static final String PARAMETER_LOGIN = "login";
     public static final String PARAMETER_PASSWORD = "password";
     public static final String PARAMETER_ROLE = "role";
     public static final String ATTRIBUTE_NAME_OF_JOURNALS = "journals";
     public static final String ATTRIBUTE_NAME_OF_TASKS = "tasks";
+    public static final String ATTRIBUTE_USER_ID = "userId";
     public static final String PATH_TO_VIEW_JOURNALS_PAGE = "view/journals.jsp";
     public static final String PATH_TO_VIEW_TASKS_PAGE = "view/tasks.jsp";
     public static final String PATH_TO_VIEW_SIGN_UP = "view/sign_up.jsp";
