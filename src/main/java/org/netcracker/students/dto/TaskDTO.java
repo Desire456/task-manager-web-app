@@ -10,6 +10,8 @@ public class TaskDTO {
     private LocalDate plannedDate;
     private LocalDate dateOfDone;
 
+    public TaskDTO() {}
+
     public TaskDTO(String id, String name, String description, String status, LocalDate plannedDate, LocalDate dateOfDone) {
         this.id = id;
         this.name = name;

@@ -10,6 +10,7 @@ public class ServletConstants {
     public static final String ATTRIBUTE_NAME_OF_JOURNALS = "journals";
     public static final String ATTRIBUTE_NAME_OF_TASKS = "tasks";
     public static final String ATTRIBUTE_USER_ID = "userId";
+    public static final String ATTRIBUTE_JOURNAL_ID = "journalId";
     public static final String PATH_TO_VIEW_JOURNALS_PAGE = "view/journals.jsp";
     public static final String PATH_TO_VIEW_TASKS_PAGE = "view/tasks.jsp";
     public static final String PATH_TO_VIEW_SIGN_UP = "view/sign_up.jsp";

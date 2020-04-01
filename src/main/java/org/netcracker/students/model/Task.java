@@ -82,6 +82,13 @@ public class Task implements Serializable {
        // id = IdGenerator.getInstance().getId();
     }
 
+    public Task(String name, String description, LocalDate plannedDate, String status) {
+        this.name = name;
+        this.description = description;
+        this.plannedDate = plannedDate;
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
