@@ -76,7 +76,7 @@ public class TasksController {
 
     public void addTask(Task task) throws SQLException {
         tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Date.valueOf(task.getPlannedDate()),
-                Date.valueOf(task.getDateOfDone()), task.getJournalId());
+               null, task.getJournalId());
     }
 
     /**

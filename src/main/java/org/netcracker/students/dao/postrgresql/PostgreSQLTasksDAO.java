@@ -24,8 +24,9 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setInt(1, journalId);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, description);
-            preparedStatement.setDate(4, plannedDate);
-            preparedStatement.setDate(5, dateOfDone);
+            preparedStatement.setString(4, status);
+            preparedStatement.setDate(5, plannedDate);
+            preparedStatement.setDate(6, dateOfDone);
             preparedStatement.execute();
         }
         try (PreparedStatement preparedStatement = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
@@ -36,7 +37,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                 return taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getDate(6).toLocalDate(),
-                        resultSet.getDate(7).toLocalDate(), resultSet.getString(5));
+                        resultSet.getDate(7) == null ? null : resultSet.getDate(7).toLocalDate(),
+                        resultSet.getString(5));
             }
         }
         return null;
@@ -52,8 +54,9 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             if (resultSet.next()) {
                 return taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(), resultSet.getString(7));
+                        resultSet.getDate(6).toLocalDate(),
+                        resultSet.getDate(7) == null ? null : resultSet.getDate(7).toLocalDate(),
+                        resultSet.getString(5));
             }
         }
         return null;
@@ -92,11 +95,11 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             TaskFactory taskFactory = new TaskFactory();
             while (resultSet.next()) {
-                Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                Task task =taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
                         resultSet.getDate(6).toLocalDate(),
-                        resultSet.getString(7));
+                        resultSet.getDate(7) == null ? null : resultSet.getDate(7).toLocalDate(),
+                        resultSet.getString(5));
                 tasks.add(task);
             }
             return tasks;
@@ -114,9 +117,9 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             while (resultSet.next()) {
                 Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
                         resultSet.getDate(6).toLocalDate(),
-                        resultSet.getString(7));
+                        resultSet.getDate(7) == null ? null : resultSet.getDate(7).toLocalDate(),
+                        resultSet.getString(5));
                 tasks.add(task);
             }
             return tasks;

@@ -28,8 +28,8 @@ public class TaskFactory {
         return new Task(id, name, description, plannedDate, status);
     }
 
-    public Task createTask(String name, String description, LocalDate plannedDate, String status) {
-        return new Task(name, description, plannedDate, status);
+    public Task createTask(String name, String description, LocalDate plannedDate, String status, int journalId) {
+        return new Task(name, description, plannedDate, status, journalId);
     }
 
     public Task createTask(int id, int journalId, String name, String description, LocalDate plannedDate, LocalDate dateOfDone, String status) {

@@ -33,7 +33,7 @@ public class AddTaskServlet extends HttpServlet {
         TaskFactory taskFactory = new TaskFactory();
         try {
             tasksController.addTask(taskFactory.createTask(name, description,
-                    parsedPlannedDate, ServletConstants.STATUS_PLANNED));
+                    parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
         } catch (SQLException e) {
             e.printStackTrace();
         }
