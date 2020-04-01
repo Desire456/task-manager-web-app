@@ -1,5 +1,6 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exception.taskDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
@@ -64,7 +65,7 @@ public class TasksController {
      * @return desired task
      */
 
-    public Task getTask(int journalId, int taskId) throws SQLException {
+    public Task getTask(int journalId, int taskId) throws SQLException, ReadTaskException {
         return tasksDAO.read(taskId);
     }
 
@@ -74,7 +75,7 @@ public class TasksController {
      * @param task - new task
      */
 
-    public void addTask(Task task) throws SQLException {
+    public void addTask(Task task) throws SQLException, CreateTaskException {
         tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Date.valueOf(task.getPlannedDate()),
                 Date.valueOf(task.getDateOfDone()), task.getJournalId());
     }
@@ -83,7 +84,7 @@ public class TasksController {
      * Delete function by id
      */
 
-    public void deleteTask(int taskId) throws SQLException {
+    public void deleteTask(int taskId) throws SQLException, DeleteTaskException {
         tasksDAO.delete(taskId);
     }
 
@@ -93,7 +94,7 @@ public class TasksController {
      * @param newTask - new task
      */
 
-    public void changeTask(Task newTask) throws SQLException {
+    public void changeTask(Task newTask) throws SQLException, UpdateTaskException {
         tasksDAO.update(newTask);
     }
 
@@ -110,7 +111,7 @@ public class TasksController {
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll(int journalId) throws SQLException {
+    public List<Task> getAll(int journalId) throws SQLException, GetAllTaskException {
         return tasksDAO.getAll(journalId);
     }
 
