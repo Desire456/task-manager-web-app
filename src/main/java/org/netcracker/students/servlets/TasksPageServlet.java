@@ -16,7 +16,7 @@ import java.util.List;
 
 @WebServlet("/tasks")
 public class TasksPageServlet extends HttpServlet {
-    @Override
+   /* @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         requestDispatcher.forward(req, resp);
@@ -37,5 +37,5 @@ public class TasksPageServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         }
         requestDispatcher.forward(req, resp);
-    }
+    }*/
 }

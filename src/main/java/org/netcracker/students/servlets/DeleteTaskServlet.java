@@ -13,7 +13,7 @@ import java.io.IOException;
 
 @WebServlet("/deleteTask")
 public class DeleteTaskServlet extends HttpServlet {
-    @Override
+   /* @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         TasksController tasksController = TasksController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
@@ -25,5 +25,5 @@ public class DeleteTaskServlet extends HttpServlet {
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
                 allTasks);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE).forward(req, resp);
-    }
+    }*/
 }

@@ -1,6 +1,8 @@
 package org.netcracker.students.dao.postrgresql;
 
 import org.netcracker.students.dao.interfaces.JournalDAO;
+import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
 
@@ -90,7 +92,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     public List<Journal> getAll() throws SQLException {
         String sql = "SELECT * FROM journals";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            List<Journal> journals = new ArrayList<Journal>();
+            List<Journal> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             String accessModifier;
             JournalFactory journalFactory = new JournalFactory();
@@ -107,20 +109,20 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public List<Journal> getAll(int userId) throws SQLException {
+    public List<JournalDTO> getAll(int userId) throws SQLException {
         String sql = "SELECT * FROM journals WHERE user_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
-            List<Journal> journals = new ArrayList<Journal>();
+            List<JournalDTO> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             String accessModifier;
-            JournalFactory journalFactory = new JournalFactory();
+            JournalDTOFactory journalDTOFactory = new JournalDTOFactory();
             while (resultSet.next()) {
                 if (resultSet.getBoolean(6)) accessModifier = "private";
                 else accessModifier = "public";
-                Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                JournalDTO journal = journalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getDate(5).toLocalDate());
                 journals.add(journal);
             }
             return journals;
@@ -148,6 +150,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             return journals;
         }
     }
+
+
 
     @Override
     public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {

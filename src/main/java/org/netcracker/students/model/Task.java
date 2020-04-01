@@ -1,7 +1,6 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -80,7 +79,7 @@ public class Task implements Serializable {
      */
 
     public Task() {
-        id = IdGenerator.getInstance().getId();
+       // id = IdGenerator.getInstance().getId();
     }
 
     @Override

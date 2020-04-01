@@ -1,14 +1,23 @@
 package org.netcracker.students.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public class TaskTO {
+public class TaskDTO {
     private String id;
     private String name;
     private String description;
     private String status;
-    private LocalDateTime plannedDate;
-    private LocalDateTime dateOfDone;
+    private LocalDate plannedDate;
+    private LocalDate dateOfDone;
+
+    public TaskDTO(String id, String name, String description, String status, LocalDate plannedDate, LocalDate dateOfDone) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.plannedDate = plannedDate;
+        this.dateOfDone = dateOfDone;
+    }
 
     public String getId() {
         return id;
@@ -42,19 +51,19 @@ public class TaskTO {
         this.status = status;
     }
 
-    public LocalDateTime getPlannedDate() {
+    public LocalDate getPlannedDate() {
         return plannedDate;
     }
 
-    public void setPlannedDate(LocalDateTime plannedDate) {
+    public void setPlannedDate(LocalDate plannedDate) {
         this.plannedDate = plannedDate;
     }
 
-    public LocalDateTime getDateOfDone() {
+    public LocalDate getDateOfDone() {
         return dateOfDone;
     }
 
-    public void setDateOfDone(LocalDateTime dateOfDone) {
+    public void setDateOfDone(LocalDate dateOfDone) {
         this.dateOfDone = dateOfDone;
     }
 }

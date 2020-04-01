@@ -3,6 +3,7 @@ package org.netcracker.students.controller;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
 import java.sql.Date;
@@ -44,7 +45,7 @@ public class JournalsController {
 
     public void deleteJournal(int id) throws SQLException {
         journalDAO.delete(id);
-       // this.tasksController.deleteJournal(id);
+        // this.tasksController.deleteJournal(id);
     }
 
     public void deleteJournal(String ids) throws SQLException {
@@ -65,7 +66,7 @@ public class JournalsController {
     }
 
 
-    public List<Journal> getAll(int userId) throws SQLException {
+    public List<JournalDTO> getAll(int userId) throws SQLException {
         return journalDAO.getAll(userId);
     }
 }

@@ -1,6 +1,7 @@
 package org.netcracker.students.dao.interfaces;
 
 
+import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
 import java.sql.Date;
@@ -19,7 +20,7 @@ public interface JournalDAO {
 
     public List<Journal> getAll() throws SQLException;
 
-    public List<Journal> getAll(int userId) throws SQLException;
+    public List<JournalDTO> getAll(int userId) throws SQLException;
 
     public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException;
 
