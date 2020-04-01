@@ -136,15 +136,13 @@ public class TasksController {
         for (int i : ids) {
             this.deleteTask(journalId, i);
         }
-    }
+    }*/
 
-    public void deleteTask(int journalId, String ids) {
+    public void deleteTask(String ids) throws SQLException {
         int id = 0;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
-            this.deleteTask(journalId, id);
+            this.deleteTask(id);
         }
-    }*/
-
-
+    }
 }

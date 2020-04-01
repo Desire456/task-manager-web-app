@@ -152,7 +152,6 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
 
-
     @Override
     public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
         String sql = "SELECT * FROM journals WHERE ? LIKE ? ORDER BY ? ?";

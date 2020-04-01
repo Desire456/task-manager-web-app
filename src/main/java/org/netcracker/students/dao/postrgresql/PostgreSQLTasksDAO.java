@@ -64,13 +64,13 @@ public class PostgreSQLTasksDAO implements TasksDAO {
 
     @Override
     public void update(Task task) throws SQLException {
-        String sql = "UPDATE tasks SET name = ?, description = ?, planned_date = ?, dateOfDone = ?, status = ? WHERE " +
+        String sql = "UPDATE tasks SET name = ?, description = ?, planned_date = ?, date_of_done = ?, status = ? WHERE " +
                 "task_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getDescription());
             preparedStatement.setDate(3, Date.valueOf(task.getPlannedDate()));
-            preparedStatement.setDate(4, Date.valueOf(task.getDateOfDone()));
+            preparedStatement.setDate(4,task.getDateOfDone() == null ? null : Date.valueOf(task.getDateOfDone()));
             preparedStatement.setString(5, task.getStatus());
             preparedStatement.setInt(6, task.getId());
             preparedStatement.execute();
