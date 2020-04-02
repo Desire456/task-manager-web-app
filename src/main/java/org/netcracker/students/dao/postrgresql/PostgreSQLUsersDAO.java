@@ -32,7 +32,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                 ResultSet resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()) {
                     User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                            resultSet.getString(4), resultSet.getDate(5).toLocalDate());
+                            resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
                     return user;
                 }
             }
@@ -51,7 +51,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getDate(5).toLocalDate()); //todo скорее всего тут нужна фабрика, как сделали для тасок и использовать подобные фабрики везде в DAO при создании новых экземпляров
+                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime()); //todo скорее всего тут нужна фабрика, как сделали для тасок и использовать подобные фабрики везде в DAO при создании новых экземпляров
                 return user;
             }
         } catch (SQLException e) {
@@ -93,7 +93,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             List<User> users = new ArrayList<User>();
             while (resultSet.next()) {
                 User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
+                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
                 users.add(user);
             }
             return users;
@@ -111,7 +111,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 return new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
+                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new GetUserByLoginAndPasswordException(DAOErrorConstants.GET_USER_BY_LOGIN_AND_PASSWORD_EXCEPTION_MESSAGE);
@@ -128,7 +128,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
                 return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
+                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new GetUserByLoginException(DAOErrorConstants.GET_USER_BY_LOGIN_EXCEPTION_MESSAGE);
@@ -146,7 +146,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             List<User> users = new ArrayList<User>();
             while (resultSet.next()) {
                 User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getDate(5).toLocalDate());
+                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
                 users.add(user);
             }
             return users;

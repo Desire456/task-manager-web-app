@@ -3,6 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.journalDAO.DeleteJournalException;
+import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -22,7 +24,7 @@ public class DeleteJournalServlet extends HttpServlet {
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
             journalsController.deleteJournal(ids);
-        } catch (SQLException e) {
+        } catch (SQLException | DeleteJournalException e) {
             e.printStackTrace();
         }
         HttpSession httpSession = req.getSession();
@@ -30,7 +32,7 @@ public class DeleteJournalServlet extends HttpServlet {
         String allJournals = null;
         try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
-        } catch (SQLException e) {
+        } catch (SQLException | GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,

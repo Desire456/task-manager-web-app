@@ -3,6 +3,7 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 import org.netcracker.students.model.Task;
 
 import javax.servlet.RequestDispatcher;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/tasks")
@@ -28,7 +30,14 @@ public class TasksPageServlet extends HttpServlet {
         int journalId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_JOURNAL_ID));
         req.setAttribute(ServletConstants.PARAMETER_JOURNAL_ID, journalId);
         TasksController tasksController = TasksController.getInstance();
-        List<Task> taskArrayList = tasksController.getAll(journalId + 1);
+        List<Task> taskArrayList = null;
+        try {
+            taskArrayList = tasksController.getAll(journalId + 1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (GetAllTaskException e) {
+            e.printStackTrace();
+        }
         if (taskArrayList.isEmpty()) {
             req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
         } else {

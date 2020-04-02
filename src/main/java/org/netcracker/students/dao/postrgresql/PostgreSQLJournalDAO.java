@@ -37,7 +37,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 if (resultSet.next()) {
                     return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                             resultSet.getString(4), resultSet.getInt(2),
-                            resultSet.getDate(5).toLocalDate(), accessModifier);
+                            resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 }
         }
         } catch (SQLException e) {
@@ -59,7 +59,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 JournalFactory journalFactory = new JournalFactory();
                 return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
             }
         } catch (SQLException e) {
             throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION);
@@ -75,7 +75,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             boolean isPrivate = journal.getAccessModifier().equals("private");
             preparedStatement.setBoolean(1, isPrivate);
             preparedStatement.setString(2, journal.getName());
-            preparedStatement.setDate(3, Date.valueOf(journal.getCreationDate()));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(journal.getCreationDate()));
             preparedStatement.setString(4, journal.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -107,7 +107,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
@@ -130,7 +130,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
@@ -154,7 +154,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
@@ -180,7 +180,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "Public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
@@ -206,7 +206,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;

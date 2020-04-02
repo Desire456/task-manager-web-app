@@ -35,8 +35,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                 if (resultSet.next()) {
                     return taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                             resultSet.getString(3), resultSet.getString(4),
-                            resultSet.getDate(6).toLocalDate(),
-                            resultSet.getDate(7).toLocalDate(), resultSet.getString(5));
+                            resultSet.getTimestamp(6).toLocalDateTime(),
+                            resultSet.getTimestamp(7).toLocalDateTime(), resultSet.getString(5));
                 }
             }
         } catch (SQLException e) {
@@ -55,8 +55,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             if (resultSet.next()) {
                 return taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(), resultSet.getString(7));
+                        resultSet.getTimestamp(5).toLocalDateTime(),
+                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7));
             }
         } catch (SQLException e) {
             throw new ReadTaskException(DAOErrorConstants.READ_TASK_EXCEPTION_MESSAGE);
@@ -71,8 +71,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, task.getName());
             preparedStatement.setString(2, task.getDescription());
-            preparedStatement.setDate(3, Date.valueOf(task.getPlannedDate()));
-            preparedStatement.setDate(4, Date.valueOf(task.getDateOfDone()));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(task.getPlannedDate()));
+            preparedStatement.setTimestamp(4, Timestamp.valueOf(task.getDateOfDone()));
             preparedStatement.setString(5, task.getStatus());
             preparedStatement.setInt(6, task.getId());
             preparedStatement.execute();
@@ -103,8 +103,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             while (resultSet.next()) {
                 Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(),
+                        resultSet.getTimestamp(5).toLocalDateTime(),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getString(7));
                 tasks.add(task);
             }
@@ -125,8 +125,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             while (resultSet.next()) {
                 Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(),
+                        resultSet.getTimestamp(5).toLocalDateTime(),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getString(7));
                 tasks.add(task);
             }
@@ -150,8 +150,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             while (resultSet.next()) {
                 Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(), resultSet.getString(7));
+                        resultSet.getTimestamp(5).toLocalDateTime(),
+                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7));
                 tasks.add(task);
             }
             return tasks;
@@ -176,8 +176,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             while (resultSet.next()) {
                 Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(), resultSet.getString(7));
+                        resultSet.getTimestamp(5).toLocalDateTime(),
+                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7));
                 tasks.add(task);
             }
             return tasks;
@@ -201,8 +201,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             while (resultSet.next()) {
                 Task task = taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getDate(5).toLocalDate(),
-                        resultSet.getDate(6).toLocalDate(), resultSet.getString(7));
+                        resultSet.getTimestamp(5).toLocalDateTime(),
+                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7));
                 tasks.add(task);
             }
             return tasks;

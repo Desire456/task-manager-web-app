@@ -8,21 +8,32 @@ public class User {
     private String login;
     private String password;
     private String role;
-    private LocalDate dateOfRegistration;
+    private LocalDateTime dateOfRegistration;
 
-    public User(String login, String password, String role, LocalDate dateOfRegistration) {
+    public User(String login, String password, String role, LocalDateTime dateOfRegistration) {
         this.login = login;
         this.password = password;
         this.role = role;
         this.dateOfRegistration = dateOfRegistration;
     }
 
-    public User(int id, String login, String password, String role, LocalDate dateOfRegistration){
+    public User(int id, String login, String password, String role, LocalDateTime dateOfRegistration){
         this.id = id;
         this.login = login;
         this.password = password;
         this.role = role;
         this.dateOfRegistration = dateOfRegistration;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", role='" + role + '\'' +
+                ", dateOfRegistration=" + dateOfRegistration +
+                '}';
     }
 
     //region Getters
@@ -34,7 +45,7 @@ public class User {
         return login;
     }
 
-    public LocalDate getDateOfRegistration() {
+    public LocalDateTime getDateOfRegistration() {
         return dateOfRegistration;
     }
 
@@ -56,7 +67,7 @@ public class User {
         this.login = login;
     }
 
-    public void setDateOfRegistration(LocalDate dateOfRegistration) {
+    public void setDateOfRegistration(LocalDateTime dateOfRegistration) {
         this.dateOfRegistration = dateOfRegistration;
     }
 
