@@ -1,6 +1,7 @@
 package org.netcracker.students.dao.interfaces;
 
 
+
 import org.netcracker.students.dao.exception.journalDAO.*;
 import org.netcracker.students.model.Journal;
 
@@ -19,6 +20,7 @@ public interface JournalDAO {
     public void delete(int id) throws SQLException, DeleteJournalException;
 
     public List<Journal> getAll() throws SQLException, GetAllJournalException;
+
 
     public List<Journal> getAll(int userId) throws SQLException, GetAllJournalByUserIdException;
 

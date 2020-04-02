@@ -1,7 +1,6 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -70,6 +69,7 @@ public class Task implements Serializable {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
+        this.formattedPlannedDate = this.formatDate(plannedDate);
         this.dateOfDone = null;
         this.status = status;
     }
@@ -80,7 +80,15 @@ public class Task implements Serializable {
      */
 
     public Task() {
-        id = IdGenerator.getInstance().getId();
+       // id = IdGenerator.getInstance().getId();
+    }
+
+    public Task(String name, String description, LocalDate plannedDate, String status, int journalId) {
+        this.name = name;
+        this.description = description;
+        this.plannedDate = plannedDate;
+        this.status = status;
+        this.journalId = journalId;
     }
 
     @Override
@@ -154,8 +162,7 @@ public class Task implements Serializable {
     private String formatDate(LocalDate localDate) {
         String dateTimeFormat = "yyyy-MM-dd";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        String formatDateTimeNow = localDate.format(formatter);
-        return formatDateTimeNow.replace(" ", "T");
+        return localDate.format(formatter);
     }
 
     private String formatDateTime(LocalDateTime localDateTime){

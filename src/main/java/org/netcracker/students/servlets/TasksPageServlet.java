@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -28,22 +29,20 @@ public class TasksPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         int journalId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_JOURNAL_ID));
-        req.setAttribute(ServletConstants.PARAMETER_JOURNAL_ID, journalId);
+        HttpSession session = req.getSession();
+        session.setAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID, journalId);
         TasksController tasksController = TasksController.getInstance();
         List<Task> taskArrayList = null;
-        try {
-            taskArrayList = tasksController.getAll(journalId + 1);
+        if (taskArrayList != null && taskArrayList.isEmpty()) {
+            taskArrayList = tasksController.getAll(journalId);
+        }  else if (taskArrayList != null){
+            XMLParser xmlParser = XMLParser.getInstance();
+            String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
+            req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (GetAllTaskException e) {
             e.printStackTrace();
-        }
-        if (taskArrayList.isEmpty()) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
-        } else {
-            XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
-            req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         }
         requestDispatcher.forward(req, resp);
     }

@@ -40,7 +40,7 @@ public class JournalsPageServlet extends HttpServlet {
         HttpSession httpSession = req.getSession();
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_USER_ID, userId);
         JournalsController journalsController = JournalsController.getInstance();
-        List<Journal> journalArrayList = null;
+        List<JournalDTO> journalArrayList = null;
         try {
             journalArrayList = journalsController.getAll(userId);
             System.out.println(journalArrayList);

@@ -1,19 +1,18 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.factories.TaskFactory;
-import org.netcracker.students.model.Task;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -29,13 +28,13 @@ public class AddTaskServlet extends HttpServlet {
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         String plannedDate = req.getParameter(ServletConstants.PARAMETER_PLANNED_DATE);
-        int journalId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_JOURNAL_ID));
-        req.setAttribute(ServletConstants.PARAMETER_JOURNAL_ID, journalId);
+        HttpSession httpSession = req.getSession();
+        int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
         TaskFactory taskFactory = new TaskFactory();
-        tasksController.addTask(journalId + 1, taskFactory.createTask(IdGenerator.getInstance().getId(), name, description,
-                parsedPlannedDate, ServletConstants.STATUS_PLANNED));
+        tasksController.addTask(taskFactory.createTask(name, description,
+                    parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId);
         String allTasks = null;
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));

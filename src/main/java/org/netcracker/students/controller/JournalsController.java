@@ -4,6 +4,7 @@ import org.netcracker.students.dao.exception.journalDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
 import java.sql.Date;
@@ -45,7 +46,7 @@ public class JournalsController {
 
     public void deleteJournal(int id) throws SQLException, DeleteJournalException {
         journalDAO.delete(id);
-       // this.tasksController.deleteJournal(id);
+        // this.tasksController.deleteJournal(id);
     }
 
     public void deleteJournal(String ids) throws SQLException, DeleteJournalException {

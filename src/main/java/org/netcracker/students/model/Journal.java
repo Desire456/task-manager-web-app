@@ -1,14 +1,12 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.LocalDateAdapter;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 /**
@@ -114,9 +112,9 @@ public class Journal implements Serializable {
     }
 
     public void addTask(Task task) {
-        while (tasks.containsKey(task.getId())) {
+        /*while (tasks.containsKey(task.getId())) {
             task.setId(IdGenerator.getInstance().getId());
-        }
+        }*/
         tasks.put(task.getId(), task);
     }
 
