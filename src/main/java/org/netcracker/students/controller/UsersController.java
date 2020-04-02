@@ -1,5 +1,6 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exception.userDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
@@ -29,27 +30,27 @@ public class UsersController {
         }
     }
 
-    public User getUser(int id) throws SQLException {
+    public User getUser(int id) throws SQLException, ReadUserException {
         return usersDAO.read(id);
     }
 
-    public User getUser(String login) throws SQLException {
+    public User getUser(String login) throws SQLException, GetUserByLoginException {
         return usersDAO.getByLogin(login);
     }
 
-    public void addUser(User user) throws SQLException {
+    public void addUser(User user) throws SQLException, CreateUserException {
         usersDAO.create(user.getLogin(), user.getPassword(), user.getRole(), Date.valueOf(user.getDateOfRegistration()));
     }
 
-    public void deleteUser(int id) throws SQLException {
+    public void deleteUser(int id) throws SQLException, DeleteUserException {
         usersDAO.delete(id);
     }
 
-    public void changeUser(User user) throws SQLException {
+    public void changeUser(User user) throws SQLException, UpdateUserException {
         usersDAO.update(user);
     }
 
-    public List<User> getAll() throws SQLException {
+    public List<User> getAll() throws SQLException, GetAllUserException {
         return usersDAO.getAll();
     }
 }

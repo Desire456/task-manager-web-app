@@ -1,5 +1,6 @@
 package org.netcracker.students.dao.postrgresql;
 
+import org.netcracker.students.dao.exception.journalDAO.*;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
@@ -16,8 +17,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public Journal create(String name, String description, Integer userId, Date creationDate, String accessModifier)
-            throws SQLException {
+    public Journal create(String name, String description, Integer userId, Date creationDate, String accessModifier) throws CreateJournalException {
         String sql = "INSERT INTO journals VALUES (default, ?, ?, ?, ?, ?)";
         String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE name = ?";
         boolean privateFlag = false;
@@ -30,22 +30,24 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setDate(4, creationDate);
             preparedStatement.setBoolean(5, privateFlag);
             preparedStatement.execute();
+            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
+                preparedStatement1.setString(1, name);
+                JournalFactory journalFactory = new JournalFactory();
+                ResultSet resultSet = preparedStatement1.executeQuery();
+                if (resultSet.next()) {
+                    return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
+                            resultSet.getString(4), resultSet.getInt(2),
+                            resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                }
         }
-        try (PreparedStatement preparedStatement = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
-            preparedStatement.setString(1, name);
-            JournalFactory journalFactory = new JournalFactory();
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (resultSet.next()) {
-                return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
-            }
+        } catch (SQLException e) {
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE);
         }
         return null;
     }
 
     @Override
-    public Journal read(int id) throws SQLException {
+    public Journal read(int id) throws ReadJournalException {
         String sql = "SELECT * FROM journals WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -57,37 +59,43 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 JournalFactory journalFactory = new JournalFactory();
                 return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
             }
+        } catch (SQLException e) {
+            throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION);
         }
         return null;
     }
 
     @Override
-    public void update(Journal journal) throws SQLException {
+    public void update(Journal journal) throws UpdateJournalException {
         String sql = "UPDATE journals SET isprivate = ?, name = ?, creation_date = ?, description = ? WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(5, journal.getId());
             boolean isPrivate = journal.getAccessModifier().equals("private");
             preparedStatement.setBoolean(1, isPrivate);
             preparedStatement.setString(2, journal.getName());
-            preparedStatement.setDate(3, Date.valueOf(journal.getCreationDate()));
+            preparedStatement.setTimestamp(3, Timestamp.valueOf(journal.getCreationDate()));
             preparedStatement.setString(4, journal.getDescription());
             preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new UpdateJournalException(DAOErrorConstants.UPDATE_JOURNAL_EXCEPTION);
         }
     }
 
     @Override
-    public void delete(int id) throws SQLException {
+    public void delete(int id) throws DeleteJournalException {
         String sql = "DELETE FROM journals WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new DeleteJournalException(DAOErrorConstants.DELETE_JOURNAL_EXCEPTION_MESSAGE);
         }
     }
 
     @Override
-    public List<Journal> getAll() throws SQLException {
+    public List<Journal> getAll() throws GetAllJournalException {
         String sql = "SELECT * FROM journals";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             List<Journal> journals = new ArrayList<Journal>();
@@ -99,15 +107,17 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
+        } catch (SQLException e) {
+            throw new GetAllJournalException(DAOErrorConstants.GET_ALL_JOURNAL_EXCEPTION_MESSAGE);
         }
     }
 
     @Override
-    public List<Journal> getAll(int userId) throws SQLException {
+    public List<Journal> getAll(int userId) throws GetAllJournalByUserIdException {
         String sql = "SELECT * FROM journals WHERE user_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
@@ -120,15 +130,17 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
+        } catch (SQLException e) {
+            throw new GetAllJournalByUserIdException(DAOErrorConstants.GET_ALL_JOURNAL_BY_USER_ID_EXCEPTION_MESSAGE);
         }
     }
 
     @Override
-    public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException {
+    public List<Journal> getSortedByCriteria(String column, String criteria) throws GetSortedByCriteriaJournalException {
         String sql = "SELECT * FROM journals ORDER BY ? ? ";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, column);
@@ -142,15 +154,17 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
+        } catch (SQLException e) {
+            throw new GetSortedByCriteriaJournalException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_JOURNAL_EXCEPTION_MESSAGE);
         }
     }
 
     @Override
-    public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException {
+    public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws GetFilteredByPatternJournalException {
         String sql = "SELECT * FROM journals WHERE ? LIKE ? ORDER BY ? ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, column);
@@ -166,15 +180,17 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "Public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
+        } catch (SQLException e) {
+            throw new GetFilteredByPatternJournalException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_JOURNAL_EXCEPTION_MESSAGE);
         }
     }
 
     @Override
-    public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException {
+    public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws GetFilteredByEqualsJournalException {
         String sql = "SELECT * FROM journals WHERE ? = ? ORDER BY ? ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, column);
@@ -190,10 +206,12 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getDate(5).toLocalDate(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
                 journals.add(journal);
             }
             return journals;
+        } catch (SQLException e) {
+            throw new GetFilteredByEqualsJournalException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_JOURNAL_EXCEPTION_MESSAGE);
         }
     }
 }

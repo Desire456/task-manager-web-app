@@ -6,6 +6,7 @@ import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 import org.netcracker.students.factories.TaskFactory;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
@@ -16,6 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -33,10 +36,18 @@ public class EditTaskServlet extends HttpServlet {
         int taskId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
+        LocalDate parsedPlannedDate1 = LocalDateTime.parse(plannedDate, formatter).toLocalDate();
         TaskFactory taskFactory = new TaskFactory();
         tasksController.changeTask(journalId + 1, taskId + 2, taskFactory.createTask(taskId + 2, name,
                 description, parsedPlannedDate, ServletConstants.STATUS_PLANNED));
-        String allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));
+        String allTasks = null;
+        try {
+            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (GetAllTaskException e) {
+            e.printStackTrace();
+        }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
                 allTasks);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE).forward(req, resp);

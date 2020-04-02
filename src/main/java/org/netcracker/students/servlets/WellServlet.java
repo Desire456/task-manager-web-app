@@ -1,6 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.UsersController;
+import org.netcracker.students.dao.exception.userDAO.CreateUserException;
 import org.netcracker.students.factories.UserFactory;
 import org.netcracker.students.model.User;
 
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @WebServlet("/well")
 public class WellServlet extends HttpServlet {
@@ -22,12 +24,12 @@ public class WellServlet extends HttpServlet {
         String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
         String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
         String role = req.getParameter(ServletConstants.PARAMETER_ROLE);
-        LocalDate dateOfRegistration = LocalDate.now();
+        LocalDateTime dateOfRegistration = LocalDateTime.now();
         UsersController usersController = UsersController.getInstance();
         UserFactory userFactory = new UserFactory();
         try {
             usersController.addUser(userFactory.createUser(login, password, role, dateOfRegistration));
-        } catch (SQLException e) {
+        } catch (SQLException | CreateUserException e) {
             e.printStackTrace();
         }
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_WELL);

@@ -1,5 +1,6 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exception.journalDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
@@ -32,22 +33,22 @@ public class JournalsController {
         }
     }
 
-    public Journal getJournal(int id) throws SQLException {
+    public Journal getJournal(int id) throws SQLException, ReadJournalException {
         return this.journalDAO.read(id);
     }
 
-    public void addJournal(Journal journal) throws SQLException {
+    public void addJournal(Journal journal) throws SQLException, CreateJournalException {
         Journal newJournal = journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
                 Date.valueOf(journal.getCreationDate()), journal.getAccessModifier());
         //this.tasksController.addJournal(newJournal.getId(), newJournal);
     }
 
-    public void deleteJournal(int id) throws SQLException {
+    public void deleteJournal(int id) throws SQLException, DeleteJournalException {
         journalDAO.delete(id);
        // this.tasksController.deleteJournal(id);
     }
 
-    public void deleteJournal(String ids) throws SQLException {
+    public void deleteJournal(String ids) throws SQLException, DeleteJournalException {
         int id;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
@@ -57,7 +58,7 @@ public class JournalsController {
     }
 
 
-    public void changeJournal(Journal newJournal) throws SQLException {
+    public void changeJournal(Journal newJournal) throws SQLException, UpdateJournalException {
         journalDAO.update(newJournal);
         int journalId = newJournal.getId();
         //this.tasksController.deleteJournal(journalId);
@@ -65,7 +66,7 @@ public class JournalsController {
     }
 
 
-    public List<Journal> getAll(int userId) throws SQLException {
+    public List<Journal> getAll(int userId) throws SQLException, GetAllJournalByUserIdException {
         return journalDAO.getAll(userId);
     }
 }

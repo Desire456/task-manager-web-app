@@ -26,12 +26,12 @@ public class Journal implements Serializable {
     private int userId;
     private String accessModifier;
     private String name;
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate creationDate;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class) //todo изменить на LocalDateTime
+    private LocalDateTime creationDate;
     private String description;
 
     public Journal(int id, String name, String description, int userId,
-                   LocalDate creationDate, String accessModifier) {
+                   LocalDateTime creationDate, String accessModifier) {
         tasks = new HashMap<>();
         this.id = id;
         this.accessModifier = accessModifier;
@@ -41,7 +41,7 @@ public class Journal implements Serializable {
         this.description = description;
     }
 
-    public Journal(String name, String description, int userId, LocalDate creationDate, String accessModifier) {
+    public Journal(String name, String description, int userId, LocalDateTime creationDate, String accessModifier) {
         tasks = new HashMap<>();
         this.name = name;
         this.description = description;
@@ -97,11 +97,11 @@ public class Journal implements Serializable {
         this.name = name;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -162,7 +162,7 @@ public class Journal implements Serializable {
      * @return desired task
      */
 
-    public Task getTaskByDate(LocalDate date) {
+    public Task getTaskByDate(LocalDateTime date) {
         Task res = null;
         for (int i = 0; i < tasks.size(); ++i) {
             if (date == tasks.get(i).getPlannedDate()) res = tasks.get(i);
