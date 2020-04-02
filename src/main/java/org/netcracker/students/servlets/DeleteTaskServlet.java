@@ -3,6 +3,7 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -29,11 +30,12 @@ public class DeleteTaskServlet extends HttpServlet {
         }
         String allTasks = null;
         try {
-            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));
+            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (GetAllTaskException e) {
+            e.printStackTrace();
         }
-        req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE).forward(req, resp);
     }
 }

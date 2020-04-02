@@ -9,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -22,23 +23,23 @@ public class Task implements Serializable {
     private int id;
     private String name;
     private String description;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class) //todo изменить на LocalDateTime
+    private LocalDateTime plannedDate;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate plannedDate;
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate dateOfDone;
+    private LocalDateTime dateOfDone;
     private String status;
     private String formattedPlannedDate;
     private int journalId;
 
 
-    public Task(int id, int journalId, String name, String description, LocalDate plannedDate, LocalDate dateOfDone, String status) {
+    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
         this.id = id;
         this.journalId = journalId;
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
-        this.formattedPlannedDate = this.formatDate(plannedDate);
+        this.formattedPlannedDate = this.formatDateTime(plannedDate);//this.formatDate(plannedDate); //todo проверить правильность подобного действия, исправить, если надо иначе форматировать
         this.status = status;
     }
 
@@ -55,8 +56,7 @@ public class Task implements Serializable {
 
     /**
      * Constructor with certain values
-     *
-     * @param id          - id of task
+     *  @param id          - id of task
      * @param name        - name of task
      * @param description - description of task
      * @param plannedDate - planned date of task
@@ -64,7 +64,7 @@ public class Task implements Serializable {
      */
 
 
-    public Task(int id, String name, String description, LocalDate plannedDate, String status) {
+    public Task(int id, String name, String description, LocalDateTime plannedDate, String status) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -127,19 +127,19 @@ public class Task implements Serializable {
         this.status = status;
     }
 
-    public LocalDate getPlannedDate() {
+    public LocalDateTime getPlannedDate() {
         return plannedDate;
     }
 
-    public void setPlannedDate(LocalDate plannedDate) {
+    public void setPlannedDate(LocalDateTime plannedDate) {
         this.plannedDate = plannedDate;
     }
 
-    public LocalDate getDateOfDone() {
+    public LocalDateTime getDateOfDone() {
         return dateOfDone;
     }
 
-    public void setDateOfDone(LocalDate dateOfDone) {
+    public void setDateOfDone(LocalDateTime dateOfDone) {
         this.dateOfDone = dateOfDone;
     }
 
@@ -163,5 +163,12 @@ public class Task implements Serializable {
         String dateTimeFormat = "yyyy-MM-dd";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
         return localDate.format(formatter);
+    }
+
+    private String formatDateTime(LocalDateTime localDateTime){
+        String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        String formatDateTimeNow = localDateTime.format(formatter);
+        return formatDateTimeNow;
     }
 }

@@ -4,7 +4,8 @@ import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.UsersController;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.XMLParser;
-import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exception.userDAO.GetUserByLoginException;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.User;
 
@@ -29,7 +30,7 @@ public class JournalsPageServlet extends HttpServlet {
         User user = null;
         try {
             user = usersController.getUser(login);
-        } catch (SQLException e) {
+        } catch (SQLException | GetUserByLoginException e) {
             e.printStackTrace();
         }
         int userId = -1;
@@ -43,7 +44,7 @@ public class JournalsPageServlet extends HttpServlet {
         try {
             journalArrayList = journalsController.getAll(userId);
             System.out.println(journalArrayList);
-        } catch (SQLException e) {
+        } catch (SQLException | GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
         if (journalArrayList != null && journalArrayList.isEmpty()) {

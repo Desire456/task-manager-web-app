@@ -3,6 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
+import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.factories.TaskFactory;
 
 import javax.servlet.ServletException;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @WebServlet("/addTask")
@@ -29,18 +31,16 @@ public class AddTaskServlet extends HttpServlet {
         HttpSession httpSession = req.getSession();
         int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
-        LocalDate parsedPlannedDate = LocalDate.parse(plannedDate, formatter);
+        LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
         TaskFactory taskFactory = new TaskFactory();
-        try {
-            tasksController.addTask(taskFactory.createTask(name, description,
-                    parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        tasksController.addTask(taskFactory.createTask(name, description,
+                    parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId);
         String allTasks = null;
         try {
-            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
+            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (GetAllTaskException e) {
             e.printStackTrace();
         }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,

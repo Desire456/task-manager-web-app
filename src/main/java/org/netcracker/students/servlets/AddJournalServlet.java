@@ -3,6 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.journalDAO.CreateJournalException;
+import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.factories.JournalFactory;
 
 import javax.servlet.ServletException;
@@ -14,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @WebServlet("/addJournal")
 public class AddJournalServlet extends HttpServlet {
@@ -30,9 +33,9 @@ public class AddJournalServlet extends HttpServlet {
         String allJournals = null;
         try {
             journalsController.addJournal(journalFactory.createJournal(name, description,
-                    userId, LocalDate.now(), accessModifier));
+                    userId, LocalDateTime.now(), accessModifier));
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
-        } catch (SQLException e) {
+        } catch (SQLException | CreateJournalException | GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,

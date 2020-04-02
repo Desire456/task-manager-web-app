@@ -3,6 +3,7 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 import org.netcracker.students.model.Task;
 
 import javax.servlet.RequestDispatcher;
@@ -32,17 +33,16 @@ public class TasksPageServlet extends HttpServlet {
         session.setAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID, journalId);
         TasksController tasksController = TasksController.getInstance();
         List<Task> taskArrayList = null;
-        try {
-            taskArrayList = tasksController.getAll(journalId);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         if (taskArrayList != null && taskArrayList.isEmpty()) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
-        } else if (taskArrayList != null){
+            taskArrayList = tasksController.getAll(journalId);
+        }  else if (taskArrayList != null){
             XMLParser xmlParser = XMLParser.getInstance();
             String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
             req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (GetAllTaskException e) {
+            e.printStackTrace();
         }
         requestDispatcher.forward(req, resp);
     }

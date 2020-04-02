@@ -4,6 +4,9 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.xml.Journals;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exception.journalDAO.ReadJournalException;
+import org.netcracker.students.dao.exception.journalDAO.UpdateJournalException;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
 
@@ -30,7 +33,7 @@ public class EditJournalServlet extends HttpServlet {
         Journal oldJournal = null;
         try {
             oldJournal = journalsController.getJournal(id);
-        } catch (SQLException e) {
+        } catch (SQLException | ReadJournalException e) {
             e.printStackTrace();
         }
         HttpSession httpSession = req.getSession();
@@ -38,13 +41,13 @@ public class EditJournalServlet extends HttpServlet {
         try {
             journalsController.changeJournal(journalFactory.createJournal(id, name, description, userId,
                     oldJournal.getCreationDate(), ServletConstants.PARAMETER_ACCESS_MODIFIER));
-        } catch (SQLException e) {
+        } catch (SQLException | UpdateJournalException e) {
             e.printStackTrace();
         }
         String allJournals = null;
         try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
-        } catch (SQLException e) {
+        } catch (SQLException | GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,

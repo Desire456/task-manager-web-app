@@ -3,6 +3,7 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.xml.Tasks;
 import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 import org.netcracker.students.factories.TaskFactory;
 
 import javax.servlet.ServletException;
@@ -30,21 +31,18 @@ public class EditTaskServlet extends HttpServlet {
         int journalId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         int taskId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
-        LocalDate parsedPlannedDate = LocalDate.parse(plannedDate, formatter);
+        LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
         TaskFactory taskFactory = new TaskFactory();
-        try {
-            tasksController.changeTask(taskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
+        tasksController.changeTask(taskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
                     null, ServletConstants.STATUS_PLANNED));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         String allTasks = null;
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (GetAllTaskException e) {
+            e.printStackTrace();
         }
-        req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE).forward(req, resp);
     }
 }
