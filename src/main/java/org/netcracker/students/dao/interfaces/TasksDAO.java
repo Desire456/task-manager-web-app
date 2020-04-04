@@ -16,7 +16,9 @@ public interface TasksDAO {
 
     public void update(Task task) throws UpdateTaskException;
 
-    public void delete(int id) throws DeleteTaskException;
+    public void deleteByTaskId(int id) throws DeleteTaskException;
+
+    public void deleteByJournalId(int id) throws DeleteTaskException;
 
     public List<Task> getAll() throws GetAllTaskException;
 

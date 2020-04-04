@@ -7,13 +7,8 @@ import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -86,7 +81,7 @@ public class TasksController {
      */
 
     public void deleteTask(int taskId) throws DeleteTaskException {
-        tasksDAO.delete(taskId);
+        tasksDAO.deleteByTaskId(taskId);
     }
 
     /**

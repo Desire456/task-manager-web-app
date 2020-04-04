@@ -1,7 +1,10 @@
 package org.netcracker.students.dao.postrgresql;
 
 import org.netcracker.students.dao.exception.journalDAO.*;
+import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
+import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
+import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.JournalFactory;
@@ -85,8 +88,10 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public void delete(int id) throws DeleteJournalException {
+    public void delete(int id) throws DeleteJournalException, DeleteTaskException, SQLException {
         String sql = "DELETE FROM journals WHERE journal_id = ?";
+        DAOManager daoManager = PostgreSQLDAOManager.getInstance();
+        daoManager.getTasksDao().deleteByJournalId(id);
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();

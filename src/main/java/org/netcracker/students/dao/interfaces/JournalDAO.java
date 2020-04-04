@@ -1,12 +1,10 @@
 package org.netcracker.students.dao.interfaces;
 
-
-
 import org.netcracker.students.dao.exception.journalDAO.*;
+import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -19,7 +17,7 @@ public interface JournalDAO {
 
     public void update(Journal journal) throws UpdateJournalException;
 
-    public void delete(int id) throws DeleteJournalException;
+    public void delete(int id) throws DeleteJournalException, SQLException, DeleteTaskException;
 
     public List<Journal> getAll() throws GetAllJournalException;
 

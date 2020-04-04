@@ -87,7 +87,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public void delete(int id) throws DeleteTaskException {
+    public void deleteByTaskId(int id) throws DeleteTaskException {
         String sql = "DELETE FROM tasks WHERE task_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -95,7 +95,17 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         } catch (SQLException e) {
             throw new DeleteTaskException(DAOErrorConstants.DELETE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
+    }
 
+    @Override
+    public void deleteByJournalId(int id) throws DeleteTaskException {
+        String sql = "DELETE FROM tasks WHERE journal_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, id);
+            preparedStatement.execute();
+        } catch (SQLException e) {
+            throw new DeleteTaskException(DAOErrorConstants.DELETE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
     }
 
     @Override
