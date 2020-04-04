@@ -1,7 +1,7 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.xml.LocalDateTimeAdapter;
+import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
