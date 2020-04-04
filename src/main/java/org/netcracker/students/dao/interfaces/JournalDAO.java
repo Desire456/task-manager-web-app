@@ -3,15 +3,17 @@ package org.netcracker.students.dao.interfaces;
 
 
 import org.netcracker.students.dao.exception.journalDAO.*;
+import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface JournalDAO {
     public Journal create(String name, String description, Integer userId,
-                          Date creatingDate, String accessModifier) throws SQLException, CreateJournalException;
+                          Timestamp creatingDate, String accessModifier) throws SQLException, CreateJournalException;
 
     public Journal read(int id) throws SQLException, ReadJournalException;
 
@@ -21,8 +23,7 @@ public interface JournalDAO {
 
     public List<Journal> getAll() throws SQLException, GetAllJournalException;
 
-
-    public List<Journal> getAll(int userId) throws SQLException, GetAllJournalByUserIdException;
+    public List<JournalDTO> getAll(int userId) throws SQLException, GetAllJournalByUserIdException;
 
     public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException, GetSortedByCriteriaJournalException;
 

@@ -19,17 +19,16 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public Journal create(String name, String description, Integer userId, Date creationDate, String accessModifier) throws CreateJournalException {
+    public Journal create(String name, String description, Integer userId, Timestamp creationDate, String accessModifier) throws CreateJournalException {
         String sql = "INSERT INTO journals VALUES (default, ?, ?, ?, ?, ?)";
         String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE name = ?";
         boolean privateFlag = false;
         if (accessModifier.equals("private")) privateFlag = true;
-        else if (accessModifier.equals("public")) privateFlag = false;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, description);
-            preparedStatement.setDate(4, creationDate);
+            preparedStatement.setTimestamp(4, creationDate);
             preparedStatement.setBoolean(5, privateFlag);
             preparedStatement.execute();
             try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
@@ -119,7 +118,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public List<Journal> getAll(int userId) throws GetAllJournalByUserIdException {
+    public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException {
         String sql = "SELECT * FROM journals WHERE user_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
@@ -201,7 +200,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(3, column);
             preparedStatement.setString(4, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Journal> journals = new ArrayList<Journal>();
+            List<Journal> journals = new ArrayList<>();
             String accessModifier;
             JournalFactory journalFactory = new JournalFactory();
             while (resultSet.next()) {

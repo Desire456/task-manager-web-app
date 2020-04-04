@@ -7,8 +7,8 @@ import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class JournalsController {
@@ -40,13 +40,11 @@ public class JournalsController {
 
     public void addJournal(Journal journal) throws SQLException, CreateJournalException {
         Journal newJournal = journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
-                Date.valueOf(journal.getCreationDate()), journal.getAccessModifier());
-        //this.tasksController.addJournal(newJournal.getId(), newJournal);
+                Timestamp.valueOf(journal.getCreationDate()), journal.getAccessModifier());
     }
 
     public void deleteJournal(int id) throws SQLException, DeleteJournalException {
         journalDAO.delete(id);
-        // this.tasksController.deleteJournal(id);
     }
 
     public void deleteJournal(String ids) throws SQLException, DeleteJournalException {
@@ -54,20 +52,15 @@ public class JournalsController {
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
             this.deleteJournal(id);
-            //this.tasksController.deleteJournal(id);
         }
     }
-
 
     public void changeJournal(Journal newJournal) throws SQLException, UpdateJournalException {
         journalDAO.update(newJournal);
         int journalId = newJournal.getId();
-        //this.tasksController.deleteJournal(journalId);
-        //this.tasksController.addJournal(journalId, newJournal);
     }
 
-
-    public List<Journal> getAll(int userId) throws SQLException, GetAllJournalByUserIdException {
+    public List<JournalDTO> getAll(int userId) throws SQLException, GetAllJournalByUserIdException {
         return journalDAO.getAll(userId);
     }
 }

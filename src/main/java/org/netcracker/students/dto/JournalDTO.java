@@ -8,6 +8,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
@@ -16,11 +17,11 @@ public class JournalDTO {
     private String name;
     private String description;
     @XmlJavaTypeAdapter(LocalDateAdapter.class)
-    private LocalDate creationDate;
+    private LocalDateTime creationDate;
 
     public JournalDTO() {}
 
-    public JournalDTO(int id, String name, String description, LocalDate creationDate) {
+    public JournalDTO(int id, String name, String description, LocalDateTime creationDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -51,11 +52,11 @@ public class JournalDTO {
         this.description = description;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 }
