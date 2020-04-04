@@ -1,4 +1,4 @@
-package org.netcracker.students.controller.utils.xml;
+package org.netcracker.students.controller.utils;
 
 import org.netcracker.students.model.Task;
 

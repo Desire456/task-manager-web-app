@@ -1,8 +1,8 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.xml.Journals;
-import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.controller.utils.Journals;
+import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.journalDAO.DeleteJournalException;
 import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 

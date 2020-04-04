@@ -1,9 +1,8 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.xml.Tasks;
-import org.netcracker.students.controller.utils.xml.XMLParser;
-import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
+import org.netcracker.students.controller.utils.Tasks;
+import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.model.Task;
 
 import javax.servlet.RequestDispatcher;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet("/tasks")

@@ -1,12 +1,11 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.xml.LocalDateAdapter;
+import org.netcracker.students.controller.utils.LocalDateAdapter;
 
 import javax.xml.bind.annotation.*;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 

@@ -1,13 +1,12 @@
 package org.netcracker.students.dto;
 
 
-import org.netcracker.students.controller.utils.xml.LocalDateAdapter;
+import org.netcracker.students.controller.utils.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @XmlAccessorType(XmlAccessType.FIELD)

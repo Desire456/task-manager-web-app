@@ -1,10 +1,9 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.xml.Tasks;
-import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.controller.utils.Tasks;
+import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
-import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.factories.TaskFactory;
 
 import javax.servlet.ServletException;

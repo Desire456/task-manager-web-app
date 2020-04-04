@@ -1,4 +1,4 @@
-package org.netcracker.students.controller.utils.xml;
+package org.netcracker.students.controller.utils;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

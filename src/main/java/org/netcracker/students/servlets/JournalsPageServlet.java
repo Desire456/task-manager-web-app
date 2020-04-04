@@ -2,11 +2,10 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.UsersController;
-import org.netcracker.students.controller.utils.xml.Journals;
-import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.controller.utils.Journals;
+import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exception.userDAO.GetUserByLoginException;
-import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.User;
 
 import javax.servlet.RequestDispatcher;
