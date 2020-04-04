@@ -44,7 +44,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                         resultSet.getString(5));
             }
         } catch (SQLException e) {
-            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE);
+            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return null;
     }
@@ -64,7 +64,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                         resultSet.getString(5));
             }
         } catch (SQLException e) {
-            throw new ReadTaskException(DAOErrorConstants.READ_TASK_EXCEPTION_MESSAGE);
+            throw new ReadTaskException(DAOErrorConstants.READ_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return null;
     }
@@ -82,7 +82,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setInt(6, task.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new UpdateTaskException(DAOErrorConstants.UPDATE_TASK_EXCEPTION_MESSAGE);
+            throw new UpdateTaskException(DAOErrorConstants.UPDATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -93,7 +93,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new DeleteTaskException(DAOErrorConstants.DELETE_TASK_EXCEPTION_MESSAGE);
+            throw new DeleteTaskException(DAOErrorConstants.DELETE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
 
     }
@@ -114,7 +114,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             }
             return tasks;
         } catch (SQLException e) {
-            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE);
+            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -135,7 +135,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             }
             return tasks;
         } catch (SQLException e) {
-            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE);
+            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -158,7 +158,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             }
             return tasks;
         } catch (SQLException e) {
-            throw new GetSortedByCriteriaTaskException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_TASK_EXCEPTION_MESSAGE);
+            throw new GetSortedByCriteriaTaskException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_TASK_EXCEPTION_MESSAGE
+            + e.getMessage());
         }
     }
 
@@ -183,7 +184,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             }
             return tasks;
         } catch (SQLException e) {
-            throw new GetFilteredByPatternTaskException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_TASK_EXCEPTION_MESSAGE);
+            throw new GetFilteredByPatternTaskException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_TASK_EXCEPTION_MESSAGE
+            + e.getMessage());
         }
     }
 
@@ -207,7 +209,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             }
             return tasks;
         } catch (SQLException e) {
-            throw new GetFilteredByEqualsTaskException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_TASK_EXCEPTION_MESSAGE);
+            throw new GetFilteredByEqualsTaskException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_TASK_EXCEPTION_MESSAGE
+            + e.getMessage());
         }
     }
 }

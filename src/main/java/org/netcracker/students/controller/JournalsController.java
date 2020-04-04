@@ -34,20 +34,20 @@ public class JournalsController {
         }
     }
 
-    public Journal getJournal(int id) throws SQLException, ReadJournalException {
+    public Journal getJournal(int id) throws ReadJournalException {
         return this.journalDAO.read(id);
     }
 
-    public void addJournal(Journal journal) throws SQLException, CreateJournalException {
-        Journal newJournal = journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
+    public void addJournal(Journal journal) throws CreateJournalException {
+        journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
                 Timestamp.valueOf(journal.getCreationDate()), journal.getAccessModifier());
     }
 
-    public void deleteJournal(int id) throws SQLException, DeleteJournalException {
+    public void deleteJournal(int id) throws DeleteJournalException {
         journalDAO.delete(id);
     }
 
-    public void deleteJournal(String ids) throws SQLException, DeleteJournalException {
+    public void deleteJournal(String ids) throws DeleteJournalException {
         int id;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));
@@ -55,12 +55,11 @@ public class JournalsController {
         }
     }
 
-    public void changeJournal(Journal newJournal) throws SQLException, UpdateJournalException {
+    public void changeJournal(Journal newJournal) throws UpdateJournalException {
         journalDAO.update(newJournal);
-        int journalId = newJournal.getId();
     }
 
-    public List<JournalDTO> getAll(int userId) throws SQLException, GetAllJournalByUserIdException {
+    public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException {
         return journalDAO.getAll(userId);
     }
 }

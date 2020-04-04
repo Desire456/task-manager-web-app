@@ -42,7 +42,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 }
         }
         } catch (SQLException e) {
-            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE);
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
         return null;
     }
@@ -63,7 +63,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                         resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
             }
         } catch (SQLException e) {
-            throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION);
+            throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION + e.getMessage());
         }
         return null;
     }
@@ -80,7 +80,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(4, journal.getDescription());
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
-            throw new UpdateJournalException(DAOErrorConstants.UPDATE_JOURNAL_EXCEPTION);
+            throw new UpdateJournalException(DAOErrorConstants.UPDATE_JOURNAL_EXCEPTION + e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new DeleteJournalException(DAOErrorConstants.DELETE_JOURNAL_EXCEPTION_MESSAGE);
+            throw new DeleteJournalException(DAOErrorConstants.DELETE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -113,7 +113,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             }
             return journals;
         } catch (SQLException e) {
-            throw new GetAllJournalException(DAOErrorConstants.GET_ALL_JOURNAL_EXCEPTION_MESSAGE);
+            throw new GetAllJournalException(DAOErrorConstants.GET_ALL_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -136,7 +136,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             }
             return journals;
         } catch (SQLException e) {
-            throw new GetAllJournalByUserIdException(DAOErrorConstants.GET_ALL_JOURNAL_BY_USER_ID_EXCEPTION_MESSAGE);
+            throw new GetAllJournalByUserIdException(DAOErrorConstants.GET_ALL_JOURNAL_BY_USER_ID_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -160,7 +160,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             }
             return journals;
         } catch (SQLException e) {
-            throw new GetSortedByCriteriaJournalException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_JOURNAL_EXCEPTION_MESSAGE);
+            throw new GetSortedByCriteriaJournalException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -187,7 +187,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             }
             return journals;
         } catch (SQLException e) {
-            throw new GetFilteredByPatternJournalException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_JOURNAL_EXCEPTION_MESSAGE);
+            throw new GetFilteredByPatternJournalException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -213,7 +213,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             }
             return journals;
         } catch (SQLException e) {
-            throw new GetFilteredByEqualsJournalException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_JOURNAL_EXCEPTION_MESSAGE);
+            throw new GetFilteredByEqualsJournalException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 }

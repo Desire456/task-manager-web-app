@@ -66,7 +66,7 @@ public class TasksController {
      * @return desired task
      */
 
-    public Task getTask(int journalId, int taskId) throws SQLException, ReadTaskException {
+    public Task getTask(int journalId, int taskId) throws ReadTaskException {
         return tasksDAO.read(taskId);
     }
 
@@ -76,7 +76,7 @@ public class TasksController {
      * @param task - new task
      */
 
-    public void addTask(Task task) throws SQLException, CreateTaskException {
+    public void addTask(Task task) throws CreateTaskException {
         tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
                null, task.getJournalId());
     }
@@ -85,7 +85,7 @@ public class TasksController {
      * Delete function by id
      */
 
-    public void deleteTask(int taskId) throws SQLException, DeleteTaskException {
+    public void deleteTask(int taskId) throws DeleteTaskException {
         tasksDAO.delete(taskId);
     }
 
@@ -95,7 +95,7 @@ public class TasksController {
      * @param newTask - new task
      */
 
-    public void changeTask(Task newTask) throws SQLException, UpdateTaskException {
+    public void changeTask(Task newTask) throws UpdateTaskException {
         tasksDAO.update(newTask);
     }
 
@@ -112,7 +112,7 @@ public class TasksController {
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll(int journalId) throws SQLException, GetAllTaskException {
+    public List<Task> getAll(int journalId) throws GetAllTaskException {
         return tasksDAO.getAll(journalId);
     }
 
@@ -140,7 +140,7 @@ public class TasksController {
         }
     }*/
 
-    public void deleteTask(String ids) throws SQLException, DeleteTaskException {
+    public void deleteTask(String ids) throws DeleteTaskException {
         int id = 0;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));

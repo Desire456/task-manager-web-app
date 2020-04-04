@@ -38,7 +38,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                 }
             }
         } catch (SQLException e) {
-            throw new CreateUserException(DAOErrorConstants.CREATE_USER_EXCEPTION_MESSAGE);
+            throw new CreateUserException(DAOErrorConstants.CREATE_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
 
         return null;
@@ -56,7 +56,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                         resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
-            throw new ReadUserException(DAOErrorConstants.READ_USER_EXCEPTION_MESSAGE);
+            throw new ReadUserException(DAOErrorConstants.READ_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
         return null;
     }
@@ -71,7 +71,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setInt(4, user.getId());
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new UpdateUserException(DAOErrorConstants.UPDATE_USER_EXCEPTION_MESSAGE);
+            throw new UpdateUserException(DAOErrorConstants.UPDATE_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -82,7 +82,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setInt(1, userId);
             preparedStatement.execute();
         } catch (SQLException e) {
-            throw new DeleteUserException(DAOErrorConstants.DELETE_USER_EXCEPTION_MESSAGE);
+            throw new DeleteUserException(DAOErrorConstants.DELETE_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -91,7 +91,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         String sql = "SELECT * FROM users";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
             UserFactory userFactory = new UserFactory();
             while (resultSet.next()) {
                 users.add(userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
@@ -100,7 +100,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             }
             return users;
         } catch (SQLException e) {
-            throw new GetAllUserException(DAOErrorConstants.GET_ALL_USER_EXCEPTION_MESSAGE);
+            throw new GetAllUserException(DAOErrorConstants.GET_ALL_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -118,7 +118,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                         resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
-            throw new GetUserByLoginAndPasswordException(DAOErrorConstants.GET_USER_BY_LOGIN_AND_PASSWORD_EXCEPTION_MESSAGE);
+            throw new GetUserByLoginAndPasswordException(DAOErrorConstants.GET_USER_BY_LOGIN_AND_PASSWORD_EXCEPTION_MESSAGE
+                    + e.getMessage());
         }
         return null;
     }
@@ -128,7 +129,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
             UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
                 return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
@@ -136,7 +137,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                         resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
-            throw new GetUserByLoginException(DAOErrorConstants.GET_USER_BY_LOGIN_EXCEPTION_MESSAGE);
+            throw new GetUserByLoginException(DAOErrorConstants.GET_USER_BY_LOGIN_EXCEPTION_MESSAGE + e.getMessage());
         }
         return null;
     }
@@ -148,7 +149,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(1, column);
             preparedStatement.setString(2, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<User> users = new ArrayList<User>();
+            List<User> users = new ArrayList<>();
             UserFactory userFactory = new UserFactory();
             while (resultSet.next()) {
                 users.add(userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
@@ -157,7 +158,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             }
             return users;
         } catch (SQLException e) {
-            throw new GetSortedByCriteriaUser(DAOErrorConstants.GET_SORTED_BY_CRITERIA_USER_EXCEPTION_MESSAGE);
+            throw new GetSortedByCriteriaUser(DAOErrorConstants.GET_SORTED_BY_CRITERIA_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 }

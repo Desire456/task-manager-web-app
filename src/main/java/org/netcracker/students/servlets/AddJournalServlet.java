@@ -1,12 +1,13 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.Journals;
-import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.controller.utils.xml.Journals;
+import org.netcracker.students.controller.utils.xml.XMLParser;
 import org.netcracker.students.dao.exception.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.factories.JournalFactory;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,13 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 @WebServlet("/addJournal")
 public class AddJournalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
         JournalsController journalsController = JournalsController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
@@ -33,12 +34,16 @@ public class AddJournalServlet extends HttpServlet {
         try {
             journalsController.addJournal(journalFactory.createJournal(name, description,
                     userId, LocalDateTime.now(), accessModifier));
+        } catch (CreateJournalException e) {
+            e.printStackTrace();
+        }
+        try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
-        } catch (SQLException | CreateJournalException | GetAllJournalByUserIdException e) {
+        } catch (GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
         req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
-        req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE).forward(req, resp);
+        requestDispatcher.forward(req, resp);
     }
 }

@@ -8,6 +8,7 @@ import org.netcracker.students.model.User;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class UsersController {
@@ -30,27 +31,31 @@ public class UsersController {
         }
     }
 
-    public User getUser(int id) throws SQLException, ReadUserException {
+    public User getUser(int id) throws ReadUserException {
         return usersDAO.read(id);
     }
 
-    public User getUser(String login) throws SQLException, GetUserByLoginException {
+    public User getUserByLogin(String login) throws GetUserByLoginException {
         return usersDAO.getByLogin(login);
     }
 
-    public void addUser(User user) throws SQLException, CreateUserException {
-        usersDAO.create(user.getLogin(), user.getPassword(), user.getRole(), Date.valueOf(user.getDateOfRegistration()));
+    public User getUserByLoginAndPassword(String login, String password) throws GetUserByLoginAndPasswordException {
+        return usersDAO.getByLoginAndPassword(login, password);
     }
 
-    public void deleteUser(int id) throws SQLException, DeleteUserException {
+    public void addUser(User user) throws CreateUserException {
+        usersDAO.create(user.getLogin(), user.getPassword(), user.getRole(), Timestamp.valueOf(user.getDateOfRegistration()));
+    }
+
+    public void deleteUser(int id) throws DeleteUserException {
         usersDAO.delete(id);
     }
 
-    public void changeUser(User user) throws SQLException, UpdateUserException {
+    public void changeUser(User user) throws UpdateUserException {
         usersDAO.update(user);
     }
 
-    public List<User> getAll() throws SQLException, GetAllUserException {
+    public List<User> getAll() throws GetAllUserException {
         return usersDAO.getAll();
     }
 }

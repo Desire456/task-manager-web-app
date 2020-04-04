@@ -10,19 +10,19 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface UsersDAO {
-    public User create(String login, String password, String role, Timestamp dateOfRegistration) throws SQLException, CreateUserException;
+    public User create(String login, String password, String role, Timestamp dateOfRegistration) throws CreateUserException;
 
-    public User read(int id) throws SQLException, ReadUserException;
+    public User read(int id) throws ReadUserException;
 
-    public void update(User user) throws SQLException, UpdateUserException;
+    public void update(User user) throws UpdateUserException;
 
-    public void delete(int userId) throws SQLException, DeleteUserException;
+    public void delete(int userId) throws  DeleteUserException;
 
-    public List<User> getAll() throws SQLException, GetAllUserException;
+    public List<User> getAll() throws GetAllUserException;
 
-    public User getByLoginAndPassword(String login, String password) throws SQLException, GetUserByLoginAndPasswordException;
+    public User getByLoginAndPassword(String login, String password) throws GetUserByLoginAndPasswordException;
 
-    public User getByLogin(String login) throws SQLException, GetUserByLoginException;
+    public User getByLogin(String login) throws GetUserByLoginException;
 
-    public List<User> getSortedByCriteria(String column, String criteria) throws SQLException, GetSortedByCriteriaUser;
+    public List<User> getSortedByCriteria(String column, String criteria) throws GetSortedByCriteriaUser;
 }

@@ -1,9 +1,11 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.LocalDateAdapter;
+import org.netcracker.students.controller.utils.xml.LocalDateTimeAdapter;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -24,7 +26,7 @@ public class Journal implements Serializable {
     private int userId;
     private String accessModifier;
     private String name;
-    @XmlJavaTypeAdapter(LocalDateAdapter.class) //todo изменить на LocalDateTime
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class) //todo изменить на LocalDateTime
     private LocalDateTime creationDate;
     private String description;
 
