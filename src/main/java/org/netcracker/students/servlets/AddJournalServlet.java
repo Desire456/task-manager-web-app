@@ -1,8 +1,8 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.xml.Journals;
-import org.netcracker.students.controller.utils.xml.XMLParser;
+import org.netcracker.students.controller.utils.Journals;
+import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.factories.JournalFactory;
@@ -36,13 +36,17 @@ public class AddJournalServlet extends HttpServlet {
                     userId, LocalDateTime.now(), accessModifier));
         } catch (CreateJournalException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);
+            requestDispatcher.forward(req, resp);
         }
         try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
-        req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
+        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
         requestDispatcher.forward(req, resp);
     }

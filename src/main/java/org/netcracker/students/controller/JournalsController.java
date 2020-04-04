@@ -1,6 +1,7 @@
 package org.netcracker.students.controller;
 
 import org.netcracker.students.dao.exception.journalDAO.*;
+import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
@@ -43,11 +44,11 @@ public class JournalsController {
                 Timestamp.valueOf(journal.getCreationDate()), journal.getAccessModifier());
     }
 
-    public void deleteJournal(int id) throws DeleteJournalException {
+    public void deleteJournal(int id) throws DeleteJournalException, DeleteTaskException, SQLException {
         journalDAO.delete(id);
     }
 
-    public void deleteJournal(String ids) throws DeleteJournalException {
+    public void deleteJournal(String ids) throws DeleteJournalException, DeleteTaskException, SQLException {
         int id;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));

@@ -3,9 +3,11 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exception.taskDAO.CreateTaskException;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 import org.netcracker.students.factories.TaskFactory;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,6 +24,7 @@ public class AddTaskServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         TasksController tasksController = TasksController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
@@ -32,18 +35,24 @@ public class AddTaskServlet extends HttpServlet {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
         TaskFactory taskFactory = new TaskFactory();
-        tasksController.addTask(taskFactory.createTask(name, description,
-                    parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId);
+        try {
+            tasksController.addTask(taskFactory.createTask(name, description,
+                        parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
+        } catch (CreateTaskException e) {
+            e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
+            requestDispatcher.forward(req, resp);
+        }
         String allTasks = null;
         try {
-            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId + 1)));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (GetAllTaskException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
-        req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
+        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
                 allTasks);
-        req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE).forward(req, resp);
+        requestDispatcher.forward(req, resp);
     }
 }

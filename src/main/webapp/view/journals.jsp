@@ -23,8 +23,8 @@
         </tr>
         </thead>
         <tbody>
-        <% if (request.getAttribute("journals") != null) { %>
-        <x:parse xml="${requestScope.journals}" var="output"/>
+        <% if (session.getAttribute("journals") != null) { %>
+        <x:parse xml="${sessionScope.journals}" var="output"/>
         <x:forEach select="$output/journals/journal" var="journal">
             <x:set var="id" select="$journal/id"/>
             <tr>

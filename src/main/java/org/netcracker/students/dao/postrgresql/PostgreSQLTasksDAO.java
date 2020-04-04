@@ -108,6 +108,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         }
     }
 
+
     @Override
     public List<Task> getAll() throws GetAllTaskException {
         String sql = "SELECT * FROM tasks";

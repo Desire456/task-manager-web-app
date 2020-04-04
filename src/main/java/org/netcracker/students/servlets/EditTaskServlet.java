@@ -4,6 +4,7 @@ import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
+import org.netcracker.students.dao.exception.taskDAO.UpdateTaskException;
 import org.netcracker.students.factories.TaskFactory;
 
 import javax.servlet.ServletException;
@@ -32,13 +33,15 @@ public class EditTaskServlet extends HttpServlet {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
         TaskFactory taskFactory = new TaskFactory();
-        tasksController.changeTask(taskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
-                    null, ServletConstants.STATUS_PLANNED));
+        try {
+            tasksController.changeTask(taskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
+                        null, ServletConstants.STATUS_PLANNED));
+        } catch (UpdateTaskException e) {
+            e.printStackTrace();
+        }
         String allTasks = null;
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
-        } catch (SQLException e) {
-            e.printStackTrace();
         } catch (GetAllTaskException e) {
             e.printStackTrace();
         }

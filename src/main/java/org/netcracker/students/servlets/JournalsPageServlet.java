@@ -6,6 +6,7 @@ import org.netcracker.students.controller.utils.Journals;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exception.userDAO.GetUserByLoginException;
+import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.User;
 
 import javax.servlet.RequestDispatcher;
@@ -28,8 +29,8 @@ public class JournalsPageServlet extends HttpServlet {
         String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
         User user = null;
         try {
-            user = usersController.getUser(login);
-        } catch (SQLException | GetUserByLoginException e) {
+            user = usersController.getUserByLogin(login);
+        } catch (GetUserByLoginException e) {
             e.printStackTrace();
         }
         int userId = -1;
@@ -42,16 +43,15 @@ public class JournalsPageServlet extends HttpServlet {
         List<JournalDTO> journalArrayList = null;
         try {
             journalArrayList = journalsController.getAll(userId);
-            System.out.println(journalArrayList);
-        } catch (SQLException | GetAllJournalByUserIdException e) {
+        } catch (GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
         if (journalArrayList != null && journalArrayList.isEmpty()) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, null);
-        } else if (journalArrayList != null){
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, null);
+        } else {
             XMLParser xmlParser = XMLParser.getInstance();
             String allJournals = xmlParser.toXML(new Journals(journalArrayList));
-            req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, allJournals);
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, allJournals);
         }
         requestDispatcher.forward(req, resp);
     }

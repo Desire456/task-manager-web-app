@@ -1,7 +1,8 @@
 package org.netcracker.students.dto;
 
 
-import org.netcracker.students.controller.utils.LocalDateAdapter;
+
+import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,10 +16,11 @@ public class JournalDTO {
     private int id;
     private String name;
     private String description;
-    @XmlJavaTypeAdapter(LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
 
-    public JournalDTO() {}
+    public JournalDTO() {
+    }
 
     public JournalDTO(int id, String name, String description, LocalDateTime creationDate) {
         this.id = id;

@@ -23,8 +23,8 @@ public class TasksPageServlet extends HttpServlet {
         requestDispatcher.forward(req, resp);
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    //@Override
+    /*protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         int journalId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_JOURNAL_ID));
         HttpSession session = req.getSession();
@@ -43,5 +43,5 @@ public class TasksPageServlet extends HttpServlet {
             e.printStackTrace();
         }
         requestDispatcher.forward(req, resp);
-    }
+    }*/
 }

@@ -29,7 +29,7 @@ public class WellServlet extends HttpServlet {
         UserFactory userFactory = new UserFactory();
         try {
             usersController.addUser(userFactory.createUser(login, password, role, dateOfRegistration));
-        } catch (SQLException | CreateUserException e) {
+        } catch (CreateUserException e) {
             e.printStackTrace();
         }
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_WELL);
