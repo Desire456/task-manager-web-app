@@ -21,4 +21,7 @@ public class ServletConstants {
     public static final String PARAMETER_IDS = "ids";
     public static final String PARAMETER_ID = "id";
     public static final String STATUS_PLANNED = "PLANNED";
+    public static final String ERROR_AT_JOURNAL = "ERROR. May be you have journal with same name or try again later.";
+    public static final String ERROR_FOR_USER = "ERROR. May be user with same name exists or try again later.";
+    public static final String ERROR_AT_TASK = "ERROR. May be you have task with same name or try again later.";
 }
