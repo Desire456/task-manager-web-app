@@ -9,6 +9,7 @@ import org.netcracker.students.model.Task;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +77,7 @@ public class TasksController {
      */
 
     public void addTask(Task task) throws SQLException, CreateTaskException {
-        tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Date.valueOf(task.getPlannedDate()),
+        tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
                null, task.getJournalId());
     }
 
@@ -139,7 +140,7 @@ public class TasksController {
         }
     }*/
 
-    public void deleteTask(String ids) throws SQLException {
+    public void deleteTask(String ids) throws SQLException, DeleteTaskException {
         int id = 0;
         for (int i = 0; i < ids.length() - 1; i += 2) {
             id = Character.getNumericValue(ids.charAt(i));

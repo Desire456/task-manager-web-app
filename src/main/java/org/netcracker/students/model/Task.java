@@ -69,7 +69,7 @@ public class Task implements Serializable {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
-        this.formattedPlannedDate = this.formatDate(plannedDate);
+        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.dateOfDone = null;
         this.status = status;
     }
@@ -83,7 +83,7 @@ public class Task implements Serializable {
        // id = IdGenerator.getInstance().getId();
     }
 
-    public Task(String name, String description, LocalDate plannedDate, String status, int journalId) {
+    public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
@@ -159,16 +159,9 @@ public class Task implements Serializable {
         this.journalId = journalId;
     }
 
-    private String formatDate(LocalDate localDate) {
-        String dateTimeFormat = "yyyy-MM-dd";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        return localDate.format(formatter);
-    }
-
     private String formatDateTime(LocalDateTime localDateTime){
         String dateTimeFormat = "yyyy-MM-dd HH:mm:ss";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        String formatDateTimeNow = localDateTime.format(formatter);
-        return formatDateTimeNow;
+        return localDateTime.format(formatter);
     }
 }

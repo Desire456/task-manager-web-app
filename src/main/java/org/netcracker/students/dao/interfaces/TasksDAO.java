@@ -4,12 +4,12 @@ package org.netcracker.students.dao.interfaces;
 import org.netcracker.students.dao.exception.taskDAO.*;
 import org.netcracker.students.model.Task;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface TasksDAO {
-    public Task create(String name, String status, String description, Date plannedDate, Date dateOfDone, Integer journalId) throws SQLException, CreateTaskException;
+    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws SQLException, CreateTaskException;
 
     public Task read(int id) throws SQLException, ReadTaskException;
 

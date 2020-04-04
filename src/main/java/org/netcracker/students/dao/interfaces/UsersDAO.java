@@ -6,10 +6,11 @@ import org.netcracker.students.model.User;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface UsersDAO {
-    public User create(String login, String password, String role, Date dateOfRegistration) throws SQLException, CreateUserException;
+    public User create(String login, String password, String role, Timestamp dateOfRegistration) throws SQLException, CreateUserException;
 
     public User read(int id) throws SQLException, ReadUserException;
 

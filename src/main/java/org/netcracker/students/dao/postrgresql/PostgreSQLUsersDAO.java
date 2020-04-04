@@ -18,22 +18,23 @@ public class PostgreSQLUsersDAO implements UsersDAO {
 
 
     @Override
-    public User create(String login, String password, String role, Date dateOfRegistration) throws CreateUserException {
+    public User create(String login, String password, String role, Timestamp dateOfRegistration) throws CreateUserException {
         String sql = "INSERT INTO users VALUES (default, ?, ?, ?, ?)";
         String RETURN_USER_SQL = "SELECT * FROM users WHERE login = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             preparedStatement.setString(3, role);
-            preparedStatement.setDate(4, dateOfRegistration);
+            preparedStatement.setTimestamp(4, dateOfRegistration);
             preparedStatement.execute();
             try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_USER_SQL)) {
                 preparedStatement1.setString(1, login);
                 ResultSet resultSet = preparedStatement1.executeQuery();
+                UserFactory userFactory = new UserFactory();
                 if (resultSet.next()) {
-                    User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                            resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
-                    return user;
+                    return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                            resultSet.getString(3), resultSet.getString(4),
+                            resultSet.getTimestamp(5).toLocalDateTime());
                 }
             }
         } catch (SQLException e) {
@@ -49,10 +50,10 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
+            UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
-                User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime()); //todo скорее всего тут нужна фабрика, как сделали для тасок и использовать подобные фабрики везде в DAO при создании новых экземпляров
-                return user;
+                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new ReadUserException(DAOErrorConstants.READ_USER_EXCEPTION_MESSAGE);
@@ -91,10 +92,11 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<User>();
+            UserFactory userFactory = new UserFactory();
             while (resultSet.next()) {
-                User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
-                users.add(user);
+                users.add(userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime()));
             }
             return users;
         } catch (SQLException e) {
@@ -109,9 +111,11 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
+            UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
-                return new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
+                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new GetUserByLoginAndPasswordException(DAOErrorConstants.GET_USER_BY_LOGIN_AND_PASSWORD_EXCEPTION_MESSAGE);
@@ -127,8 +131,9 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             List<User> users = new ArrayList<User>();
             UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
-                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
+                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new GetUserByLoginException(DAOErrorConstants.GET_USER_BY_LOGIN_EXCEPTION_MESSAGE);
@@ -144,10 +149,11 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(2, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<User>();
+            UserFactory userFactory = new UserFactory();
             while (resultSet.next()) {
-                User user = new User(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
-                users.add(user);
+                users.add(userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                        resultSet.getString(3), resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime()));
             }
             return users;
         } catch (SQLException e) {
