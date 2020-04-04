@@ -50,8 +50,9 @@ public class JournalsController {
 
     public void deleteJournal(String ids) throws DeleteJournalException, DeleteTaskException, SQLException {
         int id;
-        for (int i = 0; i < ids.length() - 1; i += 2) {
-            id = Character.getNumericValue(ids.charAt(i));
+        String[] mas = ids.split(" ");
+        for (String str : mas) {
+            id = Integer.parseInt(str);
             this.deleteJournal(id);
         }
     }

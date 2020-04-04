@@ -89,7 +89,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public void delete(int id) throws DeleteJournalException, DeleteTaskException, SQLException {
+    public void delete(int id) throws DeleteJournalException, SQLException, DeleteTaskException {
         String sql = "DELETE FROM journals WHERE journal_id = ?";
         DAOManager daoManager = PostgreSQLDAOManager.getInstance();
         daoManager.getTasksDao().deleteByJournalId(id);

@@ -27,7 +27,7 @@ public class DeleteJournalServlet extends HttpServlet {
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
             journalsController.deleteJournal(ids);
-        } catch (DeleteJournalException | SQLException | DeleteTaskException e) {
+        } catch (DeleteJournalException | DeleteTaskException | SQLException e) {
             e.printStackTrace();
         }
         HttpSession httpSession = req.getSession();

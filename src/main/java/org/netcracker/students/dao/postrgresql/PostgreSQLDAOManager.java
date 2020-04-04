@@ -25,7 +25,6 @@ public class PostgreSQLDAOManager implements DAOManager {
 
     private PostgreSQLDAOManager(){
         connectionBuilder = new PoolConnectionBuilder();
-        executeSqlStartScript();
     }
 
     public static PostgreSQLDAOManager getInstance(){

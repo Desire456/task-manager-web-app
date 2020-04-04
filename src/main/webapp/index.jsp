@@ -1,7 +1,11 @@
 <%@ page import="org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager" %>
 <%@ page import="java.sql.SQLException" %>
 <%
-    PostgreSQLDAOManager postgreSQLDAOManager = PostgreSQLDAOManager.getInstance();
+    try {
+        PostgreSQLDAOManager postgreSQLDAOManager = PostgreSQLDAOManager.getInstance("123");
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
 %>
 
 <!DOCTYPE html>

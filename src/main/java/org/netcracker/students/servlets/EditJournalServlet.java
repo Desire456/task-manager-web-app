@@ -52,7 +52,7 @@ public class EditJournalServlet extends HttpServlet {
         } catch (GetAllJournalByUserIdException e) {
             e.printStackTrace();
         }
-        req.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
+        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
         requestDispatcher.forward(req, resp);
     }

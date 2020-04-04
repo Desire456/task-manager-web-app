@@ -10,11 +10,11 @@ To change this template use File | Settings | File Templates.
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 
 <%
-    String dateTimeFormat = "yyyy-MM-dd";
+    String dateTimeFormat = "yyyy-MM-dd HH:mm";
     LocalDateTime dateTimeNow = LocalDateTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
     String formatDateTimeNow = dateTimeNow.format(formatter);
-    //formatDateTimeNow = formatDateTimeNow.replace(" ", "T");
+    formatDateTimeNow = formatDateTimeNow.replace(" ", "T");
 %>
 
 
@@ -39,8 +39,8 @@ To change this template use File | Settings | File Templates.
         </tr>
         </thead>
         <tbody id="tableBody">
-        <% if (request.getAttribute("tasks") != null) { %>
-        <x:parse xml="${requestScope.tasks}" var="output"/>
+        <% if (session.getAttribute("tasks") != null) { %>
+        <x:parse xml="${sessionScope.tasks}" var="output"/>
         <x:forEach select="$output/tasks/task" var="task">
             <x:set var="id" select="$task/id"/>
             <tr>
@@ -73,7 +73,7 @@ To change this template use File | Settings | File Templates.
                     <input type="hidden" name="id" id = "editId<x:out select="$id"/>" value="">
                     <input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>
                     <br><br><br><br>
-                    Planned date: <input type="date" min="<%=formatDateTimeNow%>"
+                    Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
                                          name="plannedDate" id="editPlannedDate"
                                          value="<x:out select = "$task/formattedPlannedDate"/>" required>
                     <button type="submit">Edit</button>
@@ -99,7 +99,7 @@ To change this template use File | Settings | File Templates.
             Description: <input type="text" name="description" required>
             <input type = "hidden" name = "journalId" value=<%=session.getAttribute("journalId")%>>
             <br><br><br><br>
-            Planned date: <input type="date" name="plannedDate" min=<%=formatDateTimeNow%> required>
+            Planned date: <input type="datetime-local" name="plannedDate" min=<%=formatDateTimeNow%> required>
             <button type="submit">Add</button>
         </form>
     </div>
