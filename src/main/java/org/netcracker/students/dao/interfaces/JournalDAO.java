@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface JournalDAO {
     public Journal create(String name, String description, Integer userId,
-                          Timestamp creatingDate, String accessModifier) throws CreateJournalException;
+                          Timestamp creatingDate, boolean isPrivate) throws CreateJournalException;
 
     public Journal read(int id) throws ReadJournalException;
 

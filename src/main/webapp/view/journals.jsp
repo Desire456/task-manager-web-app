@@ -65,12 +65,12 @@
     </div>
 
     <div class="window" id="addWindow">
-        <form action="${pageContext.request.contextPath}/addJournal" method="POST" onsubmit="return checkParameter()">
+        <form action="${pageContext.request.contextPath}/addJournal" method="POST">
             <span class="close" id="addClose">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
             <br><br><br><br>
-            Access Modifier: <input type="text" name="accessModifier" id="accessId" required>
+            Do you want to make it public? <input type="checkbox" name="accessModifier" id="accessId" required>
             <button type="submit">Add</button>
         </form>
     </div>
@@ -181,15 +181,6 @@
         addCloseButton.onclick = function () {
             addWindow.style.display = "none";
         };
-
-
-        function checkParameter() {
-            let accessModifier = document.getElementById("accessId").value;
-            if (accessModifier !== "private" && accessModifier !== "public") {
-                alert("Value of access modifier is only 'public' or 'private'");
-                return false;
-            } else return true;
-        }
 
         function goToJournal(id) {
             if (confirm("Are you really want to open this journal?")) {

@@ -24,30 +24,30 @@ public class Journal implements Serializable {
     private Map<Integer, Task> tasks;
     private int id;
     private int userId;
-    private String accessModifier;
+    private boolean isPrivate;
     private String name;
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class) //todo изменить на LocalDateTime
     private LocalDateTime creationDate;
     private String description;
 
     public Journal(int id, String name, String description, int userId,
-                   LocalDateTime creationDate, String accessModifier) {
+                   LocalDateTime creationDate, boolean isPrivate) {
         tasks = new HashMap<>();
         this.id = id;
-        this.accessModifier = accessModifier;
+        this.isPrivate = isPrivate;
         this.userId = userId;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
     }
 
-    public Journal(String name, String description, int userId, LocalDateTime creationDate, String accessModifier) {
+    public Journal(String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) {
         tasks = new HashMap<>();
         this.name = name;
         this.description = description;
         this.userId = userId;
         this.creationDate = creationDate;
-        this.accessModifier = accessModifier;
+        this.isPrivate = isPrivate;
     }
 
 
@@ -58,7 +58,7 @@ public class Journal implements Serializable {
     public Journal(Journal journal) {
         tasks = new HashMap<>();
         this.id = journal.id;
-        this.accessModifier = journal.accessModifier;
+        this.isPrivate = journal.isPrivate;
         this.name = journal.name;
         this.creationDate = journal.creationDate;
         this.description = journal.description;
@@ -81,12 +81,12 @@ public class Journal implements Serializable {
         this.userId = userId;
     }
 
-    public String getAccessModifier() {
-        return accessModifier;
+    public boolean getIsPrivate() {
+        return isPrivate;
     }
 
-    public void setAccessModifier(String accessModifier) {
-        this.accessModifier = accessModifier;
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public String getName() {

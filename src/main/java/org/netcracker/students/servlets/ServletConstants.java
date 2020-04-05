@@ -19,11 +19,12 @@ public class ServletConstants {
     public static final String PARAMETER_PLANNED_DATE = "plannedDate";
     public static final String PARAMETER_JOURNAL_ID = "journalId";
     public static final String TIME_PATTERN = "yyyy-MM-dd'T'HH:mm";
+    public static final String CHECKBOX_VALUE = "on";
     public static final String PARAMETER_IDS = "ids";
     public static final String PARAMETER_ID = "id";
     public static final String STATUS_PLANNED = "PLANNED";
     public static final String ERROR_ADD_JOURNAL = "ERROR. May be you have journal with same name or try again later.";
-    public static final String ERROR_FOR_USER = "ERROR. May be user with same name exists or try again later.";
+    public static final String ERROR_ADD_USER = "ERROR. May be user with same name exists or try again later.";
     public static final String ERROR_ADD_TASK = "ERROR. May be you have task with same name or try again later.";
     public static final String COMMON_ERROR = "Error. Try again later.";
 }

@@ -26,14 +26,15 @@ public class AddJournalServlet extends HttpServlet {
         XMLParser xmlParser = XMLParser.getInstance();
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
-        String accessModifier = req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER);
+        boolean isPrivate = !req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER).equals(
+                ServletConstants.CHECKBOX_VALUE);
         JournalFactory journalFactory = new JournalFactory();
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         String allJournals = null;
         try {
             journalsController.addJournal(journalFactory.createJournal(name, description,
-                    userId, LocalDateTime.now(), accessModifier));
+                    userId, LocalDateTime.now(), isPrivate));
         } catch (CreateJournalException e) {
             e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);

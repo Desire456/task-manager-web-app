@@ -41,7 +41,7 @@ public class JournalsController {
 
     public void addJournal(Journal journal) throws CreateJournalException {
         journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
-                Timestamp.valueOf(journal.getCreationDate()), journal.getAccessModifier());
+                Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }
 
     public void deleteJournal(int id) throws DeleteJournalException, DeleteTaskException, SQLException {

@@ -1,11 +1,9 @@
 package org.netcracker.students.dao.postrgresql;
 
-import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.dao.exception.journalDAO.*;
 import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
-import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.JournalFactory;
@@ -23,11 +21,10 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public Journal create(String name, String description, Integer userId, Timestamp creationDate, String accessModifier) throws CreateJournalException {
+    public Journal create(String name, String description, Integer userId, Timestamp creationDate,
+                          boolean isPrivate) throws CreateJournalException {
         String sql = "INSERT INTO journals VALUES (default, ?, ?, ?, ?, ?)";
         String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE name = ?";
-        boolean privateFlag = false;
-        if (accessModifier.equals("private")) privateFlag = true;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, name);
@@ -42,7 +39,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 if (resultSet.next()) {
                     return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                             resultSet.getString(4), resultSet.getInt(2),
-                            resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                            resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
                 }
         }
         } catch (SQLException e) {
@@ -57,14 +54,11 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            String accessModifier;
             if (resultSet.next()) {
-                if (resultSet.getBoolean(6)) accessModifier = "private";
-                else accessModifier = "public";
                 JournalFactory journalFactory = new JournalFactory();
                 return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
             }
         } catch (SQLException e) {
             throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION + e.getMessage());
@@ -77,8 +71,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         String sql = "UPDATE journals SET isprivate = ?, name = ?, creation_date = ?, description = ? WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(5, journal.getId());
-            boolean isPrivate = journal.getAccessModifier().equals("private");
-            preparedStatement.setBoolean(1, isPrivate);
+            preparedStatement.setBoolean(1, journal.getIsPrivate());
             preparedStatement.setString(2, journal.getName());
             preparedStatement.setTimestamp(3, Timestamp.valueOf(journal.getCreationDate()));
             preparedStatement.setString(4, journal.getDescription());
@@ -107,14 +100,11 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             List<Journal> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            String accessModifier;
             JournalFactory journalFactory = new JournalFactory();
             while (resultSet.next()) {
-                if (resultSet.getBoolean(6)) accessModifier = "private";
-                else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
                 journals.add(journal);
             }
             return journals;
@@ -130,11 +120,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setInt(1, userId);
             List<JournalDTO> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            String accessModifier;
             JournalDTOFactory journalDTOFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                if (resultSet.getBoolean(6)) accessModifier = "private";
-                else accessModifier = "public";
                 JournalDTO journal = journalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
@@ -154,14 +141,11 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(2, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Journal> journals = new ArrayList<Journal>();
-            String accessModifier;
             JournalFactory journalFactory = new JournalFactory();
             while (resultSet.next()) {
-                if (resultSet.getBoolean(6)) accessModifier = "private";
-                else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
                 journals.add(journal);
             }
             return journals;
@@ -181,14 +165,11 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(4, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Journal> journals = new ArrayList<Journal>();
-            String accessModifier;
             JournalFactory journalFactory = new JournalFactory();
             while (resultSet.next()) {
-                if (resultSet.getBoolean(6)) accessModifier = "Private";
-                else accessModifier = "Public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
                 journals.add(journal);
             }
             return journals;
@@ -207,14 +188,11 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(4, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<Journal> journals = new ArrayList<>();
-            String accessModifier;
             JournalFactory journalFactory = new JournalFactory();
             while (resultSet.next()) {
-                if (resultSet.getBoolean(6)) accessModifier = "private";
-                else accessModifier = "public";
                 Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), accessModifier);
+                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
                 journals.add(journal);
             }
             return journals;
