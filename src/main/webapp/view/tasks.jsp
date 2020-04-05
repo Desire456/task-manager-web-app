@@ -24,7 +24,7 @@ To change this template use File | Settings | File Templates.
     <meta charset="UTF-8"/>
     <title>Tasks page</title>
 </head>
-<body>
+<body onload = "showError()">
 <div class="modal">
     <table>
         <caption>Table of tasks</caption>
@@ -67,14 +67,14 @@ To change this template use File | Settings | File Templates.
             <div class="window" id = "editWindow<x:out select="$id"/>">
                 <form action="${pageContext.request.contextPath}/editTask" method="POST">
                     <span class="close" id = "close<x:out select="$id"/>">X</span>
-                    Name: <input type="text" name="name" id="editName" value="<x:out select="$task/name"/>" required>
-                    Description: <input type="text" name="description" id="editDescription"
+                    Name: <input type="text" name="name" value="<x:out select="$task/name"/>" required>
+                    Description: <input type="text" name="description"
                                         value="<x:out select="$task/description"/>" required>
                     <input type="hidden" name="id" id = "editId<x:out select="$id"/>" value="">
                     <input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>
                     <br><br><br><br>
                     Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
-                                         name="plannedDate" id="editPlannedDate"
+                                         name="plannedDate"
                                          value="<x:out select = "$task/formattedPlannedDate"/>" required>
                     <button type="submit">Edit</button>
                 </form>
@@ -106,6 +106,14 @@ To change this template use File | Settings | File Templates.
 </div>
 </body>
 <script>
+    const showError = function() {
+        <%String error = (String) request.getAttribute("error");
+        if (error != null) {%>
+        let msgError = "<%=error%>";
+        alert(msgError);
+        <%}%>
+    };
+
     const table = document.querySelector("table");
     let colIndex = -1;
 

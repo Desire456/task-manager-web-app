@@ -136,9 +136,10 @@ public class TasksController {
     }*/
 
     public void deleteTask(String ids) throws DeleteTaskException {
-        int id = 0;
-        for (int i = 0; i < ids.length() - 1; i += 2) {
-            id = Character.getNumericValue(ids.charAt(i));
+        int id;
+        String[] mas = ids.split(" ");
+        for (String str : mas) {
+            id = Integer.parseInt(str);
             this.deleteTask(id);
         }
     }

@@ -32,6 +32,8 @@ public class JournalsPageServlet extends HttpServlet {
             user = usersController.getUserByLogin(login);
         } catch (GetUserByLoginException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
         int userId = -1;
         if (user != null) {
@@ -45,6 +47,8 @@ public class JournalsPageServlet extends HttpServlet {
             journalArrayList = journalsController.getAll(userId);
         } catch (GetAllJournalByUserIdException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
         if (journalArrayList != null && journalArrayList.isEmpty()) {
             httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, null);

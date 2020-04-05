@@ -142,7 +142,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
-                        resultSet.getString(7)));
+                        resultSet.getString(5)));
             }
             return tasks;
         } catch (SQLException e) {

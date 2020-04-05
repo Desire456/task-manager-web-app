@@ -29,6 +29,8 @@ public class DeleteJournalServlet extends HttpServlet {
             journalsController.deleteJournal(ids);
         } catch (DeleteJournalException | DeleteTaskException | SQLException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
@@ -37,6 +39,8 @@ public class DeleteJournalServlet extends HttpServlet {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);

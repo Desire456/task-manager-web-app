@@ -6,6 +6,7 @@ import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -19,6 +20,7 @@ import java.sql.SQLException;
 public class DeleteTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         TasksController tasksController = TasksController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         HttpSession httpSession = req.getSession();
@@ -28,13 +30,18 @@ public class DeleteTaskServlet extends HttpServlet {
             tasksController.deleteTask(ids);
         } catch (DeleteTaskException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
         String allTasks = null;
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (GetAllTaskException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
-        req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE).forward(req, resp);
+        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
+        requestDispatcher.forward(req, resp);
     }
 }

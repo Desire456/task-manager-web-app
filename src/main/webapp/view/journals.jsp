@@ -8,7 +8,7 @@
     <meta charset="UTF-8"/>
     <title>Journals page</title>
 </head>
-<body>
+<body onload="showError()">
 <div class="modal">
     <table>
         <caption>Table of Journals</caption>
@@ -42,7 +42,6 @@
                     <x:out select="$journal/creationDate"/>
                 </td>
             </tr>
-        </tbody>
             <div class="window" id="editWindow<x:out select="$id"/>">
                 <form action="${pageContext.request.contextPath}/editJournal" method="POST">
                     <span class="close" id="close<x:out select="$id"/>">X</span>
@@ -56,6 +55,7 @@
             </div>
         </x:forEach>
         <%}%>
+        </tbody>
     </table>
 
     <div class="actions">
@@ -77,6 +77,14 @@
 
 
     <script>
+        function showError(){
+            <%String error = (String) request.getAttribute("error");
+            if (error != null) {%>
+            let msgError = "<%=error%>";
+            alert(msgError);
+            <%}%>
+        }
+
         const table = document.querySelector("table");
         let colIndex = -1;
 

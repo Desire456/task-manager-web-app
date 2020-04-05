@@ -161,7 +161,7 @@ public class Task implements Serializable {
     }
 
     private String formatDateTime(LocalDateTime localDateTime) {
-        String dateTimeFormat = "yyyy-MM-dd HH:mm";
+        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
         return localDateTime.format(formatter);
     }

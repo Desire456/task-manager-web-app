@@ -36,6 +36,8 @@ public class TasksPageServlet extends HttpServlet {
             taskArrayList = tasksController.getAll(journalId);
         } catch (GetAllTaskException e) {
             e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
         }
         if (taskArrayList != null && taskArrayList.isEmpty()) {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
