@@ -30,7 +30,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, description);
             preparedStatement.setTimestamp(4, creationDate);
-            preparedStatement.setBoolean(5, privateFlag);
+            preparedStatement.setBoolean(5, isPrivate);
             preparedStatement.execute();
             try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
                 preparedStatement1.setString(1, name);
@@ -41,7 +41,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                             resultSet.getString(4), resultSet.getInt(2),
                             resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
                 }
-        }
+            }
         } catch (SQLException e) {
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
