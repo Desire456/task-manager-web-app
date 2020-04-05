@@ -2,6 +2,7 @@ package org.netcracker.students.dao.interfaces;
 
 
 import org.netcracker.students.dao.exception.taskDAO.*;
+import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Task;
 
 import java.sql.SQLException;
@@ -18,11 +19,10 @@ public interface TasksDAO {
 
     public void deleteByTaskId(int id) throws DeleteTaskException;
 
-    public void deleteByJournalId(int id) throws DeleteTaskException;
 
     public List<Task> getAll() throws GetAllTaskException;
 
-    public List<Task> getAll(int journalId) throws GetAllTaskException;
+    public List<TaskDTO> getAll(int journalId) throws GetAllTaskException;
 
     public List<Task> getSortedByCriteria(int journalId, String column,
                                           String criteria) throws GetSortedByCriteriaTaskException;

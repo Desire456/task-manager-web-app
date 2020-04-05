@@ -24,7 +24,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     public Journal create(String name, String description, Integer userId, Timestamp creationDate,
                           boolean isPrivate) throws CreateJournalException {
         String sql = "INSERT INTO journals VALUES (default, ?, ?, ?, ?, ?)";
-        String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE name = ?";
+        String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE (name = ?) AND (user_id = ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, name);
@@ -34,6 +34,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.execute();
             try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
                 preparedStatement1.setString(1, name);
+                preparedStatement1.setInt(2, userId);
                 JournalFactory journalFactory = new JournalFactory();
                 ResultSet resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()) {
@@ -83,9 +84,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public void delete(int id) throws DeleteJournalException, SQLException, DeleteTaskException {
-        String sql = "DELETE FROM journals WHERE journal_id = ?";
-        DAOManager daoManager = PostgreSQLDAOManager.getInstance();
-        daoManager.getTasksDao().deleteByJournalId(id);
+        String sql = "DELETE  FROM journals WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             preparedStatement.execute();

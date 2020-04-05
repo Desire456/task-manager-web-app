@@ -40,7 +40,6 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         } catch (SQLException e) {
             throw new CreateUserException(DAOErrorConstants.CREATE_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
-
         return null;
     }
 

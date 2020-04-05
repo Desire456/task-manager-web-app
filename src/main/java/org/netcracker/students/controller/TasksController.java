@@ -4,6 +4,7 @@ import org.netcracker.students.dao.exception.taskDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 
@@ -107,7 +108,7 @@ public class TasksController {
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll(int journalId) throws GetAllTaskException {
+    public List<TaskDTO> getAll(int journalId) throws GetAllTaskException {
         return tasksDAO.getAll(journalId);
     }
 

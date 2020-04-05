@@ -6,7 +6,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TaskDTOFactory {
-    public TaskDTO createTaskDTO(String id, String name, String description, String status, LocalDate plannedDate, LocalDate dateOfDone) {
+    public TaskDTO createTaskDTO(int id, String name, String description, String status, LocalDateTime plannedDate,
+                                 LocalDateTime dateOfDone) {
         return new TaskDTO(id, name, description, status, plannedDate, dateOfDone);
     }
 }

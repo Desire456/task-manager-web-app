@@ -62,6 +62,8 @@
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type = "button" class = "button" onclick = "direct()" value = "Return to sign in page"
+               style = "display: block; margin-left: 30% ">
     </div>
 
     <div class="window" id="addWindow">
@@ -70,13 +72,17 @@
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
             <br><br><br><br>
-            Do you want to make it public? <input type="checkbox" name="accessModifier" id="accessId" required>
+            Do you want to make it public? <input type="checkbox" name="accessModifier" id="accessId">
             <button type="submit">Add</button>
         </form>
     </div>
 
 
     <script>
+        function direct() {
+            window.location.href = "/";
+        }
+        
         function showError(){
             <%String error = (String) request.getAttribute("error");
             if (error != null) {%>
@@ -84,6 +90,7 @@
             alert(msgError);
             <%}%>
         }
+
 
         const table = document.querySelector("table");
         let colIndex = -1;

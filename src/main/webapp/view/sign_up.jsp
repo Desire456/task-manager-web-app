@@ -14,7 +14,7 @@
         }
 
 
-        input[type=submit] {
+        input[type=submit], input[type=button] {
             background-color: #194a47;
             color: white;
         }
@@ -35,9 +35,20 @@
             }
             else return true;
         }
+        function showError(){
+            <%String error = (String) request.getAttribute("error");
+            if (error != null) {%>
+            let msgError = "<%=error%>";
+            alert(msgError);
+            <%}%>
+        }
+        function direct() {
+            window.location.href = "/";
+        }
+
     </script>
 </head>
-<body>
+<body onload = "showError()">
 <div class = "container">
     <h1>Registration</h1>
     <form  action = "${pageContext.request.contextPath}/well" method = "POST" onsubmit="return checkPass()">
@@ -52,6 +63,7 @@
         <label for="passCh">Retype your password</label>
         <input id="passCh" type="password" name = "passCh" required>
         <input type="submit" value="Sign up">
+        <input type = "button" value = "Return to sign in page" onclick = "direct()">
     </form>
 </div>
 </body>

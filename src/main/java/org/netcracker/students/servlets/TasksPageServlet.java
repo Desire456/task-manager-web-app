@@ -4,6 +4,7 @@ import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
+import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Task;
 
 import javax.servlet.RequestDispatcher;
@@ -31,7 +32,7 @@ public class TasksPageServlet extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID, journalId);
         TasksController tasksController = TasksController.getInstance();
-        List<Task> taskArrayList = null;
+        List<TaskDTO> taskArrayList = null;
         try {
             taskArrayList = tasksController.getAll(journalId);
         } catch (GetAllTaskException e) {

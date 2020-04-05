@@ -44,7 +44,7 @@ public class EditJournalServlet extends HttpServlet {
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         try {
             journalsController.changeJournal(journalFactory.createJournal(id, name, description, userId,
-                    oldJournal.getCreationDate(), ServletConstants.PARAMETER_ACCESS_MODIFIER));
+                    oldJournal.getCreationDate(), oldJournal.getIsPrivate()));
         } catch (UpdateJournalException e) {
             e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);

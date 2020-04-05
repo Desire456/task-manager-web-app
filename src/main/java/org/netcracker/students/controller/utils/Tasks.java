@@ -1,5 +1,6 @@
 package org.netcracker.students.controller.utils;
 
+import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Task;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -11,11 +12,12 @@ import java.util.List;
 @XmlSeeAlso({Task.class})
 public class Tasks {
     @XmlElement(name = "task")
-    private List<Task> tasks = null;
+    private List<TaskDTO> tasks = null;
 
-    public Tasks() {}
+    public Tasks() {
+    }
 
-    public Tasks(List<Task> tasks) {
+    public Tasks(List<TaskDTO> tasks) {
         this.tasks = tasks;
     }
 

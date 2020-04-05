@@ -1,13 +1,3 @@
-<%@ page import="org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager" %>
-<%@ page import="java.sql.SQLException" %>
-<%
-    try {
-        PostgreSQLDAOManager postgreSQLDAOManager = PostgreSQLDAOManager.getInstance("123");
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-%>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,16 +28,22 @@
         function direct() {
             window.location.href = "sign_up";
         }
+        function showError(){
+            <%String error = (String) request.getAttribute("error");
+            if (error != null) {%>
+            let msgError = "<%=error%>";
+            alert(msgError);
+            <%}%>
+        }
     </script>
 </head>
-<body>
+<body onload = "showError()">
 <div id="modal">
     <form id="login" action="${pageContext.request.contextPath}/journals" method="POST">
         <h1>Task Manager</h1>
         <input name="login" type="text" placeholder="Login" required>
         <label for="password"></label>
-        <input id="password" type="password" placeholder="Password" required>
-
+        <input name = "password" id="password" type="password" placeholder="Password" required>
         <input type="submit" id="submit" value="Sign in">
         <button onclick="direct()">Sign up</button>
     </form>

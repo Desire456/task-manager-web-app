@@ -23,11 +23,11 @@ public class PostgreSQLDAOManager implements DAOManager {
         executeSqlStartScript(path);
     }
 
-    private PostgreSQLDAOManager(){
+    private PostgreSQLDAOManager() {
         connectionBuilder = new PoolConnectionBuilder();
     }
 
-    public static PostgreSQLDAOManager getInstance(){
+    public static PostgreSQLDAOManager getInstance() {
         if (instance == null)
             instance = new PostgreSQLDAOManager();
         return instance;
@@ -59,23 +59,10 @@ public class PostgreSQLDAOManager implements DAOManager {
     }
 
     private void executeSqlStartScript(String path) {
-        try{
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("Z:\\IntelliJ IDEA 2019.3.3\\netcracker\\web-application\\src\\main\\java\\org\\netcracker\\students\\dao\\script.sql"));
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
             String line;
-            while((line = bufferedReader.readLine()) != null){
-                Statement statement = connectionBuilder.getConnect().createStatement();
-                statement.execute(line);
-            }
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void executeSqlStartScript() {
-        try{
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("Z:\\IntelliJ IDEA 2019.3.3\\netcracker\\web-application\\src\\main\\java\\org\\netcracker\\students\\dao\\script.sql"));
-            String line;
-            while((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
                 Statement statement = connectionBuilder.getConnect().createStatement();
                 statement.execute(line);
             }

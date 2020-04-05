@@ -1,31 +1,45 @@
 package org.netcracker.students.dto;
 
-import java.time.LocalDate;
+import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class TaskDTO {
-    private String id;
+    private int id;
     private String name;
     private String description;
     private String status;
-    private LocalDate plannedDate;
-    private LocalDate dateOfDone;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime plannedDate;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime dateOfDone;
+    private String formattedPlannedDate;
 
     public TaskDTO() {}
 
-    public TaskDTO(String id, String name, String description, String status, LocalDate plannedDate, LocalDate dateOfDone) {
+    public TaskDTO(int id, String name, String description, String status, LocalDateTime plannedDate, LocalDateTime dateOfDone) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
+        this.formattedPlannedDate = this.formatDateTime(plannedDate);
     }
 
-    public String getId() {
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -53,19 +67,33 @@ public class TaskDTO {
         this.status = status;
     }
 
-    public LocalDate getPlannedDate() {
+    public LocalDateTime getPlannedDate() {
         return plannedDate;
     }
 
-    public void setPlannedDate(LocalDate plannedDate) {
+    public void setPlannedDate(LocalDateTime plannedDate) {
         this.plannedDate = plannedDate;
     }
 
-    public LocalDate getDateOfDone() {
+    public LocalDateTime getDateOfDone() {
         return dateOfDone;
     }
 
-    public void setDateOfDone(LocalDate dateOfDone) {
+    public void setDateOfDone(LocalDateTime dateOfDone) {
         this.dateOfDone = dateOfDone;
+    }
+
+    public String getFormattedPlannedDate() {
+        return formattedPlannedDate;
+    }
+
+    public void setFormattedPlannedDate(String formattedPlannedDate) {
+        this.formattedPlannedDate = formattedPlannedDate;
+    }
+
+    private String formatDateTime(LocalDateTime localDateTime) {
+        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        return localDateTime.format(formatter);
     }
 }

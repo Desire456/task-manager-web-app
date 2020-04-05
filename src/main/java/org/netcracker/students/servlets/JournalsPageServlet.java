@@ -5,6 +5,7 @@ import org.netcracker.students.controller.UsersController;
 import org.netcracker.students.controller.utils.Journals;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exception.userDAO.GetUserByLoginAndPasswordException;
 import org.netcracker.students.dao.exception.userDAO.GetUserByLoginException;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.User;
@@ -23,17 +24,28 @@ import java.util.List;
 @WebServlet("/journals")
 public class JournalsPageServlet extends HttpServlet {
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
+        requestDispatcher.forward(req, resp);
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
         UsersController usersController = UsersController.getInstance();
         String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
+        String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
         User user = null;
         try {
-            user = usersController.getUserByLogin(login);
-        } catch (GetUserByLoginException e) {
+            user = usersController.getUserByLoginAndPassword(login, password);
+            if (user == null) {
+                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
+                req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
+            }
+        } catch (GetUserByLoginAndPasswordException e) {
             e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         int userId = -1;
         if (user != null) {

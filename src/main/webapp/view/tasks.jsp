@@ -89,6 +89,8 @@ To change this template use File | Settings | File Templates.
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type = "button" class = "button" onclick = "direct()" value = "Return to journals page"
+               style = "display: block; margin-left: 30% ">
     </div>
 
 
@@ -106,13 +108,17 @@ To change this template use File | Settings | File Templates.
 </div>
 </body>
 <script>
-    const showError = function() {
+    function showError(){
         <%String error = (String) request.getAttribute("error");
         if (error != null) {%>
         let msgError = "<%=error%>";
         alert(msgError);
         <%}%>
-    };
+    }
+
+    function direct() {
+        window.location.href = "journals";
+    }
 
     const table = document.querySelector("table");
     let colIndex = -1;

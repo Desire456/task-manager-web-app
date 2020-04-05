@@ -26,8 +26,7 @@ public class AddJournalServlet extends HttpServlet {
         XMLParser xmlParser = XMLParser.getInstance();
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
-        boolean isPrivate = !req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER).equals(
-                ServletConstants.CHECKBOX_VALUE);
+        boolean isPrivate = req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER) == null;
         JournalFactory journalFactory = new JournalFactory();
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
