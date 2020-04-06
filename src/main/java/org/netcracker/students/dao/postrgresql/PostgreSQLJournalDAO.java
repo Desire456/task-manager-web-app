@@ -114,9 +114,10 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException {
-        String sql = "SELECT * FROM journals WHERE user_id = ?";
+        String sql = "SELECT * FROM journals WHERE (user_id = ?) OR (is_private = ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
+            preparedStatement.setBoolean(2, false);
             List<JournalDTO> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
             JournalDTOFactory journalDTOFactory = new JournalDTOFactory();

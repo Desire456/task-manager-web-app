@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
 public class TaskDTO {
+    private static final String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
+
     private int id;
     private String name;
     private String description;
@@ -92,7 +94,6 @@ public class TaskDTO {
     }
 
     private String formatDateTime(LocalDateTime localDateTime) {
-        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
         return localDateTime.format(formatter);
     }
