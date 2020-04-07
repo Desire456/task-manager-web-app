@@ -19,13 +19,15 @@ public interface JournalDAO {
 
     public void delete(int id) throws DeleteJournalException, SQLException, DeleteTaskException;
 
-    public List<Journal> getAll() throws GetAllJournalException;
+    public List<JournalDTO> getAll() throws GetAllJournalException;
 
     public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException;
 
-    public List<Journal> getSortedByCriteria(String column, String criteria) throws GetSortedByCriteriaJournalException;
+    public List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria) throws GetSortedByCriteriaJournalException;
 
-    public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws GetFilteredByPatternJournalException;
+    public List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria)
+            throws GetFilteredByPatternJournalException;
 
-    public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws GetFilteredByEqualsJournalException;
+    public List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria)
+            throws GetFilteredByEqualsJournalException;
 }

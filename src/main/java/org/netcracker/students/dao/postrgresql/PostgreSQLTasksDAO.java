@@ -99,18 +99,17 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getAll() throws GetAllTaskException {
+    public List<TaskDTO> getAll() throws GetAllTaskException {
         String sql = "SELECT * FROM tasks";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            List<Task> tasks = new ArrayList<Task>();
+            List<TaskDTO> tasks = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            TaskFactory taskFactory = new TaskFactory();
+            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                        resultSet.getString(3), resultSet.getString(4),
+                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                        resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
                         resultSet.getTimestamp(6).toLocalDateTime(),
-                        resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
-                        resultSet.getString(7)));
+                        resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
             }
             return tasks;
         } catch (SQLException e) {
@@ -139,21 +138,20 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getSortedByCriteria(int journalId, String column, String criteria) throws GetSortedByCriteriaTaskException {
-        String sql = "Select * FROM tasks JOIN journals ON tasks.journal_id = journals.journal_id WHERE journal_id = ? ORDER BY ? ?";
-        //String sql = "Select * FROM tasks JOIN journals ON tasks.journal_id = journals.journal_id WHERE (journal_id=?) AND (? = ?)";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    public List<TaskDTO> getSortedByCriteria(int journalId, String column, String criteria) throws GetSortedByCriteriaTaskException {
+        String sql = "SELECT * FROM tasks WHERE journal_id = ? " +
+                "ORDER BY %s %s";
+        String SQL = String.format(sql, column, criteria);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setInt(1, journalId);
-            preparedStatement.setString(2, column);
-            preparedStatement.setString(3, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Task> tasks = new ArrayList<Task>();
-            TaskFactory taskFactory = new TaskFactory();
+            List<TaskDTO> tasks = new ArrayList<>();
+            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                        resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getTimestamp(5).toLocalDateTime(),
-                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7)));
+                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                        resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
+                        resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
             }
             return tasks;
         } catch (SQLException e) {
@@ -163,23 +161,21 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws GetFilteredByPatternTaskException {
-        String sql = "SELECT * FROM tasks JOIN journals ON tasks.journal_id = journals.journal_id WHERE (journal_id = ?)" +
-                " AND (? LIKE ?) ORDER BY ? ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    public List<TaskDTO> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws GetFilteredByPatternTaskException {
+        String sql = "SELECT * FROM tasks WHERE (journal_id = ?) AND (%s LIKE ?) " +
+                "ORDER BY %s %s";
+        String SQL = String.format(sql, column, column, criteria);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setInt(1, journalId);
-            preparedStatement.setString(2, column);
-            preparedStatement.setString(3, pattern);
-            preparedStatement.setString(4, column);
-            preparedStatement.setString(5, criteria);
+            preparedStatement.setString(2, pattern);
             ResultSet resultSet = preparedStatement.executeQuery();
-            TaskFactory taskFactory = new TaskFactory();
-            List<Task> tasks = new ArrayList<>();
+            TaskDTOFactory taskFactory = new TaskDTOFactory();
+            List<TaskDTO> tasks = new ArrayList<>();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                        resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getTimestamp(5).toLocalDateTime(),
-                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7)));
+                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                        resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
+                        resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
             }
             return tasks;
         } catch (SQLException e) {
@@ -189,22 +185,21 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws GetFilteredByEqualsTaskException {
-        String sql = "SELECT * FROM tasks JOIN journals ON tasks.journal_id = journals.journal_id WHERE (journal_id = ?) AND (? = ?) ORDER BY ? ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+    public List<TaskDTO> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws GetFilteredByEqualsTaskException {
+        String sql = "SELECT * FROM tasks WHERE (journal_id = ?) AND (%s = ?) " +
+                "ORDER BY %s %s";
+        String SQL = String.format(sql, column, column, criteria);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setInt(1, journalId);
-            preparedStatement.setString(2, column);
-            preparedStatement.setString(3, equal);
-            preparedStatement.setString(4, column);
-            preparedStatement.setString(5, criteria);
+            preparedStatement.setString(2, equal);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Task> tasks = new ArrayList<>();
-            TaskFactory taskFactory = new TaskFactory();
+            List<TaskDTO> tasks = new ArrayList<>();
+            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                        resultSet.getString(3), resultSet.getString(4),
-                        resultSet.getTimestamp(5).toLocalDateTime(),
-                        resultSet.getTimestamp(6).toLocalDateTime(), resultSet.getString(7)));
+                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                        resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
+                        resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
             }
             return tasks;
         } catch (SQLException e) {

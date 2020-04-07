@@ -7,6 +7,10 @@ public class ServletConstants {
     public static final String PARAMETER_LOGIN = "login";
     public static final String PARAMETER_PASSWORD = "password";
     public static final String PARAMETER_ROLE = "role";
+    public static final String PARAMETER_COLUMN = "column";
+    public static final String PARAMETER_EQUAL = "equal";
+    public static final String PARAMETER_SORT = "sort";
+    public static final String PARAMETER_PATTERN = "pattern";
     public static final String ATTRIBUTE_NAME_OF_JOURNALS = "journals";
     public static final String ATTRIBUTE_NAME_OF_TASKS = "tasks";
     public static final String ATTRIBUTE_USER_ID = "userId";
@@ -20,7 +24,6 @@ public class ServletConstants {
     public static final String PARAMETER_PLANNED_DATE = "plannedDate";
     public static final String PARAMETER_JOURNAL_ID = "journalId";
     public static final String TIME_PATTERN = "yyyy-MM-dd'T'HH:mm";
-    public static final String CHECKBOX_VALUE = "on";
     public static final String PARAMETER_IDS = "ids";
     public static final String PARAMETER_ID = "id";
     public static final String STATUS_PLANNED = "PLANNED";

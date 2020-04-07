@@ -20,16 +20,16 @@ public interface TasksDAO {
     public void deleteByTaskId(int id) throws DeleteTaskException;
 
 
-    public List<Task> getAll() throws GetAllTaskException;
+    public List<TaskDTO> getAll() throws GetAllTaskException;
 
     public List<TaskDTO> getAll(int journalId) throws GetAllTaskException;
 
-    public List<Task> getSortedByCriteria(int journalId, String column,
+    public List<TaskDTO> getSortedByCriteria(int journalId, String column,
                                           String criteria) throws GetSortedByCriteriaTaskException;
 
-    public List<Task> getFilteredByPattern(int journalId, String column, String pattern,
+    public List<TaskDTO> getFilteredByPattern(int journalId, String column, String pattern,
                                            String criteria) throws GetFilteredByPatternTaskException;
 
-    public List<Task> getFilteredByEquals(int journalId, String column, String equal,
+    public List<TaskDTO> getFilteredByEquals(int journalId, String column, String equal,
                                           String criteria) throws GetFilteredByEqualsTaskException;
 }

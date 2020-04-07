@@ -26,6 +26,24 @@ public class JournalsPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
+        HttpSession httpSession = req.getSession();
+        int userId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
+        JournalsController journalsController = JournalsController.getInstance();
+        List<JournalDTO> journalArrayList = null;
+        try {
+            journalArrayList = journalsController.getAll(userId);
+        } catch (GetAllJournalByUserIdException e) {
+            e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        if (journalArrayList != null && journalArrayList.isEmpty()) {
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, null);
+        } else {
+            XMLParser xmlParser = XMLParser.getInstance();
+            String allJournals = xmlParser.toXML(new Journals(journalArrayList));
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, allJournals);
+        }
         requestDispatcher.forward(req, resp);
     }
 

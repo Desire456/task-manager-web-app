@@ -5,6 +5,9 @@ import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
+import org.netcracker.students.dao.exception.taskDAO.ReadTaskException;
+import org.netcracker.students.dao.exception.taskDAO.UpdateTaskException;
+import org.netcracker.students.model.Task;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,9 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 
-@WebServlet("/deleteTask")
-public class DeleteTaskServlet extends HttpServlet {
+@WebServlet("/finishTask")
+public class FinishTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
@@ -26,8 +30,9 @@ public class DeleteTaskServlet extends HttpServlet {
         int journalId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
-            tasksController.deleteTasks(ids);
-        } catch (DeleteTaskException e) {
+            ArrayList<Task> tasks = tasksController.getTasks(ids);
+            tasksController.finishTasks(tasks);
+        } catch (ReadTaskException | UpdateTaskException e) {
             e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

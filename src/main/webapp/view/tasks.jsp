@@ -26,8 +26,26 @@ To change this template use File | Settings | File Templates.
 </head>
 <body onload = "showError()">
 <div class="modal">
+    <div class = "filter">
+        <form action = "${pageContext.request.contextPath}/filterTasks" id = "filterForm" method = "POST">
+            <input type = "button" class = "button" id = "filterButt" style="margin-left: 40%" value = "Filter by">
+            <br><br>
+            Column:  Name <input type = "radio" name = "column" value="name" disabled required>
+            Description <input type = "radio" name = "column" value ="description" disabled>
+            Status <input type = "radio" name = "column" value ="description" disabled>
+            <br>
+            By: <input type = "text" name = "pattern" disabled required>
+            <br>
+            Equal <input type = "checkbox" name ="equal" disabled>
+            <br>
+            Sort by ascending <input type = "radio" name = "sort" value = "ASC" disabled required>
+            or descending <input type = "radio" name = "sort" value = "DESC" disabled>
+            <br><br>
+            <input type = "submit" class ="button" style="margin-left: 40%" value = "Submit" disabled>
+        </form>
+    </div>
     <table>
-        <caption>Table of tasks</caption>
+        <caption>TABLE OF TASKS</caption>
         <thead>
         <tr>
             <th data-type = "checkbox"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
@@ -44,10 +62,10 @@ To change this template use File | Settings | File Templates.
         <x:forEach select="$output/tasks/task" var="task">
             <x:set var="id" select="$task/id"/>
             <tr>
-                <th style="cursor:default">
+                <td style="cursor:default; text-align:center">
                     <input type="checkbox" value="<x:out select = "$id"/>" class="checkbox"
-                           onchange="setGeneralCheckbox()">
-                </th>
+                          status ="<x:out select = "$task/status"/>" onchange="setGeneralCheckbox()">
+                </td>
                 <td>
                     <x:out select="$task/name"/>
                 </td>
@@ -85,12 +103,14 @@ To change this template use File | Settings | File Templates.
     </table>
 
 
-    <div class="actions">
+    <div class="actions" style = "margin-left:10%">
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type ="button" id = "finishButt" class ="button" value = "Finish" disabled>
+        <input type = "button" id ="showButt" class ="button" value="Show all tasks">
         <input type = "button" class = "button" onclick = "direct()" value = "Return to journals page"
-               style = "display: block; margin-left: 30% ">
+               style = "display: block; margin-left: 30%">
     </div>
 
 
@@ -108,6 +128,20 @@ To change this template use File | Settings | File Templates.
 </div>
 </body>
 <script>
+    let showButt = document.getElementById("showButt");
+    showButt.onclick = function () {
+        window.location.href = "/tasks";
+    };
+
+    let filterButton = document.getElementById("filterButt");
+    filterButton.onclick = function() {
+        let inputs = document.querySelectorAll("input");
+        for(let i = 1; i <= 7; ++i) {
+            inputs[i].disabled = false;
+        }
+    };
+
+
     function showError(){
         <%String error = (String) request.getAttribute("error");
         if (error != null) {%>
@@ -180,6 +214,7 @@ To change this template use File | Settings | File Templates.
     let addButton = document.getElementById("addButt");
     let editButton = document.getElementById("editButt");
     let deleteButton = document.getElementById("deleteButt");
+    let finishButton = document.getElementById("finishButt");
 
     editButton.onclick = function () {
         let id = getCheckTask()[0].value;
@@ -189,16 +224,34 @@ To change this template use File | Settings | File Templates.
         closeButton.onclick = function () {
             document.getElementById("editWindow" + id).style.display = "none";
         }
-    }
+    };
 
     let closeButtonAdd = document.getElementById("addClose");
     closeButtonAdd.onclick = function () {
         addWindow.style.display = "none";
-    }
+    };
 
     addButton.onclick = function () {
         addWindow.style.display = "block";
-    }
+    };
+
+    finishButton.onclick = function () {
+        if (confirm("Are you really want to finish this tasks?")) {
+            let form = document.createElement('form');
+            form.action = '/finishTask';
+            form.method = 'POST';
+
+            form.innerHTML = '<input type = "hidden" name="ids" id = "finishIds" value="">';
+            let strIds = "";
+            let ids = getCheckTaskFinish();
+            for (let i = 0; i < ids.length; ++i) {
+                strIds += ids[i].value + " ";
+            }
+            document.body.append(form);
+            document.getElementById("finishIds").value = strIds;
+            form.submit();
+        }
+    };
 
     deleteButton.onclick = function () {
         if (confirm("Are you really want to delete?")) {
@@ -207,7 +260,6 @@ To change this template use File | Settings | File Templates.
             form.method = 'POST';
 
             form.innerHTML = '<input type = "hidden" name="ids" id = "deleteIds" value="">';
-            form.innerHTML += '<input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>';
             let strIds = "";
             let ids = getCheckTask();
             for (let i = 0; i < ids.length; ++i) {
@@ -217,16 +269,19 @@ To change this template use File | Settings | File Templates.
             document.getElementById("deleteIds").value = strIds;
             form.submit();
         }
-    }
+    };
 
 
     function setCheck() {
         let generalCheckbox = document.getElementById("generalCheckbox");
         let checkboxes = document.getElementsByClassName("checkbox");
-        let countChecked;
+        let countChecked = 0, countCheckedFinish = 0;
         if (generalCheckbox.checked) {
             for (let i = 0; i < checkboxes.length; ++i) {
                 checkboxes[i].checked = true;
+                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                    countCheckedFinish++;
+                }
             }
             countChecked = checkboxes.length;
         } else {
@@ -235,15 +290,14 @@ To change this template use File | Settings | File Templates.
             }
             countChecked = 0;
         }
-        setDisabledAttribute(countChecked);
+        setDisabledAttribute(countChecked, countCheckedFinish);
     }
 
-    function setDisabledAttribute(countChecked) {
-        let editButton = document.getElementById("editButt");
-        let deleteButton = document.getElementById("deleteButt");
+    function setDisabledAttribute(countChecked, countCheckedFinish) {
         if (countChecked === 0) {
             editButton.disabled = true;
             deleteButton.disabled = true;
+            finishButton.disabled = true;
         } else if (countChecked === 1) {
             editButton.disabled = false;
             deleteButton.disabled = false;
@@ -251,20 +305,26 @@ To change this template use File | Settings | File Templates.
             editButton.disabled = true;
             deleteButton.disabled = false;
         }
+        if(countCheckedFinish >= 1) {
+            finishButton.disabled = false;
+        }
     }
 
     function setGeneralCheckbox() {
         let generalCheckbox = document.getElementById("generalCheckbox");
         let checkboxes = document.getElementsByClassName("checkbox");
-        let countChecked = 0;
+        let countChecked = 0, countCheckedFinish = 0;
         for (let i = 0; i < checkboxes.length; ++i) {
             if (!checkboxes[i].checked) {
                 generalCheckbox.checked = false;
             } else {
                 ++countChecked;
+                if(checkboxes[i].getAttribute("status") === "PLANNED") {
+                    countCheckedFinish++;
+                }
             }
         }
-        setDisabledAttribute(countChecked);
+        setDisabledAttribute(countChecked, countCheckedFinish);
     }
 
     function getCheckTask() {
@@ -272,6 +332,17 @@ To change this template use File | Settings | File Templates.
         let checkedCheckboxes = [];
         for (let i = 0; i < checkboxes.length; ++i) {
             if (checkboxes[i].checked) {
+                checkedCheckboxes.push(checkboxes[i]);
+            }
+        }
+        return checkedCheckboxes;
+    }
+
+    function getCheckTaskFinish() {
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkedCheckboxes = [];
+        for (let i = 0; i < checkboxes.length; ++i) {
+            if (checkboxes[i].checked && checkboxes[i].getAttribute("status") === "PLANNED") {
                 checkedCheckboxes.push(checkboxes[i]);
             }
         }

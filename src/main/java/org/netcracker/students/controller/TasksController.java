@@ -1,15 +1,20 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exception.journalDAO.GetFilteredByEqualsJournalException;
+import org.netcracker.students.dao.exception.journalDAO.GetFilteredByPatternJournalException;
 import org.netcracker.students.dao.exception.taskDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -62,7 +67,7 @@ public class TasksController {
      * @return desired task
      */
 
-    public Task getTask(int journalId, int taskId) throws ReadTaskException {
+    public Task getTask(int taskId) throws ReadTaskException {
         return tasksDAO.read(taskId);
     }
 
@@ -95,6 +100,29 @@ public class TasksController {
         tasksDAO.update(newTask);
     }
 
+    public void finishTasks(ArrayList<Task> tasks) throws UpdateTaskException {
+        for(Task task : tasks) {
+            if (LocalDateTime.now().isBefore(task.getPlannedDate())) {
+                task.setStatus("COMPLETED");
+                task.setDateOfDone(LocalDateTime.now());
+            } else {
+                task.setStatus("OVERDUE");
+            }
+            tasksDAO.update(task);
+        }
+    }
+
+    public ArrayList<Task> getTasks(String ids) throws ReadTaskException {
+        int id;
+        String[] mas = ids.split(" ");
+        ArrayList<Task> tasks = new ArrayList<>();
+        for (String str : mas) {
+            id = Integer.parseInt(str);
+            tasks.add(this.getTask(id));
+        }
+        return tasks;
+    }
+
     /**
      * Function for cancelling task by id
      */
@@ -110,6 +138,16 @@ public class TasksController {
 
     public List<TaskDTO> getAll(int journalId) throws GetAllTaskException {
         return tasksDAO.getAll(journalId);
+    }
+
+    public List<TaskDTO> getFilteredTasks(int userId, String column, String pattern, String criteria, boolean equal) throws GetFilteredByEqualsTaskException, GetFilteredByPatternTaskException {
+        if (equal) {
+            return tasksDAO.getFilteredByEquals(userId, column, pattern, criteria);
+        } else {
+            String likePattern = "%" + pattern + "%";
+            return tasksDAO.getFilteredByPattern(userId,
+                    column, likePattern, criteria);
+        }
     }
 
     /*public void restoreTasks(Journal journal) {
@@ -136,7 +174,7 @@ public class TasksController {
         }
     }*/
 
-    public void deleteTask(String ids) throws DeleteTaskException {
+    public void deleteTasks(String ids) throws DeleteTaskException {
         int id;
         String[] mas = ids.split(" ");
         for (String str : mas) {

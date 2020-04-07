@@ -10,8 +10,26 @@
 </head>
 <body onload="showError()">
 <div class="modal">
+    <div class = "filter">
+        <form action = "${pageContext.request.contextPath}/filterJournals" id = "filterForm" method = "POST">
+            <input type = "button" class = "button" id = "filterButt" style="margin-left: 40%" value = "Filter by">
+            <br><br>
+            Column:  Name <input type = "radio" name = "column" value="name" disabled required>
+            Description <input type = "radio" name = "column" value ="description" disabled>
+            <br>
+            By: <input type = "text" name = "pattern" disabled required>
+            <br>
+            Equal <input type = "checkbox" name ="equal" disabled>
+            <br>
+            Sort by ascending <input type = "radio" name = "sort" value = "ASC" disabled required>
+            or descending <input type = "radio" name = "sort" value = "DESC" disabled>
+            <br><br>
+            <input type = "submit" class ="button" style="margin-left: 40%" value = "Submit" disabled>
+        </form>
+    </div>
+    <div>
     <table>
-        <caption>Table of Journals</caption>
+        <caption>TABLE OF JOURNALS</caption>
         <thead>
         <tr>
             <th data-type="checkbox" style="cursor: default">
@@ -57,11 +75,13 @@
         <%}%>
         </tbody>
     </table>
+</div>
 
     <div class="actions">
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type = "button" id ="showButt" class ="button" value="Show all journals">
         <input type = "button" class = "button" onclick = "direct()" value = "Return to sign in page"
                style = "display: block; margin-left: 30% ">
     </div>
@@ -79,6 +99,20 @@
 
 
     <script>
+        let showButton = document.getElementById("showButt");
+
+        showButton.onclick = function() {
+            window.location.href = "/journals";
+        };
+
+        let filterButton = document.getElementById("filterButt");
+        filterButton.onclick = function() {
+            let inputs = document.querySelectorAll("input");
+            for(let i = 1; i <= 7; ++i) {
+                inputs[i].disabled = false;
+            }
+        };
+
         function direct() {
             window.location.href = "/";
         }

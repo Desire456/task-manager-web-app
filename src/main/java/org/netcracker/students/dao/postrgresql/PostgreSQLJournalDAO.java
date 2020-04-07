@@ -1,8 +1,6 @@
 package org.netcracker.students.dao.postrgresql;
 
 import org.netcracker.students.dao.exception.journalDAO.*;
-import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
-import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.factories.JournalDTOFactory;
@@ -83,7 +81,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public void delete(int id) throws DeleteJournalException, SQLException, DeleteTaskException {
+    public void delete(int id) throws DeleteJournalException {
         String sql = "DELETE  FROM journals WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
@@ -94,16 +92,16 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public List<Journal> getAll() throws GetAllJournalException {
+    public List<JournalDTO> getAll() throws GetAllJournalException {
         String sql = "SELECT * FROM journals";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            List<Journal> journals = new ArrayList<>();
+            List<JournalDTO> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            JournalFactory journalFactory = new JournalFactory();
+            JournalDTOFactory journalDTOFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
+                JournalDTO journal = journalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
             }
             return journals;
@@ -114,7 +112,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException {
-        String sql = "SELECT * FROM journals WHERE (user_id = ?) OR (is_private = ?)";
+        String sql = "SELECT * FROM journals WHERE (user_id = ?) OR (isprivate = ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setBoolean(2, false);
@@ -134,18 +132,21 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public List<Journal> getSortedByCriteria(String column, String criteria) throws GetSortedByCriteriaJournalException {
-        String sql = "SELECT * FROM journals ORDER BY ? ? ";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, column);
-            preparedStatement.setString(2, criteria);
+    public List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria)
+            throws GetSortedByCriteriaJournalException {
+        String sql = "SELECT * FROM journals WHERE (user_id = ?) " +
+                "OR (isprivate = ?) ORDER BY %s %s";
+        String SQL = String.format(sql, column, criteria);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setBoolean(2, false);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Journal> journals = new ArrayList<Journal>();
-            JournalFactory journalFactory = new JournalFactory();
+            List<JournalDTO> journals = new ArrayList<>();
+            JournalDTOFactory journalFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
+                JournalDTO journal = journalFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
             }
             return journals;
@@ -156,20 +157,21 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
 
     @Override
-    public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws GetFilteredByPatternJournalException {
-        String sql = "SELECT * FROM journals WHERE ? LIKE ? ORDER BY ? ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, column);
-            preparedStatement.setString(2, pattern);
-            preparedStatement.setString(3, column);
-            preparedStatement.setString(4, criteria);
+    public List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria) throws GetFilteredByPatternJournalException {
+        String sql = "SELECT * FROM journals WHERE ((user_id = ?) OR (isprivate = ?)) AND (%s LIKE ?) " +
+                "ORDER BY %s %s";
+        String SQL = String.format(sql, column, column, criteria);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setBoolean(2, false);
+            preparedStatement.setString(3, pattern);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Journal> journals = new ArrayList<Journal>();
-            JournalFactory journalFactory = new JournalFactory();
+            List<JournalDTO> journals = new ArrayList<>();
+            JournalDTOFactory journalFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
+                JournalDTO journal = journalFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
             }
             return journals;
@@ -179,20 +181,22 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     }
 
     @Override
-    public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws GetFilteredByEqualsJournalException {
-        String sql = "SELECT * FROM journals WHERE ? = ? ORDER BY ? ?";
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setString(1, column);
-            preparedStatement.setString(2, equal);
-            preparedStatement.setString(3, column);
-            preparedStatement.setString(4, criteria);
+    public List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria)
+            throws GetFilteredByEqualsJournalException {
+        String sql = "SELECT * FROM journals  WHERE ((user_id = ?) " +
+                "OR (isprivate = ?)) AND (%s = ?) ORDER BY %s %s";
+        String SQL = String.format(sql, column, column, criteria);
+        try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setBoolean(2, false);
+            preparedStatement.setString(3, equal);
             ResultSet resultSet = preparedStatement.executeQuery();
-            List<Journal> journals = new ArrayList<>();
-            JournalFactory journalFactory = new JournalFactory();
+            List<JournalDTO> journals = new ArrayList<>();
+            JournalDTOFactory journalFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                Journal journal = journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                        resultSet.getString(4), resultSet.getInt(2),
-                        resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
+                JournalDTO journal = journalFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                        resultSet.getString(4),
+                        resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
             }
             return journals;

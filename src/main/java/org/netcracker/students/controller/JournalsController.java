@@ -6,10 +6,12 @@ import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JournalsController {
@@ -54,6 +56,17 @@ public class JournalsController {
         for (String str : mas) {
             id = Integer.parseInt(str);
             this.deleteJournal(id);
+        }
+    }
+
+    public List<JournalDTO> getFilteredJournals(int userId, String column, String pattern, String criteria, boolean equal)
+            throws GetFilteredByEqualsJournalException, GetFilteredByPatternJournalException {
+        if (equal) {
+            return journalDAO.getFilteredByEquals(userId, column, pattern, criteria);
+        } else {
+            String likePattern = "%" + pattern + "%";
+            return journalDAO.getFilteredByPattern(userId,
+                    column, likePattern, criteria);
         }
     }
 

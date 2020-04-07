@@ -22,6 +22,24 @@ public class TasksPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
+        HttpSession session = req.getSession();
+        int journalId = (int)session.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
+        List<TaskDTO> taskArrayList = null;
+        TasksController tasksController = TasksController.getInstance();
+        try {
+            taskArrayList = tasksController.getAll(journalId);
+        } catch (GetAllTaskException e) {
+            e.printStackTrace();
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        if (taskArrayList != null && taskArrayList.isEmpty()) {
+            session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
+        }  else {
+            XMLParser xmlParser = XMLParser.getInstance();
+            String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
+            session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
+        }
         requestDispatcher.forward(req, resp);
     }
 
