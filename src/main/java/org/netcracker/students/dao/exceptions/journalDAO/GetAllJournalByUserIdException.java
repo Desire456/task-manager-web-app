@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.journalDAO;
 
 public class GetAllJournalByUserIdException extends Exception {
-    public GetAllJournalByUserIdException(){
+    public GetAllJournalByUserIdException() {
         super();
     }
 
-    public GetAllJournalByUserIdException(String message){
+    public GetAllJournalByUserIdException(String message) {
         super(message);
     }
 
-    public GetAllJournalByUserIdException(Throwable e){
+    public GetAllJournalByUserIdException(Throwable e) {
         super(e);
     }
 }

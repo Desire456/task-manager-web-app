@@ -26,13 +26,12 @@ public class FinishTaskServlet extends HttpServlet {
         TasksController tasksController = TasksController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         HttpSession httpSession = req.getSession();
-        int journalId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
+        int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
             ArrayList<Task> tasks = tasksController.getTasks(ids);
             tasksController.finishTasks(tasks);
         } catch (ReadTaskException | UpdateTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -40,7 +39,6 @@ public class FinishTaskServlet extends HttpServlet {
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (GetAllTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

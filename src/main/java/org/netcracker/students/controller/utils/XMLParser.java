@@ -30,8 +30,7 @@ public class XMLParser {
                 Marshaller marshaller = context.createMarshaller();
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(obj, sw);
-            } catch (JAXBException e) {
-                e.printStackTrace();
+            } catch (JAXBException ignored) {
             }
         } else throw new NullPointerException(NULL_EXCEPTION_MESSAGE);
         return sw.toString();

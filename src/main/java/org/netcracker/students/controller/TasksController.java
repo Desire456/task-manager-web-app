@@ -80,9 +80,9 @@ public class TasksController {
         Task oldTask = null;
         try {
             oldTask = this.getTask(newTask.getId());
-        } catch(ReadTaskException ignored) {
+        } catch (ReadTaskException ignored) {
         }
-        if(oldTask != null) {
+        if (oldTask != null) {
             newTask.setStatus(newTask.getPlannedDate().compareTo(oldTask.getPlannedDate()) == 0 ?
                     ControllerConstants.STATUS_PLANNED : ControllerConstants.STATUS_DEFERRED);
             tasksDAO.update(newTask);

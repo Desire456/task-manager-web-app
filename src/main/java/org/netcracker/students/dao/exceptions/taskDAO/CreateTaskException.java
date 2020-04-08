@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.taskDAO;
 
 public class CreateTaskException extends Exception {
-    public CreateTaskException(String message){
+    public CreateTaskException(String message) {
         super(message);
     }
 
-    public CreateTaskException(){
+    public CreateTaskException() {
         super();
     }
 
-    public CreateTaskException(Throwable e){
+    public CreateTaskException(Throwable e) {
         super(e);
     }
 }

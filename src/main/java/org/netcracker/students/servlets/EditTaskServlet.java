@@ -29,16 +29,15 @@ public class EditTaskServlet extends HttpServlet {
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         String plannedDate = req.getParameter(ServletConstants.PARAMETER_PLANNED_DATE);
         HttpSession httpSession = req.getSession();
-        int journalId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
+        int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         int taskId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
         TaskFactory taskFactory = new TaskFactory();
         try {
             tasksController.changeTask(taskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
-                        null, ServletConstants.STATUS_PLANNED));
+                    null, ServletConstants.STATUS_PLANNED));
         } catch (UpdateTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -46,7 +45,6 @@ public class EditTaskServlet extends HttpServlet {
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (GetAllTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

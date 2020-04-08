@@ -27,7 +27,6 @@ public class WellServlet extends HttpServlet {
         try {
             usersController.addUser(userFactory.createUser(login, password, role, dateOfRegistration));
         } catch (CreateUserException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
 

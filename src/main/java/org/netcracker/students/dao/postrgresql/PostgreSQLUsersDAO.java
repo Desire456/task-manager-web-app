@@ -16,7 +16,6 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         this.connection = connection;
     }
 
-
     @Override
     public User create(String login, String password, String role, Timestamp dateOfRegistration) throws CreateUserException {
         String sql = "INSERT INTO users VALUES (default, ?, ?, ?, ?)";

@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.taskDAO;
 
 public class UpdateTaskException extends Exception {
-    public UpdateTaskException(String message){
+    public UpdateTaskException(String message) {
         super(message);
     }
 
-    public UpdateTaskException(){
+    public UpdateTaskException() {
         super();
     }
 
-    public UpdateTaskException(Throwable e){
+    public UpdateTaskException(Throwable e) {
         super(e);
     }
 }

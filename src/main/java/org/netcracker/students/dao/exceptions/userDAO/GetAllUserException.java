@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.userDAO;
 
 public class GetAllUserException extends Exception {
-    public GetAllUserException(){
+    public GetAllUserException() {
         super();
     }
 
-    public GetAllUserException(String message){
+    public GetAllUserException(String message) {
         super(message);
     }
 
-    public GetAllUserException(Throwable e){
+    public GetAllUserException(Throwable e) {
         super(e);
     }
 }

@@ -42,11 +42,11 @@ public class JournalsController {
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }
 
-    public void deleteJournal(int id) throws DeleteJournalException, DeleteTaskException, SQLException {
+    public void deleteJournal(int id) throws DeleteJournalException {
         journalDAO.delete(id);
     }
 
-    public void deleteJournal(String ids) throws DeleteJournalException, DeleteTaskException, SQLException {
+    public void deleteJournal(String ids) throws DeleteJournalException {
         int id;
         String[] mas = ids.split(" ");
         for (String str : mas) {

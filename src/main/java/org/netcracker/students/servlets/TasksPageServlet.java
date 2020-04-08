@@ -22,7 +22,7 @@ public class TasksPageServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         HttpSession session = req.getSession();
-        int journalId = (int)session.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
+        int journalId = (int) session.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         List<TaskDTO> taskArrayList = null;
         TasksController tasksController = TasksController.getInstance();
         try {
@@ -34,7 +34,7 @@ public class TasksPageServlet extends HttpServlet {
         }
         if (taskArrayList != null && taskArrayList.isEmpty()) {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
-        }  else {
+        } else {
             XMLParser xmlParser = XMLParser.getInstance();
             String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
@@ -59,7 +59,7 @@ public class TasksPageServlet extends HttpServlet {
         }
         if (taskArrayList != null && taskArrayList.isEmpty()) {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
-        }  else {
+        } else {
             XMLParser xmlParser = XMLParser.getInstance();
             String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);

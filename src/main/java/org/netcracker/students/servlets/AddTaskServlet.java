@@ -36,9 +36,8 @@ public class AddTaskServlet extends HttpServlet {
         TaskFactory taskFactory = new TaskFactory();
         try {
             tasksController.addTask(taskFactory.createTask(name, description,
-                        parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
+                    parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
         } catch (CreateTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
             requestDispatcher.forward(req, resp);
         }
@@ -46,7 +45,6 @@ public class AddTaskServlet extends HttpServlet {
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (GetAllTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

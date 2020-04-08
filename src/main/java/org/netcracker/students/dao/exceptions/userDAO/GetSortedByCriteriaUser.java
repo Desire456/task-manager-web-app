@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.userDAO;
 
 public class GetSortedByCriteriaUser extends Exception {
-    public GetSortedByCriteriaUser(){
+    public GetSortedByCriteriaUser() {
         super();
     }
 
-    public GetSortedByCriteriaUser(String message){
+    public GetSortedByCriteriaUser(String message) {
         super(message);
     }
 
-    public GetSortedByCriteriaUser(Throwable e){
+    public GetSortedByCriteriaUser(Throwable e) {
         super(e);
     }
 }

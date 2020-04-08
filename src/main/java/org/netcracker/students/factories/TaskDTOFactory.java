@@ -2,7 +2,6 @@ package org.netcracker.students.factories;
 
 import org.netcracker.students.dto.TaskDTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TaskDTOFactory {

@@ -25,8 +25,7 @@ public class UsersController {
         DAOManager DAOManager = PostgreSQLDAOManager.getInstance();
         try {
             usersDAO = DAOManager.getUsersDao();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ignored) {
         }
     }
 

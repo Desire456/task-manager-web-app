@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.userDAO;
 
 public class GetUserByLoginException extends Exception {
-    public GetUserByLoginException(){
+    public GetUserByLoginException() {
         super();
     }
 
-    public GetUserByLoginException(String message){
+    public GetUserByLoginException(String message) {
         super(message);
     }
 
-    public GetUserByLoginException(Throwable e){
+    public GetUserByLoginException(Throwable e) {
         super(e);
     }
 }

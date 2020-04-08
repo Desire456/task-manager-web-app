@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.taskDAO;
 
 public class GetAllTaskException extends Exception {
-    public GetAllTaskException(String message){
+    public GetAllTaskException(String message) {
         super(message);
     }
 
-    public GetAllTaskException(){
+    public GetAllTaskException() {
         super();
     }
 
-    public GetAllTaskException(Throwable e){
+    public GetAllTaskException(Throwable e) {
         super(e);
     }
 }

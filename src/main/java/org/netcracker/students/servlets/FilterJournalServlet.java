@@ -28,13 +28,12 @@ public class FilterJournalServlet extends HttpServlet {
         String pattern = req.getParameter(ServletConstants.PARAMETER_PATTERN);
         JournalsController journalsController = JournalsController.getInstance();
         HttpSession httpSession = req.getSession();
-        int userId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
+        int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         List<JournalDTO> journals = null;
         try {
             journals = journalsController.getFilteredJournals(userId, column, pattern,
                     sortCriteria, equal != null);
         } catch (GetFilteredByEqualsJournalException | GetFilteredByPatternJournalException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

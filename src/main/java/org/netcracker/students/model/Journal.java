@@ -26,7 +26,7 @@ public class Journal implements Serializable {
     private int userId;
     private boolean isPrivate;
     private String name;
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class) //todo изменить на LocalDateTime
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
     private String description;
 
@@ -52,7 +52,7 @@ public class Journal implements Serializable {
 
 
     public Journal() {
-        tasks = new HashMap<Integer, Task>();
+        tasks = new HashMap<>();
     }
 
     public Journal(Journal journal) {

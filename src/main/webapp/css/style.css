@@ -16,28 +16,44 @@ body {
 .filter {
     margin-right: 10%;
     margin-left: 10%;
-    padding : 10px;
+    padding: 10px;
     outline: 2px solid #000;
 }
 
 table {
     margin-top: 3%;
     border: 3px solid grey;
-    width: 100%; border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 
-table th, td {border: 1px solid grey;}
-table thead tr {font-weight: bold; cursor: pointer; border-top: 1px solid #e8e9eb;}
-table tr {border-bottom: 1px solid #e8e9eb;}
-table tbody tr:hover {cursor: pointer; text-decoration: underline; background: #e8f6ff;}
+table th, td {
+    border: 1px solid grey;
+}
+
+table thead tr {
+    font-weight: bold;
+    cursor: pointer;
+    border-top: 1px solid #e8e9eb;
+}
+
+table tr {
+    border-bottom: 1px solid #e8e9eb;
+}
+
+table tbody tr:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    background: #e8f6ff;
+}
 
 
 .window {
     display: none;
     border: 3px solid black;
     background: white;
-    padding : 50px;
+    padding: 50px;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -46,7 +62,7 @@ table tbody tr:hover {cursor: pointer; text-decoration: underline; background: #
     transform: translate(-50%, -50%);
 }
 
-.window  button {
+.window button {
     margin: 50px 45% 0;
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;

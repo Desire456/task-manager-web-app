@@ -34,7 +34,6 @@ public class FilterTaskServlet extends HttpServlet {
             tasks = tasksController.getFilteredTasks(journalId, column, pattern,
                     sortCriteria, equal != null);
         } catch (GetFilteredByEqualsTaskException | GetFilteredByPatternTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

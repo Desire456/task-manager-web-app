@@ -1,7 +1,7 @@
 package org.netcracker.students.dao.exceptions.journalDAO;
 
 public class GetAllJournalException extends Exception {
-    public GetAllJournalException(){
+    public GetAllJournalException() {
         super();
     }
 
@@ -9,7 +9,7 @@ public class GetAllJournalException extends Exception {
         super(message);
     }
 
-    public GetAllJournalException(Throwable e){
+    public GetAllJournalException(Throwable e) {
         super(e);
     }
 }

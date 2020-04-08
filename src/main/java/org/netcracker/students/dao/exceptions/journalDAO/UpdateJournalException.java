@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.journalDAO;
 
 public class UpdateJournalException extends Exception {
-    public UpdateJournalException(){
+    public UpdateJournalException() {
         super();
     }
 
-    public UpdateJournalException(String message){
+    public UpdateJournalException(String message) {
         super(message);
     }
 
-    public UpdateJournalException(Throwable e){
+    public UpdateJournalException(Throwable e) {
         super(e);
     }
 }

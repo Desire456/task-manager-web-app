@@ -35,7 +35,6 @@ public class User {
                 '}';
     }
 
-    //region Getters
     public int getId() {
         return id;
     }
@@ -55,9 +54,7 @@ public class User {
     public String getRole() {
         return role;
     }
-    //endregion
 
-    //region Setters
     public void setPassword(String password) {
         this.password = password;
     }
@@ -77,6 +74,4 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-    //endregion
-
 }

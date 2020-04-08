@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.journalDAO;
 
 public class ReadJournalException extends Exception {
-    public ReadJournalException(){
+    public ReadJournalException() {
         super();
     }
 
-    public ReadJournalException(String message){
+    public ReadJournalException(String message) {
         super(message);
     }
 
-    public ReadJournalException(Throwable e){
+    public ReadJournalException(Throwable e) {
         super(e);
     }
 }

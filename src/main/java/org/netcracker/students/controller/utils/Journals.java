@@ -1,7 +1,6 @@
 package org.netcracker.students.controller.utils;
 
 import org.netcracker.students.dto.JournalDTO;
-import org.netcracker.students.model.Journal;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -12,9 +11,10 @@ import java.util.List;
 @XmlSeeAlso({JournalDTO.class})
 public class Journals {
     @XmlElement(name = "journal")
-    private List<JournalDTO> journals = null;
+    private List<JournalDTO> journals;
 
-    public Journals() {}
+    public Journals() {
+    }
 
     public Journals(List<JournalDTO> journals) {
         this.journals = journals;

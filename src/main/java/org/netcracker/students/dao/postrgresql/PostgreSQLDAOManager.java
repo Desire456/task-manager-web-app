@@ -33,7 +33,7 @@ public class PostgreSQLDAOManager implements DAOManager {
         return instance;
     }
 
-    public static PostgreSQLDAOManager getInstance(String path) throws SQLException {
+    public static PostgreSQLDAOManager getInstance(String path) {
         if (instance == null)
             instance = new PostgreSQLDAOManager(path);
         return instance;
@@ -66,8 +66,7 @@ public class PostgreSQLDAOManager implements DAOManager {
                 Statement statement = connectionBuilder.getConnect().createStatement();
                 statement.execute(line);
             }
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
+        } catch (SQLException | IOException ignored) {
         }
     }
 }

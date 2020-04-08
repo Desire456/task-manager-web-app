@@ -24,7 +24,8 @@ public class TaskDTO {
     private LocalDateTime dateOfDone;
     private String formattedPlannedDate;
 
-    public TaskDTO() {}
+    public TaskDTO() {
+    }
 
     public TaskDTO(int id, String name, String description, String status, LocalDateTime plannedDate, LocalDateTime dateOfDone) {
         this.id = id;

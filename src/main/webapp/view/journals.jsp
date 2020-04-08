@@ -10,80 +10,80 @@
 </head>
 <body onload="showError()">
 <div class="modal">
-    <div class = "filter">
-        <form action = "${pageContext.request.contextPath}/filterJournals" id = "filterForm" method = "POST">
-            <input type = "button" class = "button" id = "filterButt" style="margin-left: 40%" value = "Filter by">
+    <div class="filter">
+        <form action="${pageContext.request.contextPath}/filterJournals" id="filterForm" method="POST">
+            <input type="button" class="button" id="filterButt" style="margin-left: 40%" value="Filter by">
             <br><br>
-            Column:  Name <input type = "radio" name = "column" value="name" disabled required>
-            Description <input type = "radio" name = "column" value ="description" disabled>
+            Column: Name <input type="radio" name="column" value="name" disabled required>
+            Description <input type="radio" name="column" value="description" disabled>
             <br>
-            By: <input type = "text" name = "pattern" disabled required>
+            By: <input type="text" name="pattern" disabled required>
             <br>
-            Equal <input type = "checkbox" name ="equal" disabled>
+            Equal <input type="checkbox" name="equal" disabled>
             <br>
-            Sort by ascending <input type = "radio" name = "sort" value = "ASC" disabled required>
-            or descending <input type = "radio" name = "sort" value = "DESC" disabled>
+            Sort by ascending <input type="radio" name="sort" value="ASC" disabled required>
+            or descending <input type="radio" name="sort" value="DESC" disabled>
             <br><br>
-            <input type = "submit" class ="button" style="margin-left: 40%" value = "Submit" disabled>
+            <input type="submit" class="button" style="margin-left: 40%" value="Submit" disabled>
         </form>
     </div>
     <div>
-    <table>
-        <caption>TABLE OF JOURNALS</caption>
-        <thead>
-        <tr>
-            <th data-type="checkbox" style="cursor: default">
-                <input type="checkbox" id="generalCheckbox" onchange="setCheck()">
-            </th>
-            <th data-type="text">Name</th>
-            <th data-type="text">Description</th>
-            <th data-type="date">Creation date</th>
-        </tr>
-        </thead>
-        <tbody>
-        <% if (session.getAttribute("journals") != null) { %>
-        <x:parse xml="${sessionScope.journals}" var="output"/>
-        <x:forEach select="$output/journals/journal" var="journal">
-            <x:set var="id" select="$journal/id"/>
+        <table>
+            <caption>TABLE OF JOURNALS</caption>
+            <thead>
             <tr>
-                <td style="cursor:default; text-align:center">
-                    <input type="checkbox" value="<x:out select="$id"/>" class="checkbox"
-                           onchange="setGeneralCheckbox()">
-                </td>
-                <td onclick="goToJournal(<x:out select="$id"/>)">
-                    <x:out select="$journal/name"/>
-                </td>
-                <td onclick="goToJournal(<x:out select="$id"/>)">
-                    <x:out select="$journal/description"/>
-                </td>
-                <td onclick="goToJournal(<x:out select="$id"/>)">
-                    <x:out select="$journal/creationDate"/>
-                </td>
+                <th data-type="checkbox" style="cursor: default">
+                    <input type="checkbox" id="generalCheckbox" onchange="setCheck()">
+                </th>
+                <th data-type="text">Name</th>
+                <th data-type="text">Description</th>
+                <th data-type="date">Creation date</th>
             </tr>
-            <div class="window" id="editWindow<x:out select="$id"/>">
-                <form action="${pageContext.request.contextPath}/editJournal" method="POST">
-                    <span class="close" id="close<x:out select="$id"/>">X</span>
-                    Name: <input type="text" name="name" value="<x:out select="$journal/name"/>" required>
-                    Description: <input type="text" name="description"
-                                        value="<x:out select="$journal/description"/>" required>
-                    <input type="hidden" name="id" id="editId<x:out select="$id"/>" value="">
-                    <br>
-                    <button type="submit">Edit</button>
-                </form>
-            </div>
-        </x:forEach>
-        <%}%>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+            <% if (session.getAttribute("journals") != null) { %>
+            <x:parse xml="${sessionScope.journals}" var="output"/>
+            <x:forEach select="$output/journals/journal" var="journal">
+                <x:set var="id" select="$journal/id"/>
+                <tr>
+                    <td style="cursor:default; text-align:center">
+                        <input type="checkbox" value="<x:out select="$id"/>" class="checkbox"
+                               onchange="setGeneralCheckbox()">
+                    </td>
+                    <td onclick="goToJournal(<x:out select="$id"/>)">
+                        <x:out select="$journal/name"/>
+                    </td>
+                    <td onclick="goToJournal(<x:out select="$id"/>)">
+                        <x:out select="$journal/description"/>
+                    </td>
+                    <td onclick="goToJournal(<x:out select="$id"/>)">
+                        <x:out select="$journal/creationDate"/>
+                    </td>
+                </tr>
+                <div class="window" id="editWindow<x:out select="$id"/>">
+                    <form action="${pageContext.request.contextPath}/editJournal" method="POST">
+                        <span class="close" id="close<x:out select="$id"/>">X</span>
+                        Name: <input type="text" name="name" value="<x:out select="$journal/name"/>" required>
+                        Description: <input type="text" name="description"
+                                            value="<x:out select="$journal/description"/>" required>
+                        <input type="hidden" name="id" id="editId<x:out select="$id"/>" value="">
+                        <br>
+                        <button type="submit">Edit</button>
+                    </form>
+                </div>
+            </x:forEach>
+            <%}%>
+            </tbody>
+        </table>
+    </div>
 
     <div class="actions">
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
-        <input type = "button" id ="showButt" class ="button" value="Show all journals">
-        <input type = "button" class = "button" onclick = "direct()" value = "Return to sign in page"
-               style = "display: block; margin-left: 30% ">
+        <input type="button" id="showButt" class="button" value="Show all journals">
+        <input type="button" class="button" onclick="direct()" value="Return to sign in page"
+               style="display: block; margin-left: 30% ">
     </div>
 
     <div class="window" id="addWindow">
@@ -101,14 +101,14 @@
     <script>
         let showButton = document.getElementById("showButt");
 
-        showButton.onclick = function() {
+        showButton.onclick = function () {
             window.location.href = "/journals";
         };
 
         let filterButton = document.getElementById("filterButt");
-        filterButton.onclick = function() {
+        filterButton.onclick = function () {
             let inputs = document.querySelectorAll("input");
-            for(let i = 1; i <= 7; ++i) {
+            for (let i = 1; i <= 7; ++i) {
                 inputs[i].disabled = false;
             }
         };
@@ -116,8 +116,8 @@
         function direct() {
             window.location.href = "/start";
         }
-        
-        function showError(){
+
+        function showError() {
             <%String error = (String) request.getAttribute("error");
             if (error != null) {%>
             let msgError = "<%=error%>";
@@ -133,7 +133,7 @@
         const sortTable = function (index, type, isSorted) {
             if (type === 'checkbox') return;
             const tbody = table.querySelector('tbody');
-            const parseDate = function(rowData) {
+            const parseDate = function (rowData) {
                 let mas = rowData.split(' ');
                 return mas[20].split('-').reverse().join('-').concat(' ' + mas[21]);
             };

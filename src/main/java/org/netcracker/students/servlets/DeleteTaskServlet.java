@@ -23,12 +23,11 @@ public class DeleteTaskServlet extends HttpServlet {
         TasksController tasksController = TasksController.getInstance();
         XMLParser xmlParser = XMLParser.getInstance();
         HttpSession httpSession = req.getSession();
-        int journalId = (int)httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
+        int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
             tasksController.deleteTasks(ids);
         } catch (DeleteTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -36,7 +35,6 @@ public class DeleteTaskServlet extends HttpServlet {
         try {
             allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
         } catch (GetAllTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

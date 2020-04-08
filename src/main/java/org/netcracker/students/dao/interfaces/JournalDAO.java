@@ -10,24 +10,25 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface JournalDAO {
-    public Journal create(String name, String description, Integer userId,
-                          Timestamp creatingDate, boolean isPrivate) throws CreateJournalException;
+    Journal create(String name, String description, Integer userId,
+                   Timestamp creatingDate, boolean isPrivate) throws CreateJournalException;
 
-    public Journal read(int id) throws ReadJournalException;
+    Journal read(int id) throws ReadJournalException;
 
-    public void update(Journal journal) throws UpdateJournalException;
+    void update(Journal journal) throws UpdateJournalException;
 
-    public void delete(int id) throws DeleteJournalException, SQLException, DeleteTaskException;
+    void delete(int id) throws DeleteJournalException;
 
-    public List<JournalDTO> getAll() throws GetAllJournalException;
+    List<JournalDTO> getAll() throws GetAllJournalException;
 
-    public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException;
+    List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException;
 
-    public List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria) throws GetSortedByCriteriaJournalException;
+    List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria)
+            throws GetSortedByCriteriaJournalException;
 
-    public List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria)
+    List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria)
             throws GetFilteredByPatternJournalException;
 
-    public List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria)
+    List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria)
             throws GetFilteredByEqualsJournalException;
 }

@@ -24,36 +24,36 @@ To change this template use File | Settings | File Templates.
     <meta charset="UTF-8"/>
     <title>Tasks page</title>
 </head>
-<body onload = "showError()">
+<body onload="showError()">
 <div class="modal">
-    <div class = "filter">
-        <form action = "${pageContext.request.contextPath}/filterTasks" id = "filterForm" method = "POST">
-            <input type = "button" class = "button" id = "filterButt" style="margin-left: 40%" value = "Filter by">
+    <div class="filter">
+        <form action="${pageContext.request.contextPath}/filterTasks" id="filterForm" method="POST">
+            <input type="button" class="button" id="filterButt" style="margin-left: 40%" value="Filter by">
             <br><br>
-            Column:  Name <input type = "radio" name = "column" value="name" disabled required>
-            Description <input type = "radio" name = "column" value ="description" disabled>
-            Status <input type = "radio" name = "column" value ="status" disabled>
+            Column: Name <input type="radio" name="column" value="name" disabled required>
+            Description <input type="radio" name="column" value="description" disabled>
+            Status <input type="radio" name="column" value="status" disabled>
             <br>
-            By: <input type = "text" name = "pattern" disabled required>
+            By: <input type="text" name="pattern" disabled required>
             <br>
-            Equal <input type = "checkbox" name ="equal" disabled>
+            Equal <input type="checkbox" name="equal" disabled>
             <br>
-            Sort by ascending <input type = "radio" name = "sort" value = "ASC" disabled required>
-            or descending <input type = "radio" name = "sort" value = "DESC" disabled>
+            Sort by ascending <input type="radio" name="sort" value="ASC" disabled required>
+            or descending <input type="radio" name="sort" value="DESC" disabled>
             <br><br>
-            <input type = "submit" class ="button" style="margin-left: 40%" value = "Submit" disabled>
+            <input type="submit" class="button" style="margin-left: 40%" value="Submit" disabled>
         </form>
     </div>
     <table>
         <caption>TABLE OF TASKS</caption>
         <thead>
         <tr>
-            <th data-type = "checkbox"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
-            <th data-type = "text">Name</th>
-            <th data-type = "text">Description</th>
-            <th data-type = "date">Planned date</th>
-            <th data-type = "date">Date of done</th>
-            <th data-type = "text">Status</th>
+            <th data-type="checkbox"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
+            <th data-type="text">Name</th>
+            <th data-type="text">Description</th>
+            <th data-type="date">Planned date</th>
+            <th data-type="date">Date of done</th>
+            <th data-type="text">Status</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -64,7 +64,7 @@ To change this template use File | Settings | File Templates.
             <tr>
                 <td style="cursor:default; text-align:center">
                     <input type="checkbox" value="<x:out select = "$id"/>" class="checkbox"
-                          status ="<x:out select = "$task/status"/>" onchange="setGeneralCheckbox()">
+                           status="<x:out select = "$task/status"/>" onchange="setGeneralCheckbox()">
                 </td>
                 <td>
                     <x:out select="$task/name"/>
@@ -82,14 +82,14 @@ To change this template use File | Settings | File Templates.
                     <x:out select="$task/status"/>
                 </td>
             </tr>
-            <div class="window" id = "editWindow<x:out select="$id"/>">
+            <div class="window" id="editWindow<x:out select="$id"/>">
                 <form action="${pageContext.request.contextPath}/editTask" method="POST">
-                    <span class="close" id = "close<x:out select="$id"/>">X</span>
+                    <span class="close" id="close<x:out select="$id"/>">X</span>
                     Name: <input type="text" name="name" value="<x:out select="$task/name"/>" required>
                     Description: <input type="text" name="description"
                                         value="<x:out select="$task/description"/>" required>
-                    <input type="hidden" name="id" id = "editId<x:out select="$id"/>" value="">
-                    <input type = "hidden" name = "journalId" value=<%=request.getAttribute("journalId")%>>
+                    <input type="hidden" name="id" id="editId<x:out select="$id"/>" value="">
+                    <input type="hidden" name="journalId" value=<%=request.getAttribute("journalId")%>>
                     <br><br><br><br>
                     Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
                                          name="plannedDate"
@@ -103,23 +103,23 @@ To change this template use File | Settings | File Templates.
     </table>
 
 
-    <div class="actions" style = "margin-left:10%">
+    <div class="actions" style="margin-left:10%">
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
-        <input type ="button" id = "finishButt" class ="button" value = "Finish" disabled>
-        <input type = "button" id ="showButt" class ="button" value="Show all tasks">
-        <input type = "button" class = "button" onclick = "direct()" value = "Return to journals page"
-               style = "display: block; margin-left: 30%">
+        <input type="button" id="finishButt" class="button" value="Finish" disabled>
+        <input type="button" id="showButt" class="button" value="Show all tasks">
+        <input type="button" class="button" onclick="direct()" value="Return to journals page"
+               style="display: block; margin-left: 30%">
     </div>
 
 
     <div class="window" id="addWindow">
         <form action="${pageContext.request.contextPath}/addTask" method="POST">
-            <span class="close" id = "addClose">X</span>
+            <span class="close" id="addClose">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
-            <input type = "hidden" name = "journalId" value=<%=session.getAttribute("journalId")%>>
+            <input type="hidden" name="journalId" value=<%=session.getAttribute("journalId")%>>
             <br><br><br><br>
             Planned date: <input type="datetime-local" name="plannedDate" min=<%=formatDateTimeNow%> required>
             <button type="submit">Add</button>
@@ -134,15 +134,15 @@ To change this template use File | Settings | File Templates.
     };
 
     let filterButton = document.getElementById("filterButt");
-    filterButton.onclick = function() {
+    filterButton.onclick = function () {
         let inputs = document.querySelectorAll("input");
-        for(let i = 1; i <= 8; ++i) {
+        for (let i = 1; i <= 8; ++i) {
             inputs[i].disabled = false;
         }
     };
 
 
-    function showError(){
+    function showError() {
         <%String error = (String) request.getAttribute("error");
         if (error != null) {%>
         let msgError = "<%=error%>";
@@ -161,7 +161,7 @@ To change this template use File | Settings | File Templates.
     const sortTable = function (index, type, isSorted) {
         if (type === 'checkbox') return;
         const tbody = table.querySelector('tbody');
-        const parseDate = function(rowData) {
+        const parseDate = function (rowData) {
             let mas = rowData.split(' ');
             return mas[20].split('-').reverse().join('-').concat(' ' + mas[21]);
         };
@@ -305,7 +305,7 @@ To change this template use File | Settings | File Templates.
             editButton.disabled = true;
             deleteButton.disabled = false;
         }
-        if(countCheckedFinish >= 1) {
+        if (countCheckedFinish >= 1) {
             finishButton.disabled = false;
         }
     }
@@ -319,7 +319,7 @@ To change this template use File | Settings | File Templates.
                 generalCheckbox.checked = false;
             } else {
                 ++countChecked;
-                if(checkboxes[i].getAttribute("status") === "PLANNED") {
+                if (checkboxes[i].getAttribute("status") === "PLANNED") {
                     countCheckedFinish++;
                 }
             }

@@ -35,7 +35,6 @@ public class EditJournalServlet extends HttpServlet {
         try {
             oldJournal = journalsController.getJournal(id);
         } catch (ReadJournalException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -45,7 +44,6 @@ public class EditJournalServlet extends HttpServlet {
             journalsController.changeJournal(journalFactory.createJournal(id, name, description, userId,
                     oldJournal.getCreationDate(), oldJournal.getIsPrivate()));
         } catch (UpdateJournalException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -53,7 +51,6 @@ public class EditJournalServlet extends HttpServlet {
         try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

@@ -27,8 +27,7 @@ public class DeleteJournalServlet extends HttpServlet {
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
             journalsController.deleteJournal(ids);
-        } catch (DeleteJournalException | DeleteTaskException | SQLException e) {
-            e.printStackTrace();
+        } catch (DeleteJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -38,7 +37,6 @@ public class DeleteJournalServlet extends HttpServlet {
         try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

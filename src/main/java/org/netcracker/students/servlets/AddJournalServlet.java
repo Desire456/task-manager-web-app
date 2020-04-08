@@ -35,14 +35,12 @@ public class AddJournalServlet extends HttpServlet {
             journalsController.addJournal(journalFactory.createJournal(name, description,
                     userId, LocalDateTime.now(), isPrivate));
         } catch (CreateJournalException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);
             requestDispatcher.forward(req, resp);
         }
         try {
             allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

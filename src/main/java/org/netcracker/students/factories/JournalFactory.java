@@ -9,8 +9,8 @@ public class JournalFactory {
         return new Journal(journal);
     }
 
-    public Journal createJournal(int id, String name, String description, int userId,
-                                 LocalDateTime creatingDate, boolean accessModifier) {
+    public Journal createJournal(int id, String name, String description, int userId, LocalDateTime creatingDate,
+                                 boolean accessModifier) {
         return new Journal(id, name, description, userId, creatingDate, accessModifier);
     }
 

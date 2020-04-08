@@ -9,12 +9,12 @@ public class LocalDateTimeAdapter extends XmlAdapter<String, LocalDateTime> {
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_PATTERN);
 
     @Override
-    public LocalDateTime unmarshal(String xml) throws Exception {
+    public LocalDateTime unmarshal(String xml) {
         return LocalDateTime.parse(xml, formatter);
     }
 
     @Override
-    public String marshal(LocalDateTime object) throws Exception {
+    public String marshal(LocalDateTime object) {
         return object.format(formatter);
     }
 }

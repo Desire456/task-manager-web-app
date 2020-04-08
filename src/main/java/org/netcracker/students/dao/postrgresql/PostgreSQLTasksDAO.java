@@ -18,7 +18,6 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         this.connection = connection;
     }
 
-
     @Override
     public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException {
         String sql = "INSERT INTO tasks VALUES (default, ?, ?, ?, ?, ?, ?)";

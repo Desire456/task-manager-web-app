@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.journalDAO;
 
 public class GetFilteredByPatternJournalException extends Exception {
-    public GetFilteredByPatternJournalException(){
+    public GetFilteredByPatternJournalException() {
         super();
     }
 
-    public GetFilteredByPatternJournalException(String message){
+    public GetFilteredByPatternJournalException(String message) {
         super();
     }
 
-    public GetFilteredByPatternJournalException(Throwable e){
+    public GetFilteredByPatternJournalException(Throwable e) {
         super(e);
     }
 }

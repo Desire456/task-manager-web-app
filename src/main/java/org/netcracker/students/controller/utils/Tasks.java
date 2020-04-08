@@ -12,7 +12,7 @@ import java.util.List;
 @XmlSeeAlso({Task.class})
 public class Tasks {
     @XmlElement(name = "task")
-    private List<TaskDTO> tasks = null;
+    private List<TaskDTO> tasks;
 
     public Tasks() {
     }

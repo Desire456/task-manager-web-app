@@ -1,15 +1,15 @@
 package org.netcracker.students.dao.exceptions.journalDAO;
 
 public class DeleteJournalException extends Exception {
-    public DeleteJournalException(){
+    public DeleteJournalException() {
         super();
     }
 
-    public DeleteJournalException(String message){
+    public DeleteJournalException(String message) {
         super(message);
     }
 
-    public DeleteJournalException(Throwable e){
+    public DeleteJournalException(Throwable e) {
         super(e);
     }
 }
