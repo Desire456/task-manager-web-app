@@ -1,17 +1,15 @@
 package org.netcracker.students.controller;
 
-import org.netcracker.students.dao.exception.journalDAO.*;
-import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
+import org.netcracker.students.dao.exceptions.journalDAO.*;
+import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.dto.JournalDTO;
-import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 public class JournalsController {
@@ -24,11 +22,9 @@ public class JournalsController {
         return instance;
     }
 
-    private TasksController tasksController;
     private JournalDAO journalDAO;
 
     private JournalsController() {
-        this.tasksController = TasksController.getInstance();
         DAOManager DAOManager = PostgreSQLDAOManager.getInstance();
         try {
             this.journalDAO = DAOManager.getJournalDao();
@@ -64,7 +60,8 @@ public class JournalsController {
         if (equal) {
             return journalDAO.getFilteredByEquals(userId, column, pattern, criteria);
         } else {
-            String likePattern = "%" + pattern + "%";
+            String likePattern = ControllerConstants.LIKE_PATTERN_CONSTANT +
+                    pattern + ControllerConstants.LIKE_PATTERN_CONSTANT;
             return journalDAO.getFilteredByPattern(userId,
                     column, likePattern, criteria);
         }

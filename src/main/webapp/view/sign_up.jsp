@@ -43,7 +43,7 @@
             <%}%>
         }
         function direct() {
-            window.location.href = "/";
+            window.location.href = "/start";
         }
 
     </script>

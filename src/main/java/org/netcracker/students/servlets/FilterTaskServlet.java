@@ -3,8 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.taskDAO.GetFilteredByEqualsTaskException;
-import org.netcracker.students.dao.exception.taskDAO.GetFilteredByPatternTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.GetFilteredByEqualsTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.GetFilteredByPatternTaskException;
 import org.netcracker.students.dto.TaskDTO;
 
 import javax.servlet.RequestDispatcher;
@@ -39,8 +39,8 @@ public class FilterTaskServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
         }
         XMLParser xmlParser = XMLParser.getInstance();
-        String journalsXml = xmlParser.toXML(new Tasks(tasks));
-        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, journalsXml);
+        String tasksXml = xmlParser.toXML(new Tasks(tasks));
+        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, tasksXml);
         requestDispatcher.forward(req, resp);
     }
 }

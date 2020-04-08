@@ -4,9 +4,9 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.Journals;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
-import org.netcracker.students.dao.exception.journalDAO.ReadJournalException;
-import org.netcracker.students.dao.exception.journalDAO.UpdateJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.UpdateJournalException;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
 
@@ -18,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/editJournal")
 public class EditJournalServlet extends HttpServlet {

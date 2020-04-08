@@ -114,9 +114,6 @@ public class Journal implements Serializable {
     }
 
     public void addTask(Task task) {
-        /*while (tasks.containsKey(task.getId())) {
-            task.setId(IdGenerator.getInstance().getId());
-        }*/
         tasks.put(task.getId(), task);
     }
 

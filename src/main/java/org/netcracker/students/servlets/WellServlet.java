@@ -1,7 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.UsersController;
-import org.netcracker.students.dao.exception.userDAO.CreateUserException;
+import org.netcracker.students.dao.exceptions.userDAO.CreateUserException;
 import org.netcracker.students.factories.UserFactory;
 
 import javax.servlet.RequestDispatcher;

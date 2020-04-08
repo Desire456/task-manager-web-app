@@ -1,12 +1,9 @@
 package org.netcracker.students.controller;
 
-import org.netcracker.students.dao.exception.journalDAO.GetFilteredByEqualsJournalException;
-import org.netcracker.students.dao.exception.journalDAO.GetFilteredByPatternJournalException;
-import org.netcracker.students.dao.exception.taskDAO.*;
+import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
-import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
@@ -44,23 +41,6 @@ public class TasksController {
         }
     }
 
-
-    /*void addJournal(int id, Journal journal) {
-        tasksDAO.
-        this.journals.put(id, journal);
-    }
-
-    void deleteJournal(int id) {
-        this.journals.remove(id);
-    }*/
-
-    /**
-     * Function deleted all notifications for real journal is tasks
-     */
-   /* public Journal getJournal(int id) {
-        return journals.get(id);
-    }*/
-
     /**
      * Getter function by id
      *
@@ -79,7 +59,7 @@ public class TasksController {
 
     public void addTask(Task task) throws CreateTaskException {
         tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
-               null, task.getJournalId());
+                null, task.getJournalId());
     }
 
     /**
@@ -97,16 +77,25 @@ public class TasksController {
      */
 
     public void changeTask(Task newTask) throws UpdateTaskException {
-        tasksDAO.update(newTask);
+        Task oldTask = null;
+        try {
+            oldTask = this.getTask(newTask.getId());
+        } catch(ReadTaskException ignored) {
+        }
+        if(oldTask != null) {
+            newTask.setStatus(newTask.getPlannedDate().compareTo(oldTask.getPlannedDate()) == 0 ?
+                    ControllerConstants.STATUS_PLANNED : ControllerConstants.STATUS_DEFERRED);
+            tasksDAO.update(newTask);
+        }
     }
 
     public void finishTasks(ArrayList<Task> tasks) throws UpdateTaskException {
-        for(Task task : tasks) {
+        for (Task task : tasks) {
+            task.setDateOfDone(LocalDateTime.now());
             if (LocalDateTime.now().isBefore(task.getPlannedDate())) {
-                task.setStatus("COMPLETED");
-                task.setDateOfDone(LocalDateTime.now());
+                task.setStatus(ControllerConstants.STATUS_COMPLETED);
             } else {
-                task.setStatus("OVERDUE");
+                task.setStatus(ControllerConstants.STATUS_OVERDUE);
             }
             tasksDAO.update(task);
         }
@@ -123,19 +112,6 @@ public class TasksController {
         return tasks;
     }
 
-    /**
-     * Function for cancelling task by id
-     */
-
-    /*public void cancelTask(int journalId, int taskId) {
-        this.journals.get(journalId).getTask(taskId).setStatus("CANCELED");
-    }*/
-
-
-    /**
-     * @return unmodifiable list of all tasks
-     */
-
     public List<TaskDTO> getAll(int journalId) throws GetAllTaskException {
         return tasksDAO.getAll(journalId);
     }
@@ -144,35 +120,12 @@ public class TasksController {
         if (equal) {
             return tasksDAO.getFilteredByEquals(userId, column, pattern, criteria);
         } else {
-            String likePattern = "%" + pattern + "%";
+            String likePattern = ControllerConstants.LIKE_PATTERN_CONSTANT
+                    + pattern + ControllerConstants.LIKE_PATTERN_CONSTANT;
             return tasksDAO.getFilteredByPattern(userId,
                     column, likePattern, criteria);
         }
     }
-
-    /*public void restoreTasks(Journal journal) {
-        List<Task> tasks = journal.getAll();
-        for (Task task : tasks) {
-            if (task.getDateOfDone() == null) {
-                if (task.getPlannedDate().isBefore(LocalDateTime.now())) {
-                    task.setStatus("OVERDUE");
-                }
-            }
-            this.getJournal(journal.getId()).addTask(task);
-        }
-    }*/
-
-    /*public void cancelTask(int journalId, ArrayList<Integer> ids) {
-        for (int i : ids) {
-            this.cancelTask(journalId, i);
-        }
-    }*/
-
-   /* public void deleteTask(int journalId, ArrayList<Integer> ids) {
-        for (int i : ids) {
-            this.deleteTask(journalId, i);
-        }
-    }*/
 
     public void deleteTasks(String ids) throws DeleteTaskException {
         int id;

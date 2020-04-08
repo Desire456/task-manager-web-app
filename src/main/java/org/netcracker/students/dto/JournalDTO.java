@@ -19,8 +19,7 @@ public class JournalDTO {
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
 
-    public JournalDTO() {
-    }
+    public JournalDTO() {}
 
     public JournalDTO(int id, String name, String description, LocalDateTime creationDate) {
         this.id = id;

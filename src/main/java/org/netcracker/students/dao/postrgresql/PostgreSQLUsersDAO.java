@@ -1,6 +1,6 @@
 package org.netcracker.students.dao.postrgresql;
 
-import org.netcracker.students.dao.exception.userDAO.*;
+import org.netcracker.students.dao.exceptions.userDAO.*;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.factories.UserFactory;
 import org.netcracker.students.model.User;

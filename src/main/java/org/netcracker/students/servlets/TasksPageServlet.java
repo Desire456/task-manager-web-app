@@ -3,9 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
 import org.netcracker.students.dto.TaskDTO;
-import org.netcracker.students.model.Task;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

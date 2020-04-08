@@ -3,8 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.Journals;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.journalDAO.GetFilteredByEqualsJournalException;
-import org.netcracker.students.dao.exception.journalDAO.GetFilteredByPatternJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByEqualsJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByPatternJournalException;
 import org.netcracker.students.dto.JournalDTO;
 
 import javax.servlet.RequestDispatcher;

@@ -32,7 +32,7 @@ To change this template use File | Settings | File Templates.
             <br><br>
             Column:  Name <input type = "radio" name = "column" value="name" disabled required>
             Description <input type = "radio" name = "column" value ="description" disabled>
-            Status <input type = "radio" name = "column" value ="description" disabled>
+            Status <input type = "radio" name = "column" value ="status" disabled>
             <br>
             By: <input type = "text" name = "pattern" disabled required>
             <br>
@@ -136,7 +136,7 @@ To change this template use File | Settings | File Templates.
     let filterButton = document.getElementById("filterButt");
     filterButton.onclick = function() {
         let inputs = document.querySelectorAll("input");
-        for(let i = 1; i <= 7; ++i) {
+        for(let i = 1; i <= 8; ++i) {
             inputs[i].disabled = false;
         }
     };

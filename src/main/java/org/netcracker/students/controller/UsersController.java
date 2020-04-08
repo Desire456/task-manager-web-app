@@ -1,12 +1,11 @@
 package org.netcracker.students.controller;
 
-import org.netcracker.students.dao.exception.userDAO.*;
+import org.netcracker.students.dao.exceptions.userDAO.*;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
 import org.netcracker.students.model.User;
 
-import java.sql.Date;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;

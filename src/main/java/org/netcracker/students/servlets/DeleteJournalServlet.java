@@ -3,9 +3,9 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.Journals;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.journalDAO.DeleteJournalException;
-import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
-import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
+import org.netcracker.students.dao.exceptions.journalDAO.DeleteJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

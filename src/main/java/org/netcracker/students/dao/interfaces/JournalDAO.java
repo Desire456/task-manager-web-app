@@ -1,7 +1,7 @@
 package org.netcracker.students.dao.interfaces;
 
-import org.netcracker.students.dao.exception.journalDAO.*;
-import org.netcracker.students.dao.exception.taskDAO.DeleteTaskException;
+import org.netcracker.students.dao.exceptions.journalDAO.*;
+import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 

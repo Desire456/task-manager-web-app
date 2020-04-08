@@ -3,8 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.TasksController;
 import org.netcracker.students.controller.utils.Tasks;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.taskDAO.GetAllTaskException;
-import org.netcracker.students.dao.exception.taskDAO.UpdateTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.UpdateTaskException;
 import org.netcracker.students.factories.TaskFactory;
 
 import javax.servlet.RequestDispatcher;
@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

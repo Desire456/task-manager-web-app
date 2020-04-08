@@ -3,8 +3,8 @@ package org.netcracker.students.servlets;
 import org.netcracker.students.controller.JournalsController;
 import org.netcracker.students.controller.utils.Journals;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.dao.exception.journalDAO.CreateJournalException;
-import org.netcracker.students.dao.exception.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.factories.JournalFactory;
 
 import javax.servlet.RequestDispatcher;

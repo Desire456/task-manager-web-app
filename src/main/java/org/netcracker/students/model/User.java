@@ -1,6 +1,5 @@
 package org.netcracker.students.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User {
@@ -17,7 +16,7 @@ public class User {
         this.dateOfRegistration = dateOfRegistration;
     }
 
-    public User(int id, String login, String password, String role, LocalDateTime dateOfRegistration){
+    public User(int id, String login, String password, String role, LocalDateTime dateOfRegistration) {
         this.id = id;
         this.login = login;
         this.password = password;

@@ -1,6 +1,6 @@
 package org.netcracker.students.dao.postrgresql;
 
-import org.netcracker.students.dao.exception.taskDAO.*;
+import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.factories.TaskDTOFactory;
