@@ -20,6 +20,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     public User create(String login, String password, String role, Timestamp dateOfRegistration) throws CreateUserException {
         String sql = "INSERT INTO users VALUES (default, ?, ?, ?, ?)";
         String RETURN_USER_SQL = "SELECT * FROM users WHERE login = ?";
+        User user = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
@@ -30,7 +31,7 @@ public class PostgreSQLUsersDAO implements UsersDAO {
                 preparedStatement1.setString(1, login);
                 ResultSet resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()) {
-                    return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                    user =  UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                             resultSet.getString(3), resultSet.getString(4),
                             resultSet.getTimestamp(5).toLocalDateTime());
                 }
@@ -38,23 +39,24 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         } catch (SQLException e) {
             throw new CreateUserException(DAOErrorConstants.CREATE_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return null;
+        return user;
     }
 
     @Override
     public User read(int id) throws ReadUserException {
         String sql = "SELECT * FROM users WHERE user_id = ?";
+        User user = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                user = UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new ReadUserException(DAOErrorConstants.READ_USER_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return null;
+        return user;
     }
 
     @Override
@@ -102,12 +104,13 @@ public class PostgreSQLUsersDAO implements UsersDAO {
     @Override
     public User getByLoginAndPassword(String login, String password) throws GetUserByLoginAndPasswordException {
         String sql = "SELECT * FROM users WHERE login = ? AND password = ?";
+        User user = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                user = UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
             }
@@ -115,24 +118,25 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             throw new GetUserByLoginAndPasswordException(DAOErrorConstants.GET_USER_BY_LOGIN_AND_PASSWORD_EXCEPTION_MESSAGE
                     + e.getMessage());
         }
-        return null;
+        return user;
     }
 
     public User getByLogin(String login) throws GetUserByLoginException {
         String sql = "SELECT * FROM users WHERE login = ?";
+        User user = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<>();
             if (resultSet.next()) {
-                return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                user = UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
             throw new GetUserByLoginException(DAOErrorConstants.GET_USER_BY_LOGIN_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return null;
+        return user;
     }
 
     @Override

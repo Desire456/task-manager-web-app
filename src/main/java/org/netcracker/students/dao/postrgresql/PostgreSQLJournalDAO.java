@@ -23,6 +23,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                           boolean isPrivate) throws CreateJournalException {
         String sql = "INSERT INTO journals VALUES (default, ?, ?, ?, ?, ?)";
         String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE (name = ?) AND (user_id = ?)";
+        Journal journal = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, name);
@@ -35,7 +36,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
                 preparedStatement1.setInt(2, userId);
                 ResultSet resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()) {
-                    return JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
+                    journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                             resultSet.getString(4), resultSet.getInt(2),
                             resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
                 }
@@ -43,24 +44,25 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         } catch (SQLException e) {
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return null;
+        return journal;
     }
 
     @Override
     public Journal read(int id) throws ReadJournalException {
         String sql = "SELECT * FROM journals WHERE journal_id = ?";
+        Journal journal = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
+                journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
                         resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
             }
         } catch (SQLException e) {
             throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION + e.getMessage());
         }
-        return null;
+        return journal;
     }
 
     @Override

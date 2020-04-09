@@ -22,6 +22,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
     public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException {
         String sql = "INSERT INTO tasks VALUES (default, ?, ?, ?, ?, ?, ?)";
         String RETURN_CREATED_TASK_SQL = "SELECT * FROM tasks WHERE (name = ?) AND (journal_id = ?)";
+        Task task = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, journalId);
             preparedStatement.setString(2, name);
@@ -35,7 +36,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                 preparedStatement1.setInt(2, journalId);
                 ResultSet resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()) {
-                    return TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                    task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                             resultSet.getString(3), resultSet.getString(4),
                             resultSet.getTimestamp(6).toLocalDateTime(),
                             resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
@@ -45,17 +46,18 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         } catch (SQLException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return null;
+        return task;
     }
 
     @Override
     public Task read(int id) throws ReadTaskException {
         String sql = "SELECT * FROM tasks WHERE task_id = ?";
+        Task task = null;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                return TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
@@ -64,7 +66,7 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         } catch (SQLException e) {
             throw new ReadTaskException(DAOErrorConstants.READ_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return null;
+        return task;
     }
 
     @Override
