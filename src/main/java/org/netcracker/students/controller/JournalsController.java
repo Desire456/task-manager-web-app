@@ -1,7 +1,6 @@
 package org.netcracker.students.controller;
 
 import org.netcracker.students.dao.exceptions.journalDAO.*;
-import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.interfaces.DAOManager;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
