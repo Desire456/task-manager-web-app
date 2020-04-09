@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
  */
 
 public class TaskFactory {
-    public Task createTask(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
+    public static Task createTask(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
         return new Task(name, description, plannedDate, status, journalId);
     }
 
-    public Task createTask(int id, int journalId, String name, String description, LocalDateTime plannedDate,
+    public static Task createTask(int id, int journalId, String name, String description, LocalDateTime plannedDate,
                            LocalDateTime dateOfDone, String status) {
         return new Task(id, journalId, name, description, plannedDate, dateOfDone, status);
     }
@@ -28,7 +28,7 @@ public class TaskFactory {
      * @return copy of argument
      */
 
-    public Task createTask(Task task) {
+    public static Task createTask(Task task) {
         return new Task(task);
     }
 }

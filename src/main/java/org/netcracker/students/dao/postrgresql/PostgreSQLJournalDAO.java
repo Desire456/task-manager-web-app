@@ -33,10 +33,9 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
                 preparedStatement1.setString(1, name);
                 preparedStatement1.setInt(2, userId);
-                JournalFactory journalFactory = new JournalFactory();
                 ResultSet resultSet = preparedStatement1.executeQuery();
                 if (resultSet.next()) {
-                    return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
+                    return JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                             resultSet.getString(4), resultSet.getInt(2),
                             resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
                 }
@@ -54,8 +53,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
-                JournalFactory journalFactory = new JournalFactory();
-                return journalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
+                return JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getInt(2),
                         resultSet.getTimestamp(5).toLocalDateTime(), resultSet.getBoolean(6));
             }
@@ -97,9 +95,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             List<JournalDTO> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            JournalDTOFactory journalDTOFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                JournalDTO journal = journalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                JournalDTO journal = JournalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
@@ -118,9 +115,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setBoolean(2, false);
             List<JournalDTO> journals = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            JournalDTOFactory journalDTOFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                JournalDTO journal = journalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                JournalDTO journal = JournalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
@@ -142,9 +138,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setBoolean(2, false);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<JournalDTO> journals = new ArrayList<>();
-            JournalDTOFactory journalFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                JournalDTO journal = journalFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                JournalDTO journal = JournalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
@@ -167,9 +162,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(3, pattern);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<JournalDTO> journals = new ArrayList<>();
-            JournalDTOFactory journalFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                JournalDTO journal = journalFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                JournalDTO journal = JournalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);
@@ -192,9 +186,8 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setString(3, equal);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<JournalDTO> journals = new ArrayList<>();
-            JournalDTOFactory journalFactory = new JournalDTOFactory();
             while (resultSet.next()) {
-                JournalDTO journal = journalFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
+                JournalDTO journal = JournalDTOFactory.createJournalDTO(resultSet.getInt(1), resultSet.getString(3),
                         resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
                 journals.add(journal);

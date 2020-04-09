@@ -34,9 +34,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
                 preparedStatement1.setString(1, name);
                 preparedStatement1.setInt(2, journalId);
                 ResultSet resultSet = preparedStatement1.executeQuery();
-                TaskFactory taskFactory = new TaskFactory();
                 if (resultSet.next()) {
-                    return taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                    return TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                             resultSet.getString(3), resultSet.getString(4),
                             resultSet.getTimestamp(6).toLocalDateTime(),
                             resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
@@ -55,9 +54,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            TaskFactory taskFactory = new TaskFactory();
             if (resultSet.next()) {
-                return taskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                return TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
@@ -103,9 +101,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             List<TaskDTO> tasks = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                tasks.add(TaskDTOFactory.createTaskDTO(resultSet.getInt(1),
                         resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
@@ -123,9 +120,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setInt(1, journalId);
             List<TaskDTO> tasks = new ArrayList<>();
             ResultSet resultSet = preparedStatement.executeQuery();
-            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                tasks.add(TaskDTOFactory.createTaskDTO(resultSet.getInt(1),
                         resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
@@ -145,9 +141,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setInt(1, journalId);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<TaskDTO> tasks = new ArrayList<>();
-            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                tasks.add(TaskDTOFactory.createTaskDTO(resultSet.getInt(1),
                         resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
@@ -168,10 +163,9 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setInt(1, journalId);
             preparedStatement.setString(2, pattern);
             ResultSet resultSet = preparedStatement.executeQuery();
-            TaskDTOFactory taskFactory = new TaskDTOFactory();
             List<TaskDTO> tasks = new ArrayList<>();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                tasks.add(TaskDTOFactory.createTaskDTO(resultSet.getInt(1),
                         resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));
@@ -193,9 +187,8 @@ public class PostgreSQLTasksDAO implements TasksDAO {
             preparedStatement.setString(2, equal);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<TaskDTO> tasks = new ArrayList<>();
-            TaskDTOFactory taskFactory = new TaskDTOFactory();
             while (resultSet.next()) {
-                tasks.add(taskFactory.createTaskDTO(resultSet.getInt(1),
+                tasks.add(TaskDTOFactory.createTaskDTO(resultSet.getInt(1),
                         resultSet.getString(3), resultSet.getString(4), resultSet.getString(5),
                         resultSet.getTimestamp(6).toLocalDateTime(),
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime()));

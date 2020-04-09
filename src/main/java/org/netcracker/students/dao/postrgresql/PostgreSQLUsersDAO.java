@@ -29,9 +29,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_USER_SQL)) {
                 preparedStatement1.setString(1, login);
                 ResultSet resultSet = preparedStatement1.executeQuery();
-                UserFactory userFactory = new UserFactory();
                 if (resultSet.next()) {
-                    return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                    return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                             resultSet.getString(3), resultSet.getString(4),
                             resultSet.getTimestamp(5).toLocalDateTime());
                 }
@@ -48,9 +47,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
-            UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
-                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
+                return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2), resultSet.getString(3),
                         resultSet.getString(4), resultSet.getTimestamp(5).toLocalDateTime());
             }
         } catch (SQLException e) {
@@ -90,9 +88,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<>();
-            UserFactory userFactory = new UserFactory();
             while (resultSet.next()) {
-                users.add(userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                users.add(UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime()));
             }
@@ -109,9 +106,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
             ResultSet resultSet = preparedStatement.executeQuery();
-            UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
-                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
             }
@@ -128,9 +124,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(1, login);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<>();
-            UserFactory userFactory = new UserFactory();
             if (resultSet.next()) {
-                return userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                return UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime());
             }
@@ -148,9 +143,8 @@ public class PostgreSQLUsersDAO implements UsersDAO {
             preparedStatement.setString(2, criteria);
             ResultSet resultSet = preparedStatement.executeQuery();
             List<User> users = new ArrayList<>();
-            UserFactory userFactory = new UserFactory();
             while (resultSet.next()) {
-                users.add(userFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
+                users.add(UserFactory.createUser(resultSet.getInt(1), resultSet.getString(2),
                         resultSet.getString(3), resultSet.getString(4),
                         resultSet.getTimestamp(5).toLocalDateTime()));
             }
