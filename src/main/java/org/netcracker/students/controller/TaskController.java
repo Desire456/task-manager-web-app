@@ -1,9 +1,11 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
-import org.netcracker.students.dao.interfaces.DAOManager;
+import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
-import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
+import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 import org.netcracker.students.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
@@ -20,24 +22,24 @@ import java.util.List;
  * @see Journal
  */
 
-public class TasksController {
+public class TaskController {
     private TasksDAO tasksDAO;
 
-    private static TasksController instance;
+    private static TaskController instance;
 
-    public static synchronized TasksController getInstance() {
+    public static synchronized TaskController getInstance() throws GetConnectionException {
         if (instance == null) {
-            instance = new TasksController();
+            instance = new TaskController();
         }
         return instance;
     }
 
-    private TasksController() {
-        DAOManager daoManager = PostgreSQLDAOManager.getInstance();
+    private TaskController() throws GetConnectionException {
+        ManagerDAO managerDAO = PostgreSQLManagerDAO.getInstance();
         try {
-            this.tasksDAO = daoManager.getTasksDao();
+            this.tasksDAO = managerDAO.getTasksDao();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new GetConnectionException(DAOErrorConstants.GET_CONNECTION_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 

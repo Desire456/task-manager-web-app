@@ -1,12 +1,13 @@
 package org.netcracker.students.servlets;
 
 
-import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.Journals;
+import org.netcracker.students.controller.JournalController;
+import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.UpdateJournalException;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;
 
@@ -24,16 +25,21 @@ public class EditJournalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
-        JournalsController journalsController = JournalsController.getInstance();
+        JournalController journalController = null;
+        try {
+            journalController = JournalController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         XMLParser xmlParser = XMLParser.getInstance();
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         int id = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
-        System.out.println(id);
-        JournalFactory journalFactory = new JournalFactory();
         Journal oldJournal = null;
         try {
-            oldJournal = journalsController.getJournal(id);
+            if (journalController != null)
+                oldJournal = journalController.getJournal(id);
         } catch (ReadJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
@@ -41,7 +47,7 @@ public class EditJournalServlet extends HttpServlet {
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         try {
-            journalsController.changeJournal(journalFactory.createJournal(id, name, description, userId,
+            journalController.changeJournal(JournalFactory.createJournal(id, name, description, userId,
                     oldJournal.getCreationDate(), oldJournal.getIsPrivate()));
         } catch (UpdateJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
@@ -49,7 +55,7 @@ public class EditJournalServlet extends HttpServlet {
         }
         String allJournals = null;
         try {
-            allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
+            allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

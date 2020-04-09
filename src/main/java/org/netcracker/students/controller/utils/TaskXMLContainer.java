@@ -10,14 +10,14 @@ import java.util.List;
 
 @XmlRootElement
 @XmlSeeAlso({Task.class})
-public class Tasks {
+public class TaskXMLContainer {
     @XmlElement(name = "task")
     private List<TaskDTO> tasks;
 
-    public Tasks() {
+    public TaskXMLContainer() {
     }
 
-    public Tasks(List<TaskDTO> tasks) {
+    public TaskXMLContainer(List<TaskDTO> tasks) {
         this.tasks = tasks;
     }
 

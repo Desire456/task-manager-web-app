@@ -9,10 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostgreSQLUsersDAO implements UsersDAO {
+public class PostgreSQLUserDAO implements UsersDAO {
     private Connection connection;
 
-    public PostgreSQLUsersDAO(Connection connection) {
+    public PostgreSQLUserDAO(Connection connection) {
         this.connection = connection;
     }
 

@@ -1,8 +1,9 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.Tasks;
+import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.UpdateTaskException;
 import org.netcracker.students.factories.TaskFactory;
@@ -23,7 +24,13 @@ public class EditTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
-        TasksController tasksController = TasksController.getInstance();
+        TaskController taskController = null;
+        try {
+            taskController = TaskController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         XMLParser xmlParser = XMLParser.getInstance();
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
@@ -33,17 +40,17 @@ public class EditTaskServlet extends HttpServlet {
         int taskId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
-        TaskFactory taskFactory = new TaskFactory();
         try {
-            tasksController.changeTask(taskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
-                    null, ServletConstants.STATUS_PLANNED));
+            if (taskController != null)
+                taskController.changeTask(TaskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
+                        null, ServletConstants.STATUS_PLANNED));
         } catch (UpdateTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
         String allTasks = null;
         try {
-            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
+            allTasks = xmlParser.toXML(new TaskXMLContainer(taskController.getAll(journalId)));
         } catch (GetAllTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

@@ -1,6 +1,7 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.UsersController;
+import org.netcracker.students.controller.UserController;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.CreateUserException;
 import org.netcracker.students.factories.UserFactory;
 
@@ -22,10 +23,16 @@ public class WellServlet extends HttpServlet {
         String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
         String role = req.getParameter(ServletConstants.PARAMETER_ROLE);
         LocalDateTime dateOfRegistration = LocalDateTime.now();
-        UsersController usersController = UsersController.getInstance();
-        UserFactory userFactory = new UserFactory();
+        UserController userController = null;
         try {
-            usersController.addUser(userFactory.createUser(login, password, role, dateOfRegistration));
+            userController = UserController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        try {
+            if (userController != null)
+                userController.addUser(UserFactory.createUser(login, password, role, dateOfRegistration));
         } catch (CreateUserException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);

@@ -2,7 +2,8 @@ package org.netcracker.students.dao.postrgresql;
 
 import org.netcracker.students.dao.connection.ConnectionBuilder;
 import org.netcracker.students.dao.connection.PoolConnectionBuilder;
-import org.netcracker.students.dao.interfaces.DAOManager;
+import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
+import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
@@ -14,38 +15,38 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class PostgreSQLDAOManager implements DAOManager {
-    private static PostgreSQLDAOManager instance;
+public class PostgreSQLManagerDAO implements ManagerDAO {
+    private static PostgreSQLManagerDAO instance;
     private ConnectionBuilder connectionBuilder;
 
-    private PostgreSQLDAOManager(String path) {
+    private PostgreSQLManagerDAO(String path) throws ExecuteSqlScriptException {
         connectionBuilder = new PoolConnectionBuilder();
         executeSqlStartScript(path);
     }
 
-    private PostgreSQLDAOManager() {
+    private PostgreSQLManagerDAO() {
         connectionBuilder = new PoolConnectionBuilder();
     }
 
-    public static PostgreSQLDAOManager getInstance() {
+    public static PostgreSQLManagerDAO getInstance() {
         if (instance == null)
-            instance = new PostgreSQLDAOManager();
+            instance = new PostgreSQLManagerDAO();
         return instance;
     }
 
-    public static PostgreSQLDAOManager getInstance(String path) {
+    public static PostgreSQLManagerDAO getInstance(String path) throws ExecuteSqlScriptException {
         if (instance == null)
-            instance = new PostgreSQLDAOManager(path);
+            instance = new PostgreSQLManagerDAO(path);
         return instance;
     }
 
     public Connection getConnection() throws SQLException {
-        return connectionBuilder.getConnect();
+            return connectionBuilder.getConnect();
     }
 
     @Override
     public TasksDAO getTasksDao() throws SQLException {
-        return new PostgreSQLTasksDAO(getConnection());
+        return new PostgreSQLTaskDAO(getConnection());
     }
 
     @Override
@@ -55,10 +56,10 @@ public class PostgreSQLDAOManager implements DAOManager {
 
     @Override
     public UsersDAO getUsersDao() throws SQLException {
-        return new PostgreSQLUsersDAO(getConnection());
+        return new PostgreSQLUserDAO(getConnection());
     }
 
-    private void executeSqlStartScript(String path) {
+    private void executeSqlStartScript(String path) throws ExecuteSqlScriptException {
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
             String line;
@@ -66,7 +67,9 @@ public class PostgreSQLDAOManager implements DAOManager {
                 Statement statement = connectionBuilder.getConnect().createStatement();
                 statement.execute(line);
             }
-        } catch (SQLException | IOException ignored) {
+        } catch (SQLException | IOException e) {
+            throw new ExecuteSqlScriptException(DAOErrorConstants.EXECUTE_SQL_SCRIPT_EXCEPTION_MESSAGE
+                    + e.getMessage());
         }
     }
 }

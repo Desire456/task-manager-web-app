@@ -1,9 +1,11 @@
 package org.netcracker.students.controller;
 
 import org.netcracker.students.dao.exceptions.journalDAO.*;
-import org.netcracker.students.dao.interfaces.DAOManager;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
+import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.JournalDAO;
-import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
+import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 import org.netcracker.students.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
@@ -11,24 +13,24 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class JournalsController {
-    private static JournalsController instance;
+public class JournalController {
+    private static JournalController instance;
 
-    public static synchronized JournalsController getInstance() {
+    public static synchronized JournalController getInstance() throws GetConnectionException {
         if (instance == null) {
-            instance = new JournalsController();
+            instance = new JournalController();
         }
         return instance;
     }
 
     private JournalDAO journalDAO;
 
-    private JournalsController() {
-        DAOManager DAOManager = PostgreSQLDAOManager.getInstance();
+    private JournalController() throws GetConnectionException {
+        ManagerDAO ManagerDAO = PostgreSQLManagerDAO.getInstance();
         try {
-            this.journalDAO = DAOManager.getJournalDao();
+            this.journalDAO = ManagerDAO.getJournalDao();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new GetConnectionException(DAOErrorConstants.GET_CONNECTION_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 

@@ -1,31 +1,34 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.*;
-import org.netcracker.students.dao.interfaces.DAOManager;
+import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
-import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
+import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 import org.netcracker.students.model.User;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
-public class UsersController {
-    private static UsersController instance;
+public class UserController {
+    private static UserController instance;
     private UsersDAO usersDAO;
 
-    public static synchronized UsersController getInstance() {
+    public static synchronized UserController getInstance() throws GetConnectionException {
         if (instance == null) {
-            instance = new UsersController();
+            instance = new UserController();
         }
         return instance;
     }
 
-    private UsersController() {
-        DAOManager DAOManager = PostgreSQLDAOManager.getInstance();
+    private UserController() throws GetConnectionException {
+        ManagerDAO ManagerDAO = PostgreSQLManagerDAO.getInstance();
         try {
-            usersDAO = DAOManager.getUsersDao();
-        } catch (SQLException ignored) {
+            usersDAO = ManagerDAO.getUsersDao();
+        } catch (SQLException e) {
+            throw new GetConnectionException(DAOErrorConstants.GET_CONNECTION_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 

@@ -1,10 +1,11 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.Journals;
+import org.netcracker.students.controller.JournalController;
+import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByEqualsJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByPatternJournalException;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dto.JournalDTO;
 
 import javax.servlet.RequestDispatcher;
@@ -26,19 +27,26 @@ public class FilterJournalServlet extends HttpServlet {
         String sortCriteria = req.getParameter(ServletConstants.PARAMETER_SORT);
         String equal = req.getParameter(ServletConstants.PARAMETER_EQUAL);
         String pattern = req.getParameter(ServletConstants.PARAMETER_PATTERN);
-        JournalsController journalsController = JournalsController.getInstance();
+        JournalController journalController = null;
+        try {
+            journalController = JournalController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         List<JournalDTO> journals = null;
         try {
-            journals = journalsController.getFilteredJournals(userId, column, pattern,
-                    sortCriteria, equal != null);
+            if (journalController != null)
+                journals = journalController.getFilteredJournals(userId, column, pattern,
+                        sortCriteria, equal != null);
         } catch (GetFilteredByEqualsJournalException | GetFilteredByPatternJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
         XMLParser xmlParser = XMLParser.getInstance();
-        String journalsXml = xmlParser.toXML(new Journals(journals));
+        String journalsXml = xmlParser.toXML(new JournalXMLContainer(journals));
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, journalsXml);
         requestDispatcher.forward(req, resp);
     }

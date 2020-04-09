@@ -1,8 +1,9 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.Tasks;
+import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
 import org.netcracker.students.dto.TaskDTO;
 
@@ -23,12 +24,18 @@ public class TasksPageServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
         HttpSession session = req.getSession();
         int journalId = (int) session.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
-        List<TaskDTO> taskArrayList = null;
-        TasksController tasksController = TasksController.getInstance();
+        TaskController taskController = null;
         try {
-            taskArrayList = tasksController.getAll(journalId);
+            taskController = TaskController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        List<TaskDTO> taskArrayList = null;
+        try {
+            if (taskController != null)
+                taskArrayList = taskController.getAll(journalId);
         } catch (GetAllTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -36,7 +43,7 @@ public class TasksPageServlet extends HttpServlet {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
         } else {
             XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
+            String allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         }
         requestDispatcher.forward(req, resp);
@@ -48,12 +55,18 @@ public class TasksPageServlet extends HttpServlet {
         int journalId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_JOURNAL_ID));
         HttpSession session = req.getSession();
         session.setAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID, journalId);
-        TasksController tasksController = TasksController.getInstance();
+        TaskController taskController = null;
+        try {
+            taskController = TaskController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         List<TaskDTO> taskArrayList = null;
         try {
-            taskArrayList = tasksController.getAll(journalId);
+            if (taskController != null)
+                taskArrayList = taskController.getAll(journalId);
         } catch (GetAllTaskException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -61,7 +74,7 @@ public class TasksPageServlet extends HttpServlet {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
         } else {
             XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = xmlParser.toXML(new Tasks(taskArrayList));
+            String allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         }
         requestDispatcher.forward(req, resp);

@@ -9,14 +9,14 @@ import java.util.List;
 
 @XmlRootElement
 @XmlSeeAlso({JournalDTO.class})
-public class Journals {
+public class JournalXMLContainer {
     @XmlElement(name = "journal")
     private List<JournalDTO> journals;
 
-    public Journals() {
+    public JournalXMLContainer() {
     }
 
-    public Journals(List<JournalDTO> journals) {
+    public JournalXMLContainer(List<JournalDTO> journals) {
         this.journals = journals;
     }
 }

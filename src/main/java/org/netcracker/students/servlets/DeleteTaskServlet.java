@@ -1,8 +1,9 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.Tasks;
+import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
 
@@ -20,20 +21,27 @@ public class DeleteTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
-        TasksController tasksController = TasksController.getInstance();
+        TaskController taskController = null;
+        try {
+            taskController = TaskController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         XMLParser xmlParser = XMLParser.getInstance();
         HttpSession httpSession = req.getSession();
         int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
-            tasksController.deleteTasks(ids);
+            if (taskController != null)
+                taskController.deleteTasks(ids);
         } catch (DeleteTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
         String allTasks = null;
         try {
-            allTasks = xmlParser.toXML(new Tasks(tasksController.getAll(journalId)));
+            allTasks = xmlParser.toXML(new TaskXMLContainer(taskController.getAll(journalId)));
         } catch (GetAllTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

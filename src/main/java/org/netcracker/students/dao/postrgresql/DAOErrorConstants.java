@@ -1,6 +1,9 @@
 package org.netcracker.students.dao.postrgresql;
 
 public class DAOErrorConstants {
+    public static final String GET_CONNECTION_EXCEPTION_MESSAGE = "Can't get connection ";
+    public static final String EXECUTE_SQL_SCRIPT_EXCEPTION_MESSAGE = "Can't execute sql start script ";
+
     public static final String CREATE_TASK_EXCEPTION_MESSAGE = "Can't create task ";
     public static final String DELETE_TASK_EXCEPTION_MESSAGE = "Can't delete task ";
     public static final String GET_ALL_TASK_EXCEPTION_MESSAGE = "Can't get all tasks ";

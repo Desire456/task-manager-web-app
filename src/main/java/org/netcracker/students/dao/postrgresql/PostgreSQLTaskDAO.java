@@ -11,10 +11,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostgreSQLTasksDAO implements TasksDAO {
+public class PostgreSQLTaskDAO implements TasksDAO {
     private Connection connection;
 
-    public PostgreSQLTasksDAO(Connection connection) {
+    public PostgreSQLTaskDAO(Connection connection) {
         this.connection = connection;
     }
 

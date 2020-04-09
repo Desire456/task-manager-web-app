@@ -1,11 +1,11 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.Journals;
+import org.netcracker.students.controller.JournalController;
+import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.DeleteJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
-import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -15,18 +15,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 
 @WebServlet("/deleteJournal")
 public class DeleteJournalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
-        JournalsController journalsController = JournalsController.getInstance();
+        JournalController journalController = null;
+        try {
+            journalController = JournalController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         XMLParser xmlParser = XMLParser.getInstance();
         String ids = req.getParameter(ServletConstants.PARAMETER_IDS);
         try {
-            journalsController.deleteJournal(ids);
+            if (journalController != null)
+                journalController.deleteJournal(ids);
         } catch (DeleteJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
@@ -35,7 +41,7 @@ public class DeleteJournalServlet extends HttpServlet {
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         String allJournals = null;
         try {
-            allJournals = xmlParser.toXML(new Journals(journalsController.getAll(userId)));
+            allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
         } catch (GetAllJournalByUserIdException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

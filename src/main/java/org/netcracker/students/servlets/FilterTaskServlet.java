@@ -1,8 +1,9 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.TasksController;
-import org.netcracker.students.controller.utils.Tasks;
+import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetFilteredByEqualsTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetFilteredByPatternTaskException;
 import org.netcracker.students.dto.TaskDTO;
@@ -26,19 +27,26 @@ public class FilterTaskServlet extends HttpServlet {
         String sortCriteria = req.getParameter(ServletConstants.PARAMETER_SORT);
         String equal = req.getParameter(ServletConstants.PARAMETER_EQUAL);
         String pattern = req.getParameter(ServletConstants.PARAMETER_PATTERN);
-        TasksController tasksController = TasksController.getInstance();
+        TaskController taskController = null;
+        try {
+            taskController = TaskController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         HttpSession httpSession = req.getSession();
         int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         List<TaskDTO> tasks = null;
         try {
-            tasks = tasksController.getFilteredTasks(journalId, column, pattern,
-                    sortCriteria, equal != null);
+            if (taskController != null)
+                tasks = taskController.getFilteredTasks(journalId, column, pattern,
+                        sortCriteria, equal != null);
         } catch (GetFilteredByEqualsTaskException | GetFilteredByPatternTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
         XMLParser xmlParser = XMLParser.getInstance();
-        String tasksXml = xmlParser.toXML(new Tasks(tasks));
+        String tasksXml = xmlParser.toXML(new TaskXMLContainer(tasks));
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, tasksXml);
         requestDispatcher.forward(req, resp);
     }

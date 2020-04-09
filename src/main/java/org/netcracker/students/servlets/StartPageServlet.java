@@ -1,7 +1,7 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.dao.interfaces.DAOManager;
-import org.netcracker.students.dao.postrgresql.PostgreSQLDAOManager;
+import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
+import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -16,9 +16,14 @@ import java.io.IOException;
 public class StartPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        File file = new File(ServletConstants.PATH_TO_SCRIPT_SQL);
-        PostgreSQLDAOManager.getInstance(file.getAbsolutePath());
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START);
+        File file = new File(ServletConstants.PATH_TO_SCRIPT_SQL);
+        try {
+            PostgreSQLManagerDAO.getInstance(file.getAbsolutePath());
+        } catch (ExecuteSqlScriptException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         requestDispatcher.forward(req, resp);
     }
 }
