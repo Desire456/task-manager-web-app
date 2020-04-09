@@ -16,7 +16,7 @@ import java.sql.Statement;
 
 public class PostgreSQLDAOManager implements DAOManager {
     private static PostgreSQLDAOManager instance;
-    ConnectionBuilder connectionBuilder;
+    private ConnectionBuilder connectionBuilder;
 
     private PostgreSQLDAOManager(String path) {
         connectionBuilder = new PoolConnectionBuilder();
