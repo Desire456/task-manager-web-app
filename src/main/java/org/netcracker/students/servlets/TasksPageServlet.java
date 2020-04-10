@@ -5,7 +5,7 @@ import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
-import org.netcracker.students.dto.TaskDTO;
+import org.netcracker.students.model.dto.TaskDTO;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;

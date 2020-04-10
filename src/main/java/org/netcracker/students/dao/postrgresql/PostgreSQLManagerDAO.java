@@ -3,8 +3,8 @@ package org.netcracker.students.dao.postrgresql;
 import org.netcracker.students.dao.connection.ConnectionBuilder;
 import org.netcracker.students.dao.connection.PoolConnectionBuilder;
 import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
-import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.JournalDAO;
+import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 
@@ -41,12 +41,13 @@ public class PostgreSQLManagerDAO implements ManagerDAO {
     }
 
     public Connection getConnection() throws SQLException {
-            return connectionBuilder.getConnect();
+        Connection connection = connectionBuilder.getConnect();
+        return connection;
     }
 
     @Override
     public TasksDAO getTasksDao() throws SQLException {
-        return new PostgreSQLTaskDAO(getConnection());
+        return new PostgreSQLTaskDAO(this.getConnection());
     }
 
     @Override

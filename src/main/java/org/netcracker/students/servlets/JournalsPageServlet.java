@@ -7,7 +7,7 @@ import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.GetUserByLoginAndPasswordException;
-import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.User;
 
 import javax.servlet.RequestDispatcher;

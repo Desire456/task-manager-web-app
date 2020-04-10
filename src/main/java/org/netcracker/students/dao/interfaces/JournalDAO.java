@@ -1,11 +1,9 @@
 package org.netcracker.students.dao.interfaces;
 
 import org.netcracker.students.dao.exceptions.journalDAO.*;
-import org.netcracker.students.dao.exceptions.taskDAO.DeleteTaskException;
-import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 

@@ -2,7 +2,7 @@ package org.netcracker.students.dao.interfaces;
 
 
 import org.netcracker.students.dao.exceptions.taskDAO.*;
-import org.netcracker.students.dto.TaskDTO;
+import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.model.Task;
 
 import java.sql.Timestamp;

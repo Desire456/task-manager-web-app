@@ -2,7 +2,7 @@ package org.netcracker.students.dao.postrgresql;
 
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.interfaces.JournalDAO;
-import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.model.Journal;

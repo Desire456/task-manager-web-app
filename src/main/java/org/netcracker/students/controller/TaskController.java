@@ -6,7 +6,7 @@ import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
 import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
-import org.netcracker.students.dto.TaskDTO;
+import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 

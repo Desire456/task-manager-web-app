@@ -1,4 +1,4 @@
-package org.netcracker.students.dto;
+package org.netcracker.students.model.dto;
 
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 

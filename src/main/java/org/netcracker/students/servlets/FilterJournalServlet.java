@@ -6,7 +6,7 @@ import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByEqualsJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByPatternJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
-import org.netcracker.students.dto.JournalDTO;
+import org.netcracker.students.model.dto.JournalDTO;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
