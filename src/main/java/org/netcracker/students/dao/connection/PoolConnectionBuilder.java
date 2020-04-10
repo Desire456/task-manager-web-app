@@ -16,7 +16,7 @@ public class PoolConnectionBuilder implements ConnectionBuilder {
             Context ctx = new InitialContext();
             dataSource = (DataSource) ctx.lookup("java:comp/env/jdbc/taskManager");
         } catch (NamingException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // todo i wanna be fixed
         }
     }
 
