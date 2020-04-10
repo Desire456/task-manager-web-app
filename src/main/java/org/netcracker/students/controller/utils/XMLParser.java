@@ -31,6 +31,7 @@ public class XMLParser {
                 marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
                 marshaller.marshal(obj, sw);
             } catch (JAXBException ignored) {
+                // todo we can not marshal to xml then we will return empty string ;( and we will not know that it is breakage ;(((
             }
         } else throw new NullPointerException(NULL_EXCEPTION_MESSAGE);
         return sw.toString();
