@@ -44,13 +44,9 @@ public class XMLQueryValidator {
             validator.validate(new StreamSource(XMLQueryValidatorConstants.PATH_TO_XML));
             return true;
         }
-        catch(NotFoundXMLException e){
+        catch(NotFoundXMLException | NotFoundXSDException e){
             throw new XMLQueryValidatorException(e.getMessage());
-        }
-        catch (NotFoundXSDException e){
-            throw new XMLQueryValidatorException(e.getMessage());
-        }
-        catch (SAXException | IOException e) {
+        } catch (SAXException | IOException e) {
             throw new XMLQueryValidatorException(XMLQueryValidatorConstants.XML_NOT_VERIFIED_MESSAGE +" "+ e.getMessage());
         }
 
