@@ -5,6 +5,13 @@ import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.factories.UserFactory;
 import org.netcracker.students.model.User;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +21,17 @@ public class PostgreSQLUserDAO implements UsersDAO {
 
     public PostgreSQLUserDAO(Connection connection) {
         this.connection = connection;
+    }
+
+
+    private String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] salt = new byte[16];
+        secureRandom.nextBytes(salt);
+        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
+        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
+        byte[] hash = factory.generateSecret(spec).getEncoded();
+        return new BigInteger(1,hash).toString(16);
     }
 
     @Override

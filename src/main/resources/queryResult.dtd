@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+        <!ELEMENT queryResoult (tasks*, journals*, users*, message)>
+        <!ELEMENT tasks (task*)>
+        <!ELEMENT task EMPTY>
+        <!ATTLIST task
+                id ID #REQUIRED
+                taskName CDATA #REQUIRED
+                taskDesctiption CDATA #REQUIRED
+                status CDATA #REQUIRED
+                plannedDate CDATA #REQUIRED
+                dateOfDone CDATA
+                journalId ID>
+        <!ELEMENT journals (journal*)>
+        <!ELEMENT journal EMPTY>
+        <!ATTLIST journal
+                id ID #REQUIRED
+                journalName CDATA #REQUIRED
+                journalDescription CDATA #REQUIRED
+                creationDate CDATA #REQUIRED
+                isPrivate (true|false) #REQUIRED
+                userID ID #REQUIRED>
+        <!ELEMENT users (user*)>
+        <!ELEMENT user EMPTY>
+        <!ATTLIST user
+                id ID #REQUIRED
+                login CDATA #REQUIRED
+                password CDATA #REQUIRED
+                role CDATA #REQUIRED
+                dateOfRegistration CDATA #REQUIRED>
+        <!ELEMENT message (#PCDATA)>

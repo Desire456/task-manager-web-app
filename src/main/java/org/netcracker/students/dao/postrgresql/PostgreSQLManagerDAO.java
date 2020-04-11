@@ -62,13 +62,18 @@ public class PostgreSQLManagerDAO implements ManagerDAO {
 
     private void executeSqlStartScript(String path) throws ExecuteSqlScriptException {
         try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+            BufferedReader br = new BufferedReader(new FileReader(path));
             String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                Statement statement = connectionBuilder.getConnect().createStatement();
-                statement.execute(line);
+            StringBuilder query = new StringBuilder();
+            String ls = System.getProperty("line.separator");
+            while ((line = br.readLine()) != null) {
+                query.append(line);
+                query.append(ls);
             }
-        } catch (SQLException | IOException e) {
+            System.out.println(query);
+            Statement statement = connectionBuilder.getConnect().createStatement();
+            statement.execute(query.toString());
+        } catch (IOException | SQLException e) {
             throw new ExecuteSqlScriptException(DAOErrorConstants.EXECUTE_SQL_SCRIPT_EXCEPTION_MESSAGE
                     + e.getMessage());
         }
