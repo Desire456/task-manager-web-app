@@ -10,7 +10,7 @@ body {
 
 .actions {
     display: inline;
-    margin-left: 15%;
+    margin-left: 18%;
 }
 
 .filter {
@@ -48,6 +48,25 @@ table tbody tr:hover {
     background: #e8f6ff;
 }
 
+th.sorted[data-order="1"],
+th.sorted[data-order="-1"] {
+    position: relative;
+}
+
+th.sorted[data-order="1"]::after,
+th.sorted[data-order="-1"]::after {
+    right: 8px;
+    position: absolute;
+}
+
+th.sorted[data-order="-1"]::after {
+    content: "\2193";
+}
+
+th.sorted[data-order="1"]::after {
+    content: "\2191";
+}
+
 
 .window {
     display: none;
@@ -71,7 +90,7 @@ table tbody tr:hover {
 .button {
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    padding: 8px 28px;
+    padding: 4px 20px;
     background-color: #e7e7e7;
     color: black;
 }
@@ -79,7 +98,7 @@ table tbody tr:hover {
 .button:hover {
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
-    padding: 8px 28px;
+    padding: 4px 20px;
     background-color: #00aacc;
     color: #ffffff;
 }
@@ -87,7 +106,7 @@ table tbody tr:hover {
 .button:disabled {
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-    padding: 8px 28px;
+    padding: 4px 20px;
     background-color: #cccccc;
     color: #666666;
 }

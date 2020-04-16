@@ -37,14 +37,14 @@ To change this template use File | Settings | File Templates.
             <option value = "ASC" name = "sort">Ascending</option>
             <option value = "ASC" name = "sort">Descending</option>
         </select>
-            <br>
+            <br><br>
             By: <input type="text" name="pattern" required>
             Equal <input type="checkbox" name="equal">
             <br><br>
             <input type="submit" class="button" style="margin-left: 40%" value="Submit">
         </form>
     </div>
-    <table>
+    <table class = "table_sort">
         <caption>TABLE OF TASKS</caption>
         <thead>
         <tr>
@@ -146,59 +146,26 @@ To change this template use File | Settings | File Templates.
         window.location.href = "journals";
     }
 
-    const table = document.querySelector("table");
-    let colIndex = -1;
+    document.addEventListener('DOMContentLoaded', () => {
 
+        const getSort = ({ target }) => {
+            const order = (target.dataset.order = -(target.dataset.order || -1));
+            const index = [...target.parentNode.cells].indexOf(target);
+            const collator = new Intl.Collator(['en', 'ru'], { numeric: true });
+            const comparator = (index, order) => (a, b) => order * collator.compare(
+                a.children[index].innerHTML,
+                b.children[index].innerHTML
+            );
 
-    const sortTable = function (index, type, isSorted) {
-        if (type === 'checkbox') return;
-        const tbody = table.querySelector('tbody');
-        const parseDate = function (rowData) {
-            let mas = rowData.split(' ');
-            return mas[20].split('-').reverse().join('-').concat(' ' + mas[21]);
-        };
-        const compare = function (rowA, rowB) {
-            const rowDataA = rowA.cells[index].innerHTML;
-            const rowDataB = rowB.cells[index].innerHTML;
+            for(const tBody of target.closest('table').tBodies)
+                tBody.append(...[...tBody.rows].sort(comparator(index, order)));
 
-            switch (type) {
-                case 'text':
-                    const dataA = rowDataA.toString();
-                    const dataB = rowDataB.toString();
-                    if (dataA < dataB) return -1;
-                    else if (dataA > dataB) return 1;
-                    return 0;
-                    break;
-                case 'date':
-                    const dateA = parseDate(rowDataA);
-                    const dateB = parseDate(rowDataB);
-                    return new Date(dateA).getTime() - new Date(dateB).getTime();
-                    break;
-            }
+            for(const cell of target.parentNode.cells)
+                cell.classList.toggle('sorted', cell === target);
         };
 
-        let rows = [].slice.call(tbody.rows);
-        rows.sort(compare);
+        document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
 
-        if (isSorted) rows.reverse();
-
-        table.removeChild(tbody);
-        for (let i = 0; i < rows.length; ++i) {
-            tbody.appendChild(rows[i]);
-        }
-
-        table.appendChild(tbody);
-    };
-
-    table.addEventListener('click', (e) => {
-        const el = e.target;
-        if (el.nodeName !== 'TH') return;
-
-        const index = el.cellIndex;
-        const type = el.getAttribute('data-type');
-
-        sortTable(index, type, colIndex === index);
-        colIndex = (colIndex === index) ? -1 : index;
     });
 
     let addWindow = document.getElementById("addWindow");
