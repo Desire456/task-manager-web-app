@@ -2,6 +2,7 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
+import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByEqualsJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByPatternJournalException;
@@ -46,7 +47,13 @@ public class FilterJournalServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
         }
         XMLParser xmlParser = XMLParser.getInstance();
-        String journalsXml = xmlParser.toXML(new JournalXMLContainer(journals));
+        String journalsXml = null;
+        try {
+            journalsXml = xmlParser.toXML(new JournalXMLContainer(journals));
+        } catch (ParseXMLException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, journalsXml);
         requestDispatcher.forward(req, resp);
     }

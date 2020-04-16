@@ -1,6 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
@@ -46,7 +47,13 @@ public class FilterTaskServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
         }
         XMLParser xmlParser = XMLParser.getInstance();
-        String tasksXml = xmlParser.toXML(new TaskXMLContainer(tasks));
+        String tasksXml = null;
+        try {
+            tasksXml = xmlParser.toXML(new TaskXMLContainer(tasks));
+        } catch (ParseXMLException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, tasksXml);
         requestDispatcher.forward(req, resp);
     }

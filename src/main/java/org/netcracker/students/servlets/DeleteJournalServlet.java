@@ -2,6 +2,7 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
+import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.DeleteJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
@@ -42,7 +43,7 @@ public class DeleteJournalServlet extends HttpServlet {
         String allJournals = null;
         try {
             allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
-        } catch (GetAllJournalByUserIdException e) {
+        } catch (GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

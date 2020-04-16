@@ -10,7 +10,7 @@
                                         <xsd:element name="name" type="xsd:string"/>
                                         <xsd:element name="description" type="xsd:string"/>
                                         <xsd:element name="status" type="xsd:string"/>
-                                        <xsd:element name="plannedDate" type="xsd:dateTime"/>
+                                        <xsd:element name="plannedDate" type="xsd:string"/>
                                         <xsd:element name='formattedPlannedDate' type="xsd:string"/>
                                     </xsd:sequence>
                                 </xsd:complexType>
@@ -27,7 +27,7 @@
                                         <xsd:element name="id" type="xsd:nonNegativeInteger"/>
                                         <xsd:element name="name" type="xsd:string"/>
                                         <xsd:element name="description" type="xsd:string"/>
-                                        <xsd:element name="creationDate" type="xsd:dateTime"/>
+                                        <xsd:element name="creationDate" type="xsd:string"/>
                                     </xsd:sequence>
                                 </xsd:complexType>
                             </xsd:element>

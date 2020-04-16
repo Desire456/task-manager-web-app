@@ -35,10 +35,10 @@ public class WellServlet extends HttpServlet {
         try {
             if (userController != null) {
                 String hashPassword = HashingClass.hashPassword(password);
-                userController.addUser(UserFactory.createUser(login, hashPassword, dateOfRegistration));
+                System.out.println(hashPassword);
+                userController.addUser(UserFactory.createUser(login, password, dateOfRegistration));
             }
         } catch (CreateUserException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
 

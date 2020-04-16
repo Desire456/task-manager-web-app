@@ -2,6 +2,7 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
+import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
@@ -48,8 +49,8 @@ public class AddJournalServlet extends HttpServlet {
         try {
             if (journalController != null)
                 allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
-            System.out.println(allJournals);
-        } catch (GetAllJournalByUserIdException e) {
+        } catch (GetAllJournalByUserIdException | ParseXMLException e) {
+            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

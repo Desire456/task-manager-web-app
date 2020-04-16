@@ -1,6 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
@@ -43,7 +44,13 @@ public class TasksPageServlet extends HttpServlet {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
         } else {
             XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
+            String allTasks = null;
+            try {
+                allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
+            } catch (ParseXMLException e) {
+                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+                requestDispatcher.forward(req, resp);
+            }
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         }
         requestDispatcher.forward(req, resp);
@@ -74,7 +81,13 @@ public class TasksPageServlet extends HttpServlet {
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
         } else {
             XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
+            String allTasks = null;
+            try {
+                allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
+            } catch (ParseXMLException e) {
+                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+                requestDispatcher.forward(req, resp);
+            }
             session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         }
         requestDispatcher.forward(req, resp);

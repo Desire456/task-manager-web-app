@@ -1,6 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.TaskController;
+import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
@@ -42,7 +43,7 @@ public class DeleteTaskServlet extends HttpServlet {
         String allTasks = null;
         try {
             allTasks = xmlParser.toXML(new TaskXMLContainer(taskController.getAll(journalId)));
-        } catch (GetAllTaskException e) {
+        } catch (GetAllTaskException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

@@ -70,7 +70,6 @@ public class PostgreSQLManagerDAO implements ManagerDAO {
                 query.append(line);
                 query.append(ls);
             }
-            System.out.println(query);
             Statement statement = connectionBuilder.getConnect().createStatement();
             statement.execute(query.toString());
         } catch (IOException | SQLException e) {

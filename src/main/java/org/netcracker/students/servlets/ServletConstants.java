@@ -6,7 +6,6 @@ public class ServletConstants {
     public static final String PARAMETER_ACCESS_MODIFIER = "accessModifier";
     public static final String PARAMETER_LOGIN = "login";
     public static final String PARAMETER_PASSWORD = "password";
-    public static final String PARAMETER_ROLE = "role";
     public static final String PARAMETER_COLUMN = "column";
     public static final String PARAMETER_EQUAL = "equal";
     public static final String PARAMETER_SORT = "sort";
