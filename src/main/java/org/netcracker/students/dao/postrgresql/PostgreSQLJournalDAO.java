@@ -67,7 +67,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public void update(Journal journal) throws UpdateJournalException {
-        String sql = "UPDATE journals SET isprivate = ?, name = ?, creation_date = ?, description = ? WHERE journal_id = ?";
+        String sql = "UPDATE journals SET is_private = ?, name = ?, creation_date = ?, description = ? WHERE journal_id = ?";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(5, journal.getId());
             preparedStatement.setBoolean(1, journal.getIsPrivate());
@@ -111,7 +111,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException {
-        String sql = "SELECT * FROM journals WHERE (user_id = ?) OR (isprivate = ?)";
+        String sql = "SELECT * FROM journals WHERE (user_id = ?) OR (is_private = ?)";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, userId);
             preparedStatement.setBoolean(2, false);
@@ -133,7 +133,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     public List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria)
             throws GetSortedByCriteriaJournalException {
         String sql = "SELECT * FROM journals WHERE (user_id = ?) " +
-                "OR (isprivate = ?) ORDER BY %s %s";
+                "OR (is_private = ?) ORDER BY %s %s";
         String SQL = String.format(sql, column, criteria);
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setInt(1, userId);
@@ -155,7 +155,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria) throws GetFilteredByPatternJournalException {
-        String sql = "SELECT * FROM journals WHERE ((user_id = ?) OR (isprivate = ?)) AND (%s LIKE ?) " +
+        String sql = "SELECT * FROM journals WHERE ((user_id = ?) OR (is_private = ?)) AND (%s LIKE ?) " +
                 "ORDER BY %s %s";
         String SQL = String.format(sql, column, column, criteria);
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
@@ -180,7 +180,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     public List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria)
             throws GetFilteredByEqualsJournalException {
         String sql = "SELECT * FROM journals  WHERE ((user_id = ?) " +
-                "OR (isprivate = ?)) AND (%s = ?) ORDER BY %s %s";
+                "OR (is_private = ?)) AND (%s = ?) ORDER BY %s %s";
         String SQL = String.format(sql, column, column, criteria);
         try (PreparedStatement preparedStatement = connection.prepareStatement(SQL)) {
             preparedStatement.setInt(1, userId);

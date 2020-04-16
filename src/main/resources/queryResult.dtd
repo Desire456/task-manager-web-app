@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-        <!ELEMENT queryResoult (tasks*, journals*, users*, message)>
         <!ELEMENT tasks (task*)>
         <!ELEMENT task EMPTY>
         <!ATTLIST task
@@ -27,4 +26,3 @@
                 password CDATA #REQUIRED
                 role CDATA #REQUIRED
                 dateOfRegistration CDATA #REQUIRED>
-        <!ELEMENT message (#PCDATA)>

@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <xsd:element name="queryResult">
-        <xsd:complexType>
-            <xsd:sequence>
-                <xsd:element name="tasks" minOccurs="0">
+                <xsd:element name="tasks">
                     <xsd:complexType>
                         <xsd:sequence>
                             <xsd:element name="task" minOccurs="0">
@@ -14,69 +11,27 @@
                                         <xsd:element name="description" type="xsd:string"/>
                                         <xsd:element name="status" type="xsd:string"/>
                                         <xsd:element name="plannedDate" type="xsd:dateTime"/>
-                                        <xsd:element name="dateOfDone" type="xsd:dateTime"/>
-                                        <xsd:element name="journalId" type="xsd:nonNegativeInteger"/>
+                                        <xsd:element name='formattedPlannedDate' type="xsd:string"/>
                                     </xsd:sequence>
                                 </xsd:complexType>
                             </xsd:element>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
-                <xsd:element name="journals" minOccurs="0">
+                <xsd:element name="journals">
                     <xsd:complexType>
                         <xsd:sequence>
                             <xsd:element name="journal" minOccurs="0">
                                 <xsd:complexType>
                                     <xsd:sequence>
                                         <xsd:element name="id" type="xsd:nonNegativeInteger"/>
-                                        <xsd:element name="userId" type="xsd:nonNegativeInteger"/>
                                         <xsd:element name="name" type="xsd:string"/>
                                         <xsd:element name="description" type="xsd:string"/>
                                         <xsd:element name="creationDate" type="xsd:dateTime"/>
-                                        <xsd:element name="isPrivate" type="xsd:boolean"/>
                                     </xsd:sequence>
                                 </xsd:complexType>
                             </xsd:element>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
-                <xsd:element name="users" minOccurs="0">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="user" minOccurs="0">
-                                <xsd:complexType>
-                                    <xsd:sequence>
-                                        <xsd:element name="id" type="xsd:nonNegativeInteger"/>
-                                        <xsd:element name="login" type="xsd:string"/>
-                                        <xsd:element name="password" type="xsd:string"/>
-                                        <xsd:element name="dateOfRegistration" type="xsd:dateTime"/>
-                                    </xsd:sequence>
-                                </xsd:complexType>
-                            </xsd:element>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-                <xsd:element name="message">
-                    <xsd:complexType>
-                        <xsd:sequence>
-                            <xsd:element name="result">
-                                <xsd:simpleType>
-                                    <xsd:restriction base="xsd:string">
-                                        <xsd:minLength value="1"/>
-                                    </xsd:restriction>
-                                </xsd:simpleType>
-                            </xsd:element>
-                            <xsd:element name="errorMessage" minOccurs="0">
-                                <xsd:simpleType>
-                                    <xsd:restriction base="xsd:string">
-                                        <xsd:minLength value="1"/>
-                                    </xsd:restriction>
-                                </xsd:simpleType>
-                            </xsd:element>
-                        </xsd:sequence>
-                    </xsd:complexType>
-                </xsd:element>
-            </xsd:sequence>
-        </xsd:complexType>
-    </xsd:element>
 </xsd:schema>
