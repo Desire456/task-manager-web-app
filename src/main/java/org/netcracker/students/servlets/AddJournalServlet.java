@@ -48,6 +48,7 @@ public class AddJournalServlet extends HttpServlet {
         try {
             if (journalController != null)
                 allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
+            System.out.println(allJournals);
         } catch (GetAllJournalByUserIdException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

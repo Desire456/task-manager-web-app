@@ -52,6 +52,7 @@ public class AddTaskServlet extends HttpServlet {
         try {
             if (taskController != null)
                 allTasks = xmlParser.toXML(new TaskXMLContainer(taskController.getAll(journalId)));
+            System.out.println(allTasks);
         } catch (GetAllTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

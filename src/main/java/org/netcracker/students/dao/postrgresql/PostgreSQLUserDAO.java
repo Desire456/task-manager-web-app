@@ -23,17 +23,6 @@ public class PostgreSQLUserDAO implements UsersDAO {
         this.connection = connection;
     }
 
-
-    private String hashPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        SecureRandom secureRandom = new SecureRandom();
-        byte[] salt = new byte[16];
-        secureRandom.nextBytes(salt);
-        KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, 65536, 128);
-        SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA1");
-        byte[] hash = factory.generateSecret(spec).getEncoded();
-        return new BigInteger(1,hash).toString(16);
-    }
-
     @Override
     public User create(String login, String password, String role, Timestamp dateOfRegistration) throws CreateUserException {
         String sql = "INSERT INTO users VALUES (default, ?, ?, ?, ?)";

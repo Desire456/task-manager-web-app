@@ -2,6 +2,7 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.UserController;
+import org.netcracker.students.controller.utils.HashingClass;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @WebServlet("/journals")
@@ -66,13 +69,15 @@ public class JournalsPageServlet extends HttpServlet {
         String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
         User user = null;
         try {
-            if (userController != null)
-                user = userController.getUserByLoginAndPassword(login, password);
+            if (userController != null ){
+                String hashPassword = HashingClass.hashPassword(password);
+                user = userController.getUserByLoginAndPassword(login, hashPassword);
+            }
             if (user == null) {
-                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
+                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
                 req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
             }
-        } catch (GetUserByLoginAndPasswordException e) {
+        } catch (GetUserByLoginAndPasswordException | NoSuchAlgorithmException | InvalidKeySpecException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }

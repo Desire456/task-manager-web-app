@@ -28,20 +28,20 @@ To change this template use File | Settings | File Templates.
 <div class="modal">
     <div class="filter">
         <form action="${pageContext.request.contextPath}/filterTasks" id="filterForm" method="POST">
-            <input type="button" class="button" id="filterButt" style="margin-left: 40%" value="Filter by">
+            Column: <select required>
+            <option value = "name" name = "name">Name</option>
+            <option value = "description" name = "description">Description</option>
+            <option value = "status" name = "status">Status</option>
+        </select>
+            Sort by <select required>
+            <option value = "ASC" name = "sort">Ascending</option>
+            <option value = "ASC" name = "sort">Descending</option>
+        </select>
+            <br>
+            By: <input type="text" name="pattern" required>
+            Equal <input type="checkbox" name="equal">
             <br><br>
-            Column: Name <input type="radio" name="column" value="name" disabled required>
-            Description <input type="radio" name="column" value="description" disabled>
-            Status <input type="radio" name="column" value="status" disabled>
-            <br>
-            By: <input type="text" name="pattern" disabled required>
-            <br>
-            Equal <input type="checkbox" name="equal" disabled>
-            <br>
-            Sort by ascending <input type="radio" name="sort" value="ASC" disabled required>
-            or descending <input type="radio" name="sort" value="DESC" disabled>
-            <br><br>
-            <input type="submit" class="button" style="margin-left: 40%" value="Submit" disabled>
+            <input type="submit" class="button" style="margin-left: 40%" value="Submit">
         </form>
     </div>
     <table>
@@ -131,14 +131,6 @@ To change this template use File | Settings | File Templates.
     let showButt = document.getElementById("showButt");
     showButt.onclick = function () {
         window.location.href = "/tasks";
-    };
-
-    let filterButton = document.getElementById("filterButt");
-    filterButton.onclick = function () {
-        let inputs = document.querySelectorAll("input");
-        for (let i = 1; i <= 8; ++i) {
-            inputs[i].disabled = false;
-        }
     };
 
 
