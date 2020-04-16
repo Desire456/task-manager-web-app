@@ -6,21 +6,18 @@ public class User {
     private int id;
     private String login;
     private String password;
-    private String role;
     private LocalDateTime dateOfRegistration;
 
-    public User(String login, String password, String role, LocalDateTime dateOfRegistration) {
+    public User(String login, String password, LocalDateTime dateOfRegistration) {
         this.login = login;
         this.password = password;
-        this.role = role;
         this.dateOfRegistration = dateOfRegistration;
     }
 
-    public User(int id, String login, String password, String role, LocalDateTime dateOfRegistration) {
+    public User(int id, String login, String password, LocalDateTime dateOfRegistration) {
         this.id = id;
         this.login = login;
         this.password = password;
-        this.role = role;
         this.dateOfRegistration = dateOfRegistration;
     }
 
@@ -30,7 +27,6 @@ public class User {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
                 ", dateOfRegistration=" + dateOfRegistration +
                 '}';
     }
@@ -51,10 +47,6 @@ public class User {
         return password;
     }
 
-    public String getRole() {
-        return role;
-    }
-
     public void setPassword(String password) {
         this.password = password;
     }
@@ -69,9 +61,5 @@ public class User {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 }

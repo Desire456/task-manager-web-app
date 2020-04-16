@@ -45,7 +45,7 @@ public class UserController {
     }
 
     public void addUser(User user) throws CreateUserException {
-        usersDAO.create(user.getLogin(), user.getPassword(), user.getRole(), Timestamp.valueOf(user.getDateOfRegistration()));
+        usersDAO.create(user.getLogin(), user.getPassword(), Timestamp.valueOf(user.getDateOfRegistration()));
     }
 
     public void deleteUser(int id) throws DeleteUserException {

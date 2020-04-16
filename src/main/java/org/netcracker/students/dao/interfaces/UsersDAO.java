@@ -8,7 +8,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 public interface UsersDAO {
-    User create(String login, String password, String role, Timestamp dateOfRegistration) throws CreateUserException;
+    User create(String login, String password, Timestamp dateOfRegistration) throws CreateUserException;
 
     User read(int id) throws ReadUserException;
 

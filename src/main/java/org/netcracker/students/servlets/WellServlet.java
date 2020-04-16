@@ -24,7 +24,6 @@ public class WellServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_WELL);
         String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
         String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
-        String role = req.getParameter(ServletConstants.PARAMETER_ROLE);
         LocalDateTime dateOfRegistration = LocalDateTime.now();
         UserController userController = null;
         try {
@@ -36,7 +35,7 @@ public class WellServlet extends HttpServlet {
         try {
             if (userController != null) {
                 String hashPassword = HashingClass.hashPassword(password);
-                userController.addUser(UserFactory.createUser(login, hashPassword, role, dateOfRegistration));
+                userController.addUser(UserFactory.createUser(login, hashPassword, dateOfRegistration));
             }
         } catch (CreateUserException e) {
             e.printStackTrace();
