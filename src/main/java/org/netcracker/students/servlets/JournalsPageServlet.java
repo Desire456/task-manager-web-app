@@ -2,7 +2,7 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.UserController;
-import org.netcracker.students.controller.utils.HashingClass;
+import org.netcracker.students.controller.utils.hashing.HashingClass;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;

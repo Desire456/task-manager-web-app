@@ -1,7 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.UserController;
-import org.netcracker.students.controller.utils.HashingClass;
+import org.netcracker.students.controller.utils.hashing.HashingClass;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.CreateUserException;
 import org.netcracker.students.factories.UserFactory;

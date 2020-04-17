@@ -1,37 +1,35 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema">
                 <xsd:element name="tasks">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="task" minOccurs="0">
-                                <xsd:complexType>
-                                    <xsd:sequence>
-                                        <xsd:element name="id" type="xsd:nonNegativeInteger"/>
-                                        <xsd:element name="name" type="xsd:string"/>
-                                        <xsd:element name="description" type="xsd:string"/>
-                                        <xsd:element name="status" type="xsd:string"/>
-                                        <xsd:element name="plannedDate" type="xsd:string"/>
-                                        <xsd:element name='formattedPlannedDate' type="xsd:string"/>
-                                    </xsd:sequence>
-                                </xsd:complexType>
-                            </xsd:element>
+                            <xsd:element name="task" type="TaskType" minOccurs="0" maxOccurs="unbounded"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
                 <xsd:element name="journals">
                     <xsd:complexType>
                         <xsd:sequence>
-                            <xsd:element name="journal" minOccurs="0">
-                                <xsd:complexType>
-                                    <xsd:sequence>
-                                        <xsd:element name="id" type="xsd:nonNegativeInteger"/>
-                                        <xsd:element name="name" type="xsd:string"/>
-                                        <xsd:element name="description" type="xsd:string"/>
-                                        <xsd:element name="creationDate" type="xsd:string"/>
-                                    </xsd:sequence>
-                                </xsd:complexType>
-                            </xsd:element>
+                            <xsd:element name="journal" type="JournalType" minOccurs="0" maxOccurs="unbounded"/>
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
+    <xs:complexType name="TaskType">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:nonNegativeInteger"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="description" type="xsd:string"/>
+            <xsd:element name="status" type="xsd:string"/>
+            <xsd:element name="plannedDate" type="xsd:string"/>
+            <xsd:element name='formattedPlannedDate' type="xsd:string"/>
+        </xsd:sequence>
+    </xs:complexType>
+    <xsd:complexType name="JournalType">
+        <xsd:sequence>
+            <xsd:element name="id" type="xsd:nonNegativeInteger"/>
+            <xsd:element name="name" type="xsd:string"/>
+            <xsd:element name="description" type="xsd:string"/>
+            <xsd:element name="creationDate" type="xsd:string"/>
+        </xsd:sequence>
+    </xsd:complexType>
 </xsd:schema>
