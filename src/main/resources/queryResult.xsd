@@ -14,16 +14,17 @@
                         </xsd:sequence>
                     </xsd:complexType>
                 </xsd:element>
-    <xs:complexType name="TaskType">
+    <xsd:complexType name="TaskType">
         <xsd:sequence>
             <xsd:element name="id" type="xsd:nonNegativeInteger"/>
             <xsd:element name="name" type="xsd:string"/>
             <xsd:element name="description" type="xsd:string"/>
             <xsd:element name="status" type="xsd:string"/>
             <xsd:element name="plannedDate" type="xsd:string"/>
+            <xsd:element name="dateOfDone" type = "xsd:string"/>
             <xsd:element name='formattedPlannedDate' type="xsd:string"/>
         </xsd:sequence>
-    </xs:complexType>
+    </xsd:complexType>
     <xsd:complexType name="JournalType">
         <xsd:sequence>
             <xsd:element name="id" type="xsd:nonNegativeInteger"/>

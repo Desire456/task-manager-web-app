@@ -12,13 +12,13 @@
 <div class="modal">
     <div class="filter">
         <form action="${pageContext.request.contextPath}/filterJournals" id="filterForm" method="POST">
-            Column: <select required>
-            <option value = "name" name = "name">Name</option>
-            <option value = "description" name = "description">Description</option>
+            Column: <select name = "column" required>
+            <option value = "name">Name</option>
+            <option value = "description">Description</option>
         </select>
-            Sort by <select required>
-            <option value = "ASC" name = "sort">Ascending</option>
-            <option value = "ASC" name = "sort">Descending</option>
+            Sort by <select name = "sort" required>
+            <option value = "ASC">Ascending</option>
+            <option value = "DESC">Descending</option>
         </select>
             <br><br>
             By: <input type="text" name="pattern" required>

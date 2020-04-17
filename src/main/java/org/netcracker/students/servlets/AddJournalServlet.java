@@ -50,7 +50,6 @@ public class AddJournalServlet extends HttpServlet {
             if (journalController != null)
                 allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
         } catch (GetAllJournalByUserIdException | ParseXMLException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }

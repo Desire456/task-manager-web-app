@@ -6,9 +6,12 @@ import org.netcracker.students.controller.utils.hashing.HashingClass;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.controller.utils.hashing.exceptions.GeneratePasswordException;
+import org.netcracker.students.controller.utils.hashing.exceptions.ValidatePasswordException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.GetUserByLoginAndPasswordException;
+import org.netcracker.students.dao.exceptions.userDAO.GetUserByLoginException;
 import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.User;
 
@@ -77,15 +80,15 @@ public class JournalsPageServlet extends HttpServlet {
         User user = null;
         try {
             if (userController != null ){
-                String hashPassword = HashingClass.hashPassword(password);
-                System.out.println(hashPassword);
-                user = userController.getUserByLoginAndPassword(login, password);
+                user = userController.getUserByLogin(login);
+                if (user != null)
+                    user = HashingClass.validatePassword(password, user.getPassword()) ? user : null;
             }
             if (user == null) {
                 req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
                 req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
             }
-        } catch (GetUserByLoginAndPasswordException | NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (GetUserByLoginException | ValidatePasswordException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
@@ -99,7 +102,6 @@ public class JournalsPageServlet extends HttpServlet {
         try {
             journalController = JournalController.getInstance();
         } catch (GetConnectionException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -108,7 +110,6 @@ public class JournalsPageServlet extends HttpServlet {
             if (journalController != null)
                 journalArrayList = journalController.getAll(userId);
         } catch (GetAllJournalByUserIdException e) {
-            e.printStackTrace();
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
@@ -120,7 +121,6 @@ public class JournalsPageServlet extends HttpServlet {
             try {
                 allJournals = xmlParser.toXML(new JournalXMLContainer(journalArrayList));
             } catch (ParseXMLException e) {
-                e.printStackTrace();
                 req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
                 requestDispatcher.forward(req, resp);
             }

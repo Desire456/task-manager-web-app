@@ -2,6 +2,7 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.UserController;
 import org.netcracker.students.controller.utils.hashing.HashingClass;
+import org.netcracker.students.controller.utils.hashing.exceptions.GeneratePasswordException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.CreateUserException;
 import org.netcracker.students.factories.UserFactory;
@@ -34,17 +35,16 @@ public class WellServlet extends HttpServlet {
         }
         try {
             if (userController != null) {
-                String hashPassword = HashingClass.hashPassword(password);
-                System.out.println(hashPassword);
-                userController.addUser(UserFactory.createUser(login, password, dateOfRegistration));
+                String hashPassword = HashingClass.generatePasswordHash(password);
+                userController.addUser(UserFactory.createUser(login, hashPassword, dateOfRegistration));
             }
         } catch (CreateUserException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
 
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+        } catch (GeneratePasswordException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
+            requestDispatcher.forward(req, resp);
         }
         requestDispatcher.forward(req, resp);
     }

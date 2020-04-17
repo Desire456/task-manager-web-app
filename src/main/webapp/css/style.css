@@ -55,7 +55,7 @@ th.sorted[data-order="-1"] {
 
 th.sorted[data-order="1"]::after,
 th.sorted[data-order="-1"]::after {
-    right: 8px;
+    right: 30px;
     position: absolute;
 }
 

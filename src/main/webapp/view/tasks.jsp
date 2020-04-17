@@ -28,14 +28,14 @@ To change this template use File | Settings | File Templates.
 <div class="modal">
     <div class="filter">
         <form action="${pageContext.request.contextPath}/filterTasks" id="filterForm" method="POST">
-            Column: <select required>
-            <option value = "name" name = "name">Name</option>
-            <option value = "description" name = "description">Description</option>
-            <option value = "status" name = "status">Status</option>
+            Column: <select name = "column" required>
+            <option value = "name">Name</option>
+            <option value = "description">Description</option>
+            <option value = "status">Status</option>
         </select>
-            Sort by <select required>
-            <option value = "ASC" name = "sort">Ascending</option>
-            <option value = "ASC" name = "sort">Descending</option>
+            Sort by <select name = "sort" required>
+            <option value = "ASC">Ascending</option>
+            <option value = "DESC">Descending</option>
         </select>
             <br><br>
             By: <input type="text" name="pattern" required>
@@ -49,7 +49,7 @@ To change this template use File | Settings | File Templates.
         <thead>
         <tr>
             <th data-type="checkbox"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
-            <th data-type="text">Name</th>
+            <th data-type="text" style="width:100px">Name</th>
             <th data-type="text">Description</th>
             <th data-type="date">Planned date</th>
             <th data-type="date">Date of done</th>
