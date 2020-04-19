@@ -7,10 +7,8 @@ import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
 import org.netcracker.students.controller.utils.hashing.exceptions.GeneratePasswordException;
-import org.netcracker.students.controller.utils.hashing.exceptions.ValidatePasswordException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
-import org.netcracker.students.dao.exceptions.userDAO.GetUserByLoginAndPasswordException;
 import org.netcracker.students.dao.exceptions.userDAO.GetUserByLoginException;
 import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.User;
@@ -24,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 @WebServlet("/journals")
@@ -80,15 +77,16 @@ public class JournalsPageServlet extends HttpServlet {
         User user = null;
         try {
             if (userController != null ){
+                HashingClass hashingClass = HashingClass.getInstance();
                 user = userController.getUserByLogin(login);
                 if (user != null)
-                    user = HashingClass.validatePassword(password, user.getPassword()) ? user : null;
+                    user = hashingClass.validatePassword(password, user.getPassword()) ? user : null;
             }
             if (user == null) {
                 req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
                 req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
             }
-        } catch (GetUserByLoginException | ValidatePasswordException e) {
+        } catch (GetUserByLoginException | NoSuchAlgorithmException | GeneratePasswordException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
