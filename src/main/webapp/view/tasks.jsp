@@ -48,12 +48,12 @@ To change this template use File | Settings | File Templates.
         <caption>TABLE OF TASKS</caption>
         <thead>
         <tr>
-            <th data-type="checkbox"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
-            <th data-type="text" style="width:100px">Name</th>
-            <th data-type="text">Description</th>
-            <th data-type="date">Planned date</th>
-            <th data-type="date">Date of done</th>
-            <th data-type="text">Status</th>
+            <th style="cursor:default"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
+            <th style="width:150px" title = "Click this button to sort by this column">Name</th>
+            <th style="width:200px" title = "Click this button to sort by this column">Description</th>
+            <th title = "Click this button to sort by this column">Planned date</th>
+            <th title = "Click this button to sort by this column">Date of done</th>
+            <th title = "Click this button to sort by this column">Status</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -103,11 +103,11 @@ To change this template use File | Settings | File Templates.
     </table>
 
 
-    <div class="actions" style="margin-left:10%">
+    <div class="actions" style="margin-left:20%">
         <input type="button" id="addButt" class="button" value="Add">
-        <input type="button" id="editButt" class="button" value="Edit" disabled>
+        <input type="button" id="editButt" class="button" value="Edit" title = "You can edit only one task" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
-        <input type="button" id="finishButt" class="button" value="Finish" disabled>
+        <input type="button" id="finishButt" class="button" value="Finish" title = "You can finish tasks only with status PLANNED" disabled>
         <input type="button" id="showButt" class="button" value="Show all tasks">
         <input type="button" class="button" onclick="direct()" value="Return to journals page"
                style="display: block; margin-left: 30%">
@@ -164,7 +164,10 @@ To change this template use File | Settings | File Templates.
                 cell.classList.toggle('sorted', cell === target);
         };
 
-        document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+        let ths = document.querySelector('.table_sort thead').getElementsByTagName('TH');
+        for(let i = 1; i < ths.length; ++i) {
+            ths[i].addEventListener('click', () => getSort(event));
+        }
 
     });
 
@@ -235,11 +238,15 @@ To change this template use File | Settings | File Templates.
         let generalCheckbox = document.getElementById("generalCheckbox");
         let checkboxes = document.getElementsByClassName("checkbox");
         let countChecked = 0, countCheckedFinish = 0;
+        let notPlannedIsChecked = false;
         if (generalCheckbox.checked) {
             for (let i = 0; i < checkboxes.length; ++i) {
                 checkboxes[i].checked = true;
                 if (checkboxes[i].getAttribute("status") === "PLANNED") {
                     countCheckedFinish++;
+                }
+                else {
+                    notPlannedIsChecked = true;
                 }
             }
             countChecked = checkboxes.length;
@@ -249,10 +256,10 @@ To change this template use File | Settings | File Templates.
             }
             countChecked = 0;
         }
-        setDisabledAttribute(countChecked, countCheckedFinish);
+        setDisabledAttribute(countChecked, countCheckedFinish, notPlannedIsChecked);
     }
 
-    function setDisabledAttribute(countChecked, countCheckedFinish) {
+    function setDisabledAttribute(countChecked, countCheckedFinish, notPlannedIsChecked) {
         if (countChecked === 0) {
             editButton.disabled = true;
             deleteButton.disabled = true;
@@ -264,8 +271,10 @@ To change this template use File | Settings | File Templates.
             editButton.disabled = true;
             deleteButton.disabled = false;
         }
-        if (countCheckedFinish >= 1) {
+        if (countCheckedFinish >= 1 && !notPlannedIsChecked) {
             finishButton.disabled = false;
+        } else if (notPlannedIsChecked) {
+            finishButton.disabled = true;
         }
     }
 
@@ -273,6 +282,7 @@ To change this template use File | Settings | File Templates.
         let generalCheckbox = document.getElementById("generalCheckbox");
         let checkboxes = document.getElementsByClassName("checkbox");
         let countChecked = 0, countCheckedFinish = 0;
+        let notPlannedIsChecked = false;
         for (let i = 0; i < checkboxes.length; ++i) {
             if (!checkboxes[i].checked) {
                 generalCheckbox.checked = false;
@@ -281,9 +291,12 @@ To change this template use File | Settings | File Templates.
                 if (checkboxes[i].getAttribute("status") === "PLANNED") {
                     countCheckedFinish++;
                 }
+                else {
+                    notPlannedIsChecked = true;
+                }
             }
         }
-        setDisabledAttribute(countChecked, countCheckedFinish);
+        setDisabledAttribute(countChecked, countCheckedFinish, notPlannedIsChecked);
     }
 
     function getCheckTask() {

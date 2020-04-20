@@ -32,12 +32,11 @@
             <caption>TABLE OF JOURNALS</caption>
             <thead>
             <tr>
-                <th data-type="checkbox" style="cursor: default">
+                <th style="cursor:default">
                     <input type="checkbox" id="generalCheckbox" onchange="setCheck()">
-                </th>
-                <th data-type="text">Name</th>
-                <th data-type="text">Description</th>
-                <th data-type="date">Creation date</th>
+                <th style="width: 150px" title = "Click this button to sort by this column">Name</th>
+                <th title = "Click this button to sort by this column">Description</th>
+                <th title = "Click this button to sort by this column">Creation date</th>
             </tr>
             </thead>
             <tbody>
@@ -79,7 +78,7 @@
 
     <div class="actions">
         <input type="button" id="addButt" class="button" value="Add">
-        <input type="button" id="editButt" class="button" value="Edit" disabled>
+        <input type="button" id="editButt" class="button" value="Edit" title = "You can edit only one journal" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
         <input type="button" id="showButt" class="button" value="Show all journals">
         <input type="button" class="button" onclick="direct()" value="Return to sign in page"
@@ -135,7 +134,10 @@
                     cell.classList.toggle('sorted', cell === target);
             };
 
-            document.querySelectorAll('.table_sort thead').forEach(tableTH => tableTH.addEventListener('click', () => getSort(event)));
+            let ths = document.querySelector('.table_sort thead').getElementsByTagName('TH');
+            for(let i = 1; i < ths.length; ++i) {
+                ths[i].addEventListener('click', () => getSort(event));
+            }
 
         });
 
