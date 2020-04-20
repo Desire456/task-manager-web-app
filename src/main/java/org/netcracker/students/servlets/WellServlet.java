@@ -2,7 +2,6 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.controller.UserController;
 import org.netcracker.students.controller.utils.hashing.HashingClass;
-import org.netcracker.students.controller.utils.hashing.exceptions.GeneratePasswordException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.CreateUserException;
 import org.netcracker.students.factories.UserFactory;
@@ -14,8 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 
 @WebServlet("/well")

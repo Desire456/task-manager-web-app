@@ -6,7 +6,6 @@ import org.netcracker.students.controller.utils.hashing.HashingClass;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
-import org.netcracker.students.controller.utils.hashing.exceptions.GeneratePasswordException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.GetUserByLoginException;
@@ -21,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @WebServlet("/journals")

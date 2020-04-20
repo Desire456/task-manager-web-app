@@ -19,7 +19,5 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 
 Non yet
 
-## How to run our application TODO: looks like highlevel configuration without details - i can not run it 
- - Download Tomcat Apache Server (version?)
- - Edit your Tomcat configuration (how? where?)
- - Move "script.sql" from resources package to Tomcat directory "bin/jdbc" ("then why do we package it in resources in war?")
+## How to run our application 
+ - Download Tomcat Apache Server version 8.5.51
