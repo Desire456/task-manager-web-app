@@ -86,7 +86,7 @@ public class JournalsPageServlet extends HttpServlet {
                 req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
                 req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
             }
-        } catch (GetUserByLoginException | NoSuchAlgorithmException | GeneratePasswordException e) {
+        } catch (GetUserByLoginException  e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }

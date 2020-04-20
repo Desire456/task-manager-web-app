@@ -1,48 +1,40 @@
 package org.netcracker.students.controller.utils.hashing;
 
-import org.netcracker.students.controller.utils.hashing.exceptions.GeneratePasswordException;
-import org.netcracker.students.controller.utils.hashing.exceptions.HashingExceptionsConstants;
-
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
-import java.security.spec.InvalidKeySpecException;
 
 public class HashingClass {
-    private byte[] salt;
+    private static final byte[] salt = new byte[]{49, 54, 75, -31, 28, 120, -25, -55, -128, 49 - 23, 9, -124, -113, -118, -120};
     public static HashingClass instance;
 
-    public static synchronized HashingClass getInstance() throws NoSuchAlgorithmException {
+    public static synchronized HashingClass getInstance() {
         if (instance == null)
             instance = new HashingClass();
         return instance;
     }
 
-    private HashingClass() throws NoSuchAlgorithmException {
-        this.salt = new byte[16];
-        SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
-        sr.nextBytes(salt);
+    private HashingClass() {
     }
 
-    public String hashPassword(String password) throws GeneratePasswordException {
+    public String hashPassword(String userPassword) {
         String generatedPassword = null;
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-512");
             md.update(salt);
-            byte[] bytes = md.digest(password.getBytes());
+            byte[] bytes = md.digest(userPassword.getBytes(StandardCharsets.UTF_8));
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < bytes.length; i++) {
-                sb.append(Integer.toString((bytes[i] & 0xFF) + 0x100, 16).substring(1));
+            for (byte aByte : bytes) {
+                sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
             }
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            throw new GeneratePasswordException(HashingExceptionsConstants.GENERATE_PASSWORD_EXCEPTION_MESSAGE
-            + e.getMessage());
+            e.printStackTrace();
         }
         return generatedPassword;
     }
 
-    public boolean validatePassword(String userPassword, String passwordDb) throws GeneratePasswordException {
+    public boolean validatePassword(String userPassword, String passwordDb) {
         String hashPassword = hashPassword(userPassword);
         return hashPassword.equals(passwordDb);
     }

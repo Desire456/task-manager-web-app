@@ -42,10 +42,6 @@ public class WellServlet extends HttpServlet {
         } catch (CreateUserException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
-
-        } catch (NoSuchAlgorithmException | GeneratePasswordException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
         }
         requestDispatcher.forward(req, resp);
     }
