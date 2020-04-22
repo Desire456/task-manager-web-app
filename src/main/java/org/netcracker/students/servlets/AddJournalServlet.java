@@ -1,38 +1,60 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.controller.JournalsController;
-import org.netcracker.students.controller.utils.IdGenerator;
-import org.netcracker.students.controller.utils.XMLConverter;
-import org.netcracker.students.model.Journal;
-import org.netcracker.students.model.Journals;
+import org.netcracker.students.controller.JournalController;
+import org.netcracker.students.controller.utils.JournalXMLContainer;
+import org.netcracker.students.controller.utils.ParseXMLException;
+import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
+import org.netcracker.students.factories.JournalFactory;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
-@WebServlet("/add")
+@WebServlet("/addJournal")
 public class AddJournalServlet extends HttpServlet {
-    private static final String PARAMETER_NAME_OF_JOURNAL = "name";
-    private static final String PARAMETER_DESCRIPTION_OF_JOURNAL = "description";
-    private static final String ACCESS_MODIFIER = "private";
-    private static final String ATTRIBUTE_NAME = "journals";
-    private static final String PATH_TO_VIEW = "view/journals.jsp";
-
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        JournalsController journalsController = JournalsController.getInstance();
-        XMLConverter xmlConverter = XMLConverter.getInstance();
-        String name = req.getParameter(PARAMETER_NAME_OF_JOURNAL);
-        String description = req.getParameter(PARAMETER_DESCRIPTION_OF_JOURNAL);
-        journalsController.addJournal(new Journal(IdGenerator.getInstance().getId(), name,
-                ACCESS_MODIFIER, LocalDateTime.now(), description));
-        String allJournals = xmlConverter.toXML(new Journals(journalsController.getAll()));
-        req.setAttribute(ATTRIBUTE_NAME,
+        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
+        JournalController journalController = null;
+        try {
+            journalController = JournalController.getInstance();
+        } catch (GetConnectionException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        XMLParser xmlParser = XMLParser.getInstance();
+        String name = req.getParameter(ServletConstants.PARAMETER_NAME);
+        String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
+        boolean isPrivate = req.getParameter(ServletConstants.PARAMETER_ACCESS_MODIFIER) == null;
+        HttpSession httpSession = req.getSession();
+        int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
+        String allJournals = null;
+        try {
+            if (journalController != null)
+                journalController.addJournal(JournalFactory.createJournal(name, description,
+                        userId, LocalDateTime.now(), isPrivate));
+        } catch (CreateJournalException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);
+            requestDispatcher.forward(req, resp);
+        }
+        try {
+            if (journalController != null)
+                allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
+        } catch (GetAllJournalByUserIdException | ParseXMLException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
-        req.getRequestDispatcher(PATH_TO_VIEW).forward(req, resp);
+        requestDispatcher.forward(req, resp);
     }
 }

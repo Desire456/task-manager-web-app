@@ -1,24 +1,35 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.IdGenerator;
+import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 /**
  * Task class, which have a name, description, date of complete, planned date and status
  */
 
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class Task implements Serializable {
-    private String name;
-    private String description;
-    private LocalDateTime plannedDate;
-    private LocalDateTime dateOfDone;
-    private String status;
-    private int journalId;
 
     private int id;
+    private String name;
+    private String description;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime plannedDate;
+    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
+    private LocalDateTime dateOfDone;
+    private String status;
+    private String formattedPlannedDate;
+    private int journalId;
 
 
     public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
@@ -28,14 +39,17 @@ public class Task implements Serializable {
         this.description = description;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
+        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.status = status;
     }
 
     public Task(Task task) {
         id = task.id;
+        journalId = task.journalId;
         name = task.name;
         description = task.description;
         plannedDate = task.plannedDate;
+        formattedPlannedDate = task.formattedPlannedDate;
         dateOfDone = task.dateOfDone;
         status = task.status;
     }
@@ -56,6 +70,7 @@ public class Task implements Serializable {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
+        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.dateOfDone = null;
         this.status = status;
     }
@@ -66,7 +81,15 @@ public class Task implements Serializable {
      */
 
     public Task() {
-        id = IdGenerator.getInstance().getId();
+        // id = IdGenerator.getInstance().getId();
+    }
+
+    public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
+        this.name = name;
+        this.description = description;
+        this.plannedDate = plannedDate;
+        this.status = status;
+        this.journalId = journalId;
     }
 
     @Override
@@ -127,5 +150,19 @@ public class Task implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getJournalId() {
+        return journalId;
+    }
+
+    public void setJournalId(int journalId) {
+        this.journalId = journalId;
+    }
+
+    private String formatDateTime(LocalDateTime localDateTime) {
+        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+        return localDateTime.format(formatter);
     }
 }

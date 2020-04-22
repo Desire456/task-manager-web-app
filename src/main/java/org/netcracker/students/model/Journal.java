@@ -1,10 +1,11 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.IdGenerator;
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -23,25 +24,45 @@ public class Journal implements Serializable {
     private Map<Integer, Task> tasks;
     private int id;
     private int userId;
-    private String accessModifier;
+    private boolean isPrivate;
     private String name;
-
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
     private String description;
 
-    public Journal(int id, String name, String accessModifier, LocalDateTime creationDate, String description) {
-        tasks = new HashMap<Integer, Task>();
+    public Journal(int id, String name, String description, int userId,
+                   LocalDateTime creationDate, boolean isPrivate) {
+        tasks = new HashMap<>();
         this.id = id;
-        this.accessModifier = accessModifier;
+        this.isPrivate = isPrivate;
+        this.userId = userId;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
     }
 
+    public Journal(String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) {
+        tasks = new HashMap<>();
+        this.name = name;
+        this.description = description;
+        this.userId = userId;
+        this.creationDate = creationDate;
+        this.isPrivate = isPrivate;
+    }
+
 
     public Journal() {
-        tasks = new HashMap<Integer, Task>();
+        tasks = new HashMap<>();
+    }
+
+    public Journal(Journal journal) {
+        tasks = new HashMap<>();
+        this.id = journal.id;
+        this.isPrivate = journal.isPrivate;
+        this.name = journal.name;
+        this.creationDate = journal.creationDate;
+        this.description = journal.description;
+        this.userId = journal.userId;
     }
 
     public int getId() {
@@ -60,12 +81,12 @@ public class Journal implements Serializable {
         this.userId = userId;
     }
 
-    public String getAccessModifier() {
-        return accessModifier;
+    public boolean getIsPrivate() {
+        return isPrivate;
     }
 
-    public void setAccessModifier(String accessModifier) {
-        this.accessModifier = accessModifier;
+    public void setIsPrivate(boolean isPrivate) {
+        this.isPrivate = isPrivate;
     }
 
     public String getName() {
@@ -93,9 +114,6 @@ public class Journal implements Serializable {
     }
 
     public void addTask(Task task) {
-        while (tasks.containsKey(task.getId())) {
-            task.setId(IdGenerator.getInstance().getId());
-        }
         tasks.put(task.getId(), task);
     }
 
@@ -175,7 +193,7 @@ public class Journal implements Serializable {
      * @return unmodifiable list of all tasks
      */
 
-    public List<Task> getAll() {
+    public ArrayList<Task> getAll() {
         Task[] arr = tasks.values().toArray(new Task[0]);
         return new ArrayList<>(Arrays.asList(arr));
     }

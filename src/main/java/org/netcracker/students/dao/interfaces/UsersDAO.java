@@ -1,22 +1,26 @@
 package org.netcracker.students.dao.interfaces;
 
-import org.netcracker.students.entity.User;
 
-import java.sql.SQLException;
+import org.netcracker.students.dao.exceptions.userDAO.*;
+import org.netcracker.students.model.User;
+
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface UsersDAO {
-    public User create(String login, String password, String role) throws SQLException;
+    User create(String login, String password, Timestamp dateOfRegistration) throws CreateUserException;
 
-    public User read(int id) throws SQLException;
+    User read(int id) throws ReadUserException;
 
-    public void update(User user) throws SQLException;
+    void update(User user) throws UpdateUserException;
 
-    public void delete(User user) throws SQLException;
+    void delete(int userId) throws DeleteUserException;
 
-    public List<User> getAll() throws SQLException;
+    List<User> getAll() throws GetAllUserException;
 
-    public User getByLoginAndPassword(String login, String password) throws SQLException;
+    User getByLoginAndPassword(String login, String password) throws GetUserByLoginAndPasswordException;
 
-    public List<User> getSortedByCriteria(String column, String criteria) throws SQLException;
+    User getByLogin(String login) throws GetUserByLoginException;
+
+    List<User> getSortedByCriteria(String column, String criteria) throws GetSortedByCriteriaUser;
 }

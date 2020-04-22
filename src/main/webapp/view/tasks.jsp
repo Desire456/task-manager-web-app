@@ -1,108 +1,325 @@
-<%@ page import="org.netcracker.students.model.Task" %>
-<%@ page import="java.util.ArrayList" %>
-<%@ page import="java.time.LocalDateTime" %><%--
+<%@ page import="java.time.LocalDateTime" %>
+<%@ page import="java.time.format.DateTimeFormatter" %><%--
 Created by IntelliJ IDEA.
 User: user
 Date: 28.02.2020
 Time: 9:16
 To change this template use File | Settings | File Templates.
 --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
+
 <%
-ArrayList<Task> tasks = new ArrayList<>();
-    for (int i = 0; i < 3; ++i) {
-    tasks.add(new Task(i, i, "#" + i, "#" + i, LocalDateTime.now(), null, "Planned"));
-    }
-    int j = 0;
+    String dateTimeFormat = "yyyy-MM-dd HH:mm";
+    LocalDateTime dateTimeNow = LocalDateTime.now();
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
+    String formatDateTimeNow = dateTimeNow.format(formatter);
+    formatDateTimeNow = formatDateTimeNow.replace(" ", "T");
 %>
 
-    <html>
-    <head>
-        <meta charset="UTF-8"/>
-        <title>Journals page</title>
-        <style>
-            .modal {
-                padding: 50px;
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                -webkit-transform: translate(-50%, -50%);
-                -ms-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-            }
 
-            table {
-                font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-                text-align: left;
-                border-collapse: separate;
-                border-spacing: 5px;
-                background: #ECE9E0;
-                color: #656665;
-                border: 16px solid #ECE9E0;
-                border-radius: 20px;
-            }
-
-            th {
-                font-size: 18px;
-                padding: 10px;
-            }
-
-            td {
-                background: #F5D7BF;
-                padding: 10px;
-            }
-            .button {
-                padding: 8px 28px;
-                font-size: 15px;
-                font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-                background-color: #e7e7e7;
-                color: #656665;
-            }
-        </style>
-    </head>
-    <body>
-    <div class="modal" >
-        <table>
-            <caption>Table of tasks</caption>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Planned date</th>
-                <th>Date of done</th>
-                <th>Status</th>
-            <tr>
-                <td><%= tasks.get(j).getId()%></td>
-                <td><%= tasks.get(j).getName()%></td>
-                <td><%= tasks.get(j).getDescription()%></td>
-                <td><%= tasks.get(j).getPlannedDate()%></td>
-                <td><%= tasks.get(j).getDateOfDone()%></td>
-                <td><%= tasks.get(j++).getStatus()%></td>
-            </tr>
-            <tr>
-                <td><%= tasks.get(j).getId()%></td>
-                <td><%= tasks.get(j).getName()%></td>
-                <td><%= tasks.get(j).getDescription()%></td>
-                <td><%= tasks.get(j).getPlannedDate()%></td>
-                <td><%= tasks.get(j).getDateOfDone()%></td>
-                <td><%= tasks.get(j++).getStatus()%></td>
-            </tr>
-            <tr>
-                <td><%= tasks.get(j).getId()%></td>
-                <td><%= tasks.get(j).getName()%></td>
-                <td><%= tasks.get(j).getDescription()%></td>
-                <td><%= tasks.get(j).getPlannedDate()%></td>
-                <td><%= tasks.get(j).getDateOfDone()%></td>
-                <td><%= tasks.get(j).getStatus()%></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input class = "button" type = "button" value = "Change"></td>
-                <td><input class = "button" type = "button" value = "Delete"></td>
-                <td><input class = "button" type = "button" value = "Add"></td>
-                <td></td>
-            </tr>
-        </table>
-
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="../css/style.css">
+    <meta charset="UTF-8"/>
+    <title>Tasks page</title>
+</head>
+<body onload="showError()">
+<div class="modal">
+    <div class="filter">
+        <form action="${pageContext.request.contextPath}/filterTasks" id="filterForm" method="POST">
+            Column: <select name = "column" required>
+            <option value = "name">Name</option>
+            <option value = "description">Description</option>
+            <option value = "status">Status</option>
+        </select>
+            Sort by <select name = "sort" required>
+            <option value = "ASC">Ascending</option>
+            <option value = "DESC">Descending</option>
+        </select>
+            <br><br>
+            By: <input type="text" name="pattern" required>
+            Equal <input type="checkbox" name="equal">
+            <br><br>
+            <input type="submit" class="button" style="margin-left: 40%" value="Submit">
+        </form>
     </div>
-    </body>
-    </html>
+    <table class = "table_sort">
+        <caption>TABLE OF TASKS</caption>
+        <thead>
+        <tr>
+            <th style="cursor:default"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
+            <th style="width:150px" title = "Click this button to sort by this column">Name</th>
+            <th style="width:200px" title = "Click this button to sort by this column">Description</th>
+            <th title = "Click this button to sort by this column">Planned date</th>
+            <th title = "Click this button to sort by this column">Date of done</th>
+            <th title = "Click this button to sort by this column">Status</th>
+        </tr>
+        </thead>
+        <tbody id="tableBody">
+        <% if (session.getAttribute("tasks") != null) { %>
+        <x:parse xml="${sessionScope.tasks}" var="output"/>
+        <x:forEach select="$output/tasks/task" var="task">
+            <x:set var="id" select="$task/id"/>
+            <tr>
+                <td style="cursor:default; text-align:center">
+                    <input type="checkbox" value="<x:out select = "$id"/>" class="checkbox"
+                           status="<x:out select = "$task/status"/>" onchange="setGeneralCheckbox()">
+                </td>
+                <td>
+                    <x:out select="$task/name"/>
+                </td>
+                <td>
+                    <x:out select="$task/description"/>
+                </td>
+                <td>
+                    <x:out select="$task/plannedDate"/>
+                </td>
+                <td>
+                    <x:out select="$task/dateOfDone"/>
+                </td>
+                <td>
+                    <x:out select="$task/status"/>
+                </td>
+            </tr>
+            <div class="window" id="editWindow<x:out select="$id"/>">
+                <form action="${pageContext.request.contextPath}/editTask" method="POST">
+                    <span class="close" id="close<x:out select="$id"/>">X</span>
+                    Name: <input type="text" name="name" value="<x:out select="$task/name"/>" required>
+                    Description: <input type="text" name="description"
+                                        value="<x:out select="$task/description"/>" required>
+                    <input type="hidden" name="id" id="editId<x:out select="$id"/>" value="">
+                    <input type="hidden" name="journalId" value=<%=request.getAttribute("journalId")%>>
+                    <br><br><br><br>
+                    Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
+                                         name="plannedDate"
+                                         value="<x:out select = "$task/formattedPlannedDate"/>" required>
+                    <button type="submit">Edit</button>
+                </form>
+            </div>
+        </x:forEach>
+        <%}%>
+        </tbody>
+    </table>
+
+
+    <div class="actions" style="margin-left:20%">
+        <input type="button" id="addButt" class="button" value="Add">
+        <input type="button" id="editButt" class="button" value="Edit" title = "You can edit only one task" disabled>
+        <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type="button" id="finishButt" class="button" value="Finish" title = "You can finish tasks only with status PLANNED" disabled>
+        <input type="button" id="showButt" class="button" value="Show all tasks">
+        <input type="button" class="button" onclick="direct()" value="Return to journals page"
+               style="display: block; margin-left: 30%">
+    </div>
+
+
+    <div class="window" id="addWindow">
+        <form action="${pageContext.request.contextPath}/addTask" method="POST">
+            <span class="close" id="addClose">X</span>
+            Name: <input type="text" name="name" required>
+            Description: <input type="text" name="description" required>
+            <input type="hidden" name="journalId" value=<%=session.getAttribute("journalId")%>>
+            <br><br><br><br>
+            Planned date: <input type="datetime-local" name="plannedDate" min=<%=formatDateTimeNow%> required>
+            <button type="submit">Add</button>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+    let showButt = document.getElementById("showButt");
+    showButt.onclick = function () {
+        window.location.href = "/tasks";
+    };
+
+
+    function showError() {
+        <%String error = (String) request.getAttribute("error");
+        if (error != null) {%>
+        let msgError = "<%=error%>";
+        alert(msgError);
+        <%}%>
+    }
+
+    function direct() {
+        window.location.href = "journals";
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const getSort = ({ target }) => {
+            const order = (target.dataset.order = -(target.dataset.order || -1));
+            const index = [...target.parentNode.cells].indexOf(target);
+            const collator = new Intl.Collator(['en', 'ru'], { numeric: true });
+            const comparator = (index, order) => (a, b) => order * collator.compare(
+                a.children[index].innerHTML,
+                b.children[index].innerHTML
+            );
+
+            for(const tBody of target.closest('table').tBodies)
+                tBody.append(...[...tBody.rows].sort(comparator(index, order)));
+
+            for(const cell of target.parentNode.cells)
+                cell.classList.toggle('sorted', cell === target);
+        };
+
+        let ths = document.querySelector('.table_sort thead').getElementsByTagName('TH');
+        for(let i = 1; i < ths.length; ++i) {
+            ths[i].addEventListener('click', () => getSort(event));
+        }
+
+    });
+
+    let addWindow = document.getElementById("addWindow");
+    let editWindow = document.getElementById("editWindow");
+    let addButton = document.getElementById("addButt");
+    let editButton = document.getElementById("editButt");
+    let deleteButton = document.getElementById("deleteButt");
+    let finishButton = document.getElementById("finishButt");
+
+    editButton.onclick = function () {
+        let id = getCheckTask()[0].value;
+        document.getElementById("editId" + id).value = id;
+        document.getElementById("editWindow" + id).style.display = "block";
+        let closeButton = document.getElementById("close" + id);
+        closeButton.onclick = function () {
+            document.getElementById("editWindow" + id).style.display = "none";
+        }
+    };
+
+    let closeButtonAdd = document.getElementById("addClose");
+    closeButtonAdd.onclick = function () {
+        addWindow.style.display = "none";
+    };
+
+    addButton.onclick = function () {
+        addWindow.style.display = "block";
+    };
+
+    finishButton.onclick = function () {
+        if (confirm("Are you really want to finish this tasks?")) {
+            let form = document.createElement('form');
+            form.action = '/finishTask';
+            form.method = 'POST';
+
+            form.innerHTML = '<input type = "hidden" name="ids" id = "finishIds" value="">';
+            let strIds = "";
+            let ids = getCheckTaskFinish();
+            for (let i = 0; i < ids.length; ++i) {
+                strIds += ids[i].value + " ";
+            }
+            document.body.append(form);
+            document.getElementById("finishIds").value = strIds;
+            form.submit();
+        }
+    };
+
+    deleteButton.onclick = function () {
+        if (confirm("Are you really want to delete?")) {
+            let form = document.createElement('form');
+            form.action = '/deleteTask';
+            form.method = 'POST';
+
+            form.innerHTML = '<input type = "hidden" name="ids" id = "deleteIds" value="">';
+            let strIds = "";
+            let ids = getCheckTask();
+            for (let i = 0; i < ids.length; ++i) {
+                strIds += ids[i].value + " ";
+            }
+            document.body.append(form);
+            document.getElementById("deleteIds").value = strIds;
+            form.submit();
+        }
+    };
+
+
+    function setCheck() {
+        let generalCheckbox = document.getElementById("generalCheckbox");
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let countChecked = 0, countCheckedFinish = 0;
+        let notPlannedIsChecked = false;
+        if (generalCheckbox.checked) {
+            for (let i = 0; i < checkboxes.length; ++i) {
+                checkboxes[i].checked = true;
+                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                    countCheckedFinish++;
+                }
+                else {
+                    notPlannedIsChecked = true;
+                }
+            }
+            countChecked = checkboxes.length;
+        } else {
+            for (let i = 0; i < checkboxes.length; ++i) {
+                checkboxes[i].checked = false;
+            }
+            countChecked = 0;
+        }
+        setDisabledAttribute(countChecked, countCheckedFinish, notPlannedIsChecked);
+    }
+
+    function setDisabledAttribute(countChecked, countCheckedFinish, notPlannedIsChecked) {
+        if (countChecked === 0) {
+            editButton.disabled = true;
+            deleteButton.disabled = true;
+            finishButton.disabled = true;
+        } else if (countChecked === 1) {
+            editButton.disabled = false;
+            deleteButton.disabled = false;
+        } else if (countChecked > 1) {
+            editButton.disabled = true;
+            deleteButton.disabled = false;
+        }
+        if (countCheckedFinish >= 1 && !notPlannedIsChecked) {
+            finishButton.disabled = false;
+        } else if (notPlannedIsChecked) {
+            finishButton.disabled = true;
+        }
+    }
+
+    function setGeneralCheckbox() {
+        let generalCheckbox = document.getElementById("generalCheckbox");
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let countChecked = 0, countCheckedFinish = 0;
+        let notPlannedIsChecked = false;
+        for (let i = 0; i < checkboxes.length; ++i) {
+            if (!checkboxes[i].checked) {
+                generalCheckbox.checked = false;
+            } else {
+                ++countChecked;
+                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                    countCheckedFinish++;
+                }
+                else {
+                    notPlannedIsChecked = true;
+                }
+            }
+        }
+        setDisabledAttribute(countChecked, countCheckedFinish, notPlannedIsChecked);
+    }
+
+    function getCheckTask() {
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkedCheckboxes = [];
+        for (let i = 0; i < checkboxes.length; ++i) {
+            if (checkboxes[i].checked) {
+                checkedCheckboxes.push(checkboxes[i]);
+            }
+        }
+        return checkedCheckboxes;
+    }
+
+    function getCheckTaskFinish() {
+        let checkboxes = document.getElementsByClassName("checkbox");
+        let checkedCheckboxes = [];
+        for (let i = 0; i < checkboxes.length; ++i) {
+            if (checkboxes[i].checked && checkboxes[i].getAttribute("status") === "PLANNED") {
+                checkedCheckboxes.push(checkboxes[i]);
+            }
+        }
+        return checkedCheckboxes;
+    }
+
+</script>
+</html>

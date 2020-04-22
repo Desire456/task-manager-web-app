@@ -1,25 +1,32 @@
 package org.netcracker.students.dao.interfaces;
 
-import org.netcracker.students.entity.Journal;
+import org.netcracker.students.dao.exceptions.journalDAO.*;
+import org.netcracker.students.model.dto.JournalDTO;
+import org.netcracker.students.model.Journal;
 
-import java.sql.Date;
-import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
 
 public interface JournalDAO {
-    public Journal create(String name, String description, Integer userId, Date creatingDate, boolean privateFlag) throws SQLException;
+    Journal create(String name, String description, Integer userId,
+                   Timestamp creatingDate, boolean isPrivate) throws CreateJournalException;
 
-    public Journal read(int id) throws SQLException;
+    Journal read(int id) throws ReadJournalException;
 
-    public void update(Journal journal) throws SQLException;
+    void update(Journal journal) throws UpdateJournalException;
 
-    public void delete(Journal journal) throws SQLException;
+    void delete(int id) throws DeleteJournalException;
 
-    public List<Journal> getAll() throws SQLException;
+    List<JournalDTO> getAll() throws GetAllJournalException;
 
-    public List<Journal> getSortedByCriteria(String column, String criteria) throws SQLException;
+    List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException;
 
-    public List<Journal> getFilteredByPattern(String column, String pattern, String criteria) throws SQLException;
+    List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria)
+            throws GetSortedByCriteriaJournalException;
 
-    public List<Journal> getFilteredByEquals(String column, String equal, String criteria) throws SQLException;
+    List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria)
+            throws GetFilteredByPatternJournalException;
+
+    List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria)
+            throws GetFilteredByEqualsJournalException;
 }
