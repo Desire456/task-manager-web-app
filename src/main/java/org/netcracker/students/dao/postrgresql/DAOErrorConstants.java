@@ -12,7 +12,7 @@ public class DAOErrorConstants {
     public static final String GET_SORTED_BY_CRITERIA_TASK_EXCEPTION_MESSAGE = "Can't sort tasks by this criteria ";
     public static final String READ_TASK_EXCEPTION_MESSAGE = "Can't get task ";
     public static final String UPDATE_TASK_EXCEPTION_MESSAGE = "Can't update task ";
-//
+
     public static final String CREATE_USER_EXCEPTION_MESSAGE = "Can't create user ";
     public static final String DELETE_USER_EXCEPTION_MESSAGE = "Can't delete user ";
     public static final String GET_ALL_USER_EXCEPTION_MESSAGE = "Can't get all users ";
