@@ -21,3 +21,5 @@ Non yet
 
 ## How to run our application 
  - Download Tomcat Apache Server version 8.5.51
+  - Edit your Tomcat configuration
+  - Move "script.sql" from resources package to Tomcat directory "bin/jdbc" and "queryResult.xsd" from to "bin/xml"
