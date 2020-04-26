@@ -68,7 +68,7 @@ public class JournalController {
         }
     }
 
-    public void changeJournal(Journal newJournal) throws UpdateJournalException {
+    public void editJournal(Journal newJournal) throws UpdateJournalException {
         journalDAO.update(newJournal);
     }
 

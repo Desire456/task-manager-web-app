@@ -8,6 +8,8 @@ import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByEqualsJour
 import org.netcracker.students.dao.exceptions.journalDAO.GetFilteredByPatternJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.model.dto.JournalDTO;
+import org.netcracker.students.servlets.constants.MappingConstants;
+import org.netcracker.students.servlets.constants.ServletConstants;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,7 +21,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/filterJournals")
+@WebServlet(MappingConstants.FILTER_JOURNAL_MAPPING)
 public class FilterJournalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -28,33 +30,57 @@ public class FilterJournalServlet extends HttpServlet {
         String sortCriteria = req.getParameter(ServletConstants.PARAMETER_SORT);
         String equal = req.getParameter(ServletConstants.PARAMETER_EQUAL);
         String pattern = req.getParameter(ServletConstants.PARAMETER_PATTERN);
-        JournalController journalController = null;
+        /*JournalController journalController = null;
         try {
             journalController = JournalController.getInstance();
         } catch (GetConnectionException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
-        }
+        }*/
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         List<JournalDTO> journals = null;
         try {
+            journals = this.getFilteredJournals(userId, column, pattern, sortCriteria, equal);
+        } catch (GetConnectionException | GetFilteredByEqualsJournalException | GetFilteredByPatternJournalException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }
+        /*try {
             if (journalController != null)
                 journals = journalController.getFilteredJournals(userId, column, pattern,
                         sortCriteria, equal != null);
         } catch (GetFilteredByEqualsJournalException | GetFilteredByPatternJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
-        }
-        XMLParser xmlParser = XMLParser.getInstance();
+        }*/
+        //XMLParser xmlParser = XMLParser.getInstance();
         String journalsXml = null;
         try {
-            journalsXml = xmlParser.toXML(new JournalXMLContainer(journals));
+            journalsXml = this.parseJournalListToXml(journals);
         } catch (ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
+        /*try {
+            journalsXml = xmlParser.toXML(new JournalXMLContainer(journals));
+        } catch (ParseXMLException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        }*/
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, journalsXml);
         requestDispatcher.forward(req, resp);
+    }
+
+    private List<JournalDTO> getFilteredJournals(int userId, String column, String pattern, String sortCriteria,
+                                                 String equal) throws GetConnectionException,
+            GetFilteredByEqualsJournalException, GetFilteredByPatternJournalException {
+        JournalController journalController = JournalController.getInstance();
+        return journalController.getFilteredJournals(userId, column, pattern, sortCriteria, equal != null);
+    }
+
+    private String parseJournalListToXml(List<JournalDTO> journals) throws ParseXMLException {
+        XMLParser xmlParser = XMLParser.getInstance();
+        return xmlParser.toXML(new JournalXMLContainer(journals));
     }
 }
