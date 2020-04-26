@@ -1,5 +1,8 @@
 package org.netcracker.students.servlets;
 
+import org.netcracker.students.servlets.constants.MappingConstants;
+import org.netcracker.students.servlets.constants.ServletConstants;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,7 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/sign_up")
+@WebServlet(MappingConstants.SIGN_UP_PAGE_MAPPING)
 public class SignUpServlet extends HttpServlet {
 
     @Override

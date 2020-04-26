@@ -1,4 +1,4 @@
-package org.netcracker.students.servlets;
+package org.netcracker.students.servlets.constants;
 
 public class ServletConstants {
     public static final String PARAMETER_NAME = "name";

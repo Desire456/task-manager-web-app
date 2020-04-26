@@ -78,7 +78,7 @@ public class TaskController {
      * @param newTask - new task
      */
 
-    public void changeTask(Task newTask) throws UpdateTaskException {
+    public void editTask(Task newTask) throws UpdateTaskException {
         Task oldTask = null;
         try {
             oldTask = this.getTask(newTask.getId());
@@ -118,18 +118,18 @@ public class TaskController {
         return tasksDAO.getAll(journalId);
     }
 
-    public List<TaskDTO> getFilteredTasks(int userId, String column, String pattern, String criteria, boolean equal) throws GetFilteredByEqualsTaskException, GetFilteredByPatternTaskException {
+    public List<TaskDTO> getFilteredTasks(int journalId, String column, String pattern, String criteria, boolean equal) throws GetFilteredByEqualsTaskException, GetFilteredByPatternTaskException {
         if (equal) {
-            return tasksDAO.getFilteredByEquals(userId, column, pattern, criteria);
+            return tasksDAO.getFilteredByEquals(journalId, column, pattern, criteria);
         } else {
             String likePattern = ControllerConstants.LIKE_PATTERN_CONSTANT
                     + pattern + ControllerConstants.LIKE_PATTERN_CONSTANT;
-            return tasksDAO.getFilteredByPattern(userId,
+            return tasksDAO.getFilteredByPattern(journalId,
                     column, likePattern, criteria);
         }
     }
 
-    public void deleteTasks(String ids) throws DeleteTaskException {
+    public void deleteTask(String ids) throws DeleteTaskException {
         int id;
         String[] mas = ids.split(" ");
         for (String str : mas) {

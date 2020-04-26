@@ -46,8 +46,8 @@
         <label for="password"></label>
         <input name="password" id="password" type="password" placeholder="Password" required>
         <input type="submit" id="submit" value="Sign in">
-        <button onclick="direct()">Sign up</button>
     </form>
+    <button onclick="direct()">Sign up</button>
 </div>
 </body>
 </html>

@@ -2,6 +2,8 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
 import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
+import org.netcracker.students.servlets.constants.MappingConstants;
+import org.netcracker.students.servlets.constants.ServletConstants;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
-@WebServlet("/start")
+@WebServlet(MappingConstants.START_PAGE_MAPPING)
 public class StartPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

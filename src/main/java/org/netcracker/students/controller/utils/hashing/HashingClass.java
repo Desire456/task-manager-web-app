@@ -17,10 +17,10 @@ public class HashingClass {
     private HashingClass() {
     }
 
-    public String hashPassword(String userPassword) {
-        String generatedPassword = null;
+    public String hashPassword(String userPassword) throws HashPasswordException {
+        String generatedPassword;
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            MessageDigest md = MessageDigest.getInstance(HashConstants.HASH_FUNCTION);
             md.update(salt);
             byte[] bytes = md.digest(userPassword.getBytes(StandardCharsets.UTF_8));
             StringBuilder sb = new StringBuilder();
@@ -29,12 +29,12 @@ public class HashingClass {
             }
             generatedPassword = sb.toString();
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            throw new HashPasswordException(HashConstants.HASH_EXCEPTION_MESSAGE + e.getMessage());
         }
         return generatedPassword;
     }
 
-    public boolean validatePassword(String userPassword, String passwordDb) {
+    public boolean validatePassword(String userPassword, String passwordDb) throws HashPasswordException {
         String hashPassword = hashPassword(userPassword);
         return hashPassword.equals(passwordDb);
     }

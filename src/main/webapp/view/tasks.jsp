@@ -25,8 +25,9 @@ To change this template use File | Settings | File Templates.
     <title>Tasks page</title>
 </head>
 <body onload="showError()">
-<div class="modal">
-    <div class="filter">
+<div class="modal" style="width: 70%;
+    margin-left: 15%">
+    <div class="filter" style = "margin: 0 30%">
         <form action="${pageContext.request.contextPath}/filterTasks" id="filterForm" method="POST">
             Column: <select name = "column" required>
             <option value = "name">Name</option>
@@ -51,9 +52,9 @@ To change this template use File | Settings | File Templates.
             <th style="cursor:default"><input type="checkbox" id="generalCheckbox" onchange="setCheck()"></th>
             <th style="width:150px" title = "Click this button to sort by this column">Name</th>
             <th style="width:200px" title = "Click this button to sort by this column">Description</th>
-            <th title = "Click this button to sort by this column">Planned date</th>
-            <th title = "Click this button to sort by this column">Date of done</th>
-            <th title = "Click this button to sort by this column">Status</th>
+            <th style="width:250px" title = "Click this button to sort by this column">Planned date</th>
+            <th style="width:250px" title = "Click this button to sort by this column">Date of done</th>
+            <th style="width:150px" title = "Click this button to sort by this column">Status</th>
         </tr>
         </thead>
         <tbody id="tableBody">
@@ -63,7 +64,7 @@ To change this template use File | Settings | File Templates.
             <x:set var="id" select="$task/id"/>
             <tr>
                 <td style="cursor:default; text-align:center">
-                    <input type="checkbox" value="<x:out select = "$id"/>" class="checkbox"
+                    <input type="checkbox" value="<x:out select = "$task/id"/>" class="checkbox"
                            status="<x:out select = "$task/status"/>" onchange="setGeneralCheckbox()">
                 </td>
                 <td>
@@ -82,26 +83,30 @@ To change this template use File | Settings | File Templates.
                     <x:out select="$task/status"/>
                 </td>
             </tr>
-            <div class="window" id="editWindow<x:out select="$id"/>">
-                <form action="${pageContext.request.contextPath}/editTask" method="POST">
-                    <span class="close" id="close<x:out select="$id"/>">X</span>
-                    Name: <input type="text" name="name" value="<x:out select="$task/name"/>" required>
-                    Description: <input type="text" name="description"
-                                        value="<x:out select="$task/description"/>" required>
-                    <input type="hidden" name="id" id="editId<x:out select="$id"/>" value="">
-                    <input type="hidden" name="journalId" value=<%=request.getAttribute("journalId")%>>
-                    <br><br><br><br>
-                    Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
-                                         name="plannedDate"
-                                         value="<x:out select = "$task/formattedPlannedDate"/>" required>
-                    <button type="submit">Edit</button>
-                </form>
-            </div>
         </x:forEach>
         <%}%>
         </tbody>
     </table>
-
+    <% if (session.getAttribute("tasks") != null) { %>
+    <x:parse xml="${sessionScope.tasks}" var="output"/>
+    <x:forEach select="$output/tasks/task" var="task">
+    <div class="window" id="editWindow<x:out select="$task/id"/>">
+        <form action="${pageContext.request.contextPath}/editTask" method="POST">
+            <span class="close" id="close<x:out select="$task/id"/>">X</span>
+            Name: <input type="text" name="name" value="<x:out select="$task/name"/>" required>
+            Description: <input type="text" name="description"
+                                value="<x:out select="$task/description"/>" required>
+            <input type="hidden" name="id" id="editId<x:out select="$task/id"/>" value="">
+            <input type="hidden" name="journalId" value=<%=request.getAttribute("journalId")%>>
+            <br><br><br><br>
+            Planned date: <input type="datetime-local" min="<%=formatDateTimeNow%>"
+                                 name="plannedDate"
+                                 value="<x:out select = "$task/formattedPlannedDate"/>" required>
+            <button type="submit">Edit</button>
+        </form>
+    </div>
+    </x:forEach>
+    <%}%>
 
     <div class="actions" style="margin-left:20%">
         <input type="button" id="addButt" class="button" value="Add">
