@@ -29,14 +29,14 @@ public class AddTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
-        TaskController taskController = null;
+     /*   TaskController taskController = null;
         try {
             taskController = TaskController.getInstance();
         } catch (GetConnectionException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        XMLParser xmlParser = XMLParser.getInstance();
+        XMLParser xmlParser = XMLParser.getInstance();*/
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         String plannedDate = req.getParameter(ServletConstants.PARAMETER_PLANNED_DATE);
