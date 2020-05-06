@@ -17,7 +17,7 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 
 ## Releases
 
-- The 1st Lab: [v1.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v1.0)
+- [v1.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v1.0)
 
 ## How to run our application 
  - Download Tomcat Apache Server version 8.5.51
