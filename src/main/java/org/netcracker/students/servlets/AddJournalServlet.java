@@ -11,6 +11,7 @@ import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
 
+import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
 
 @WebServlet(MappingConstants.ADD_JOURNAL_MAPPING)
 public class AddJournalServlet extends HttpServlet {
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);

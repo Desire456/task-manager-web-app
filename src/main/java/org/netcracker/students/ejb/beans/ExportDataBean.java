@@ -15,7 +15,7 @@ public class ExportDataBean implements ExportData {
         this.exportStrategy = exportStrategy;
     }
 
-    public Object export(List<Object> object) {
+    public Object export(List<Object> object) { //2-nd parameter strategy
         return exportStrategy.exportData(object);
     }
 }
