@@ -35,26 +35,6 @@ public class WellServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
         }
-        /*UserController userController = null;
-        try {
-            userController = UserController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        try {
-            if (userController != null) {
-                HashingClass hashingClass = HashingClass.getInstance();
-                String hashPassword = hashingClass.hashPassword(password);
-                userController.addUser(UserFactory.createUser(login, hashPassword, dateOfRegistration));
-            }
-        } catch (CreateUserException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
-            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
-        } catch (HashPasswordException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP);
-        }*/
         requestDispatcher.forward(req, resp);
     }
 

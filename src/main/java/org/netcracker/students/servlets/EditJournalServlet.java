@@ -28,13 +28,6 @@ public class EditJournalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
-        /*JournalController journalController = null;
-        try {
-            journalController = JournalController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         int id = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
@@ -46,24 +39,6 @@ public class EditJournalServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*Journal oldJournal = null;
-        try {
-            if (journalController != null)
-                oldJournal = journalController.getJournal(id);
-        } catch (ReadJournalException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        HttpSession httpSession = req.getSession();
-        int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
-        try {
-            journalController.changeJournal(JournalFactory.createJournal(id, name, description, userId,
-                    oldJournal.getCreationDate(), oldJournal.getIsPrivate()));
-        } catch (UpdateJournalException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
-
         String allJournalsXml = null;
         try {
             allJournalsXml = this.parseJournalListToXml(userId);
@@ -71,16 +46,9 @@ public class EditJournalServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*try {
-            allJournalsXml = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
-        } catch (GetAllJournalByUserIdException | ParseXMLException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournalsXml);
         resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
-        //requestDispatcher.forward(req, resp);
     }
 
     private void changeJournal(int id, String name, String description, int userId) throws GetConnectionException,
