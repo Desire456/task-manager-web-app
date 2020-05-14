@@ -11,6 +11,7 @@ import org.netcracker.students.model.Journal;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 public class JournalController {
@@ -41,6 +42,12 @@ public class JournalController {
     public void addJournal(Journal journal) throws CreateJournalException {
         journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
+    }
+
+    public List<Journal> getJournals(List<Integer> ids) throws ReadJournalException {
+        List<Journal> journals = new ArrayList<>();
+        for(Integer i : ids) journals.add(this.getJournal(i));
+        return journals;
     }
 
     public void deleteJournal(int id) throws DeleteJournalException {

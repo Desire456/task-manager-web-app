@@ -6,9 +6,9 @@ import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
 import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
-import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
+import org.netcracker.students.model.dto.TaskDTO;
 
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -116,6 +116,22 @@ public class TaskController {
 
     public List<TaskDTO> getAll(int journalId) throws GetAllTaskException {
         return tasksDAO.getAll(journalId);
+    }
+
+    public List<Task> getTasks(List<Integer> ids) throws ReadTaskException {
+        List<Task> tasks = new ArrayList<>();
+        for (Integer id : ids) tasks.add(this.getTask(id));
+        return tasks;
+    }
+
+    public List<Task> getTasksByJournalIds(List<Integer> ids) throws GetAllTaskException {
+        List<Task> tasks = new ArrayList<>();
+        for(Integer journalId : ids) tasks.addAll(tasks.size(), this.tasksDAO.getAllByJournalId(journalId));
+        return tasks;
+    }
+
+    public List<Task> getTaskByNameAndJournalId(String name, int journalId) throws GetAllTaskException {
+        return tasksDAO.getAllByNameAndJournalId(name, journalId);
     }
 
     public List<TaskDTO> getFilteredTasks(int journalId, String column, String pattern, String criteria, boolean equal) throws GetFilteredByEqualsTaskException, GetFilteredByPatternTaskException {

@@ -18,10 +18,13 @@ public interface TasksDAO {
 
     void deleteByTaskId(int id) throws DeleteTaskException;
 
+    List<Task> getAllByJournalId(int journalId) throws GetAllTaskException;
 
     List<TaskDTO> getAll() throws GetAllTaskException;
 
     List<TaskDTO> getAll(int journalId) throws GetAllTaskException;
+
+    List<Task> getAllByNameAndJournalId(String name, int journalId) throws GetAllTaskException;
 
     List<TaskDTO> getSortedByCriteria(int journalId, String column,
                                       String criteria) throws GetSortedByCriteriaTaskException;

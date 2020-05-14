@@ -165,4 +165,16 @@ public class Task implements Serializable {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
         return localDateTime.format(formatter);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this.getClass() != obj.getClass()) return false;
+
+        Task task = (Task)obj;
+        return task.dateOfDone.isEqual(this.dateOfDone) && task.description.equals(this.description) &&
+                task.formattedPlannedDate.equals(this.formattedPlannedDate) && task.id == this.id &&
+                task.journalId == this.journalId && task.name.equals(this.name) && task.status.equals(this.status);
+
+
+    }
 }
