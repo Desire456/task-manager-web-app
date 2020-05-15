@@ -1,8 +1,12 @@
 package org.netcracker.students.model;
 
 
+import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
+import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -18,38 +22,54 @@ import java.time.format.DateTimeFormatter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
+@Entity
+@Table(name = "tasks")
 public class Task implements Serializable {
 
+    @Id
+    @Column(name = "task_id")
     private int id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "planned_date")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime plannedDate;
+
+    @Column(name = "date_of_done")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime dateOfDone;
+
+    @Column(name = "status")
     private String status;
-    private String formattedPlannedDate;
-    private int journalId;
+
+    @ManyToOne
+    @JoinColumn(name = "journal_id", nullable = false)
+    @Column(name = "journal_id")
+    private Journal journal;
 
 
-    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate,
+                LocalDateTime dateOfDone, String status) throws GetConnectionException, ReadJournalException {
         this.id = id;
-        this.journalId = journalId;
+        this.journal= JournalController.getInstance().getJournal(journalId);
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
-        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.status = status;
     }
 
     public Task(Task task) {
         id = task.id;
-        journalId = task.journalId;
+        journal = task.journal;
         name = task.name;
         description = task.description;
         plannedDate = task.plannedDate;
-        formattedPlannedDate = task.formattedPlannedDate;
         dateOfDone = task.dateOfDone;
         status = task.status;
     }
@@ -70,7 +90,6 @@ public class Task implements Serializable {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
-        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.dateOfDone = null;
         this.status = status;
     }
@@ -81,15 +100,15 @@ public class Task implements Serializable {
      */
 
     public Task() {
-        // id = IdGenerator.getInstance().getId();
     }
 
-    public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
+    public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId)
+            throws GetConnectionException, ReadJournalException {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
         this.status = status;
-        this.journalId = journalId;
+        this.journal = JournalController.getInstance().getJournal(journalId);
     }
 
     @Override
@@ -153,16 +172,18 @@ public class Task implements Serializable {
     }
 
     public int getJournalId() {
-        return journalId;
+        return journal.getId();
     }
 
-    public void setJournalId(int journalId) {
-        this.journalId = journalId;
+    public void setJournalId(int journalId) throws GetConnectionException, ReadJournalException {
+        this.journal = JournalController.getInstance().getJournal(journalId);
     }
 
-    private String formatDateTime(LocalDateTime localDateTime) {
-        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        return localDateTime.format(formatter);
+    public Journal getJournal() {
+        return journal;
+    }
+
+    public void setJournal(Journal journal) {
+        this.journal = journal;
     }
 }

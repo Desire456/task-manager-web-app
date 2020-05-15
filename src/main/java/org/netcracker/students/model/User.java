@@ -1,7 +1,11 @@
 package org.netcracker.students.model;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
+@Entity
+@Table(name ="users")
 public class User {
     private int id;
     private String login;
