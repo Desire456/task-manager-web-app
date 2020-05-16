@@ -35,34 +35,6 @@ public class TasksPageServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*TaskController taskController = null;
-        try {
-            taskController = TaskController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        List<TaskDTO> taskArrayList = null;
-        try {
-            if (taskController != null)
-                taskArrayList = taskController.getAll(journalId);
-        } catch (GetAllTaskException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        if (taskArrayList != null && taskArrayList.isEmpty()) {
-            session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
-        } else {
-            XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = null;
-            try {
-                allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
-            } catch (ParseXMLException e) {
-                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-                requestDispatcher.forward(req, resp);
-            }
-            session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
-        }*/
         requestDispatcher.forward(req, resp);
     }
 
@@ -81,34 +53,6 @@ public class TasksPageServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
         }
         session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasksXml);
-        /*TaskController taskController = null;
-        try {
-            taskController = TaskController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        List<TaskDTO> taskArrayList = null;
-        try {
-            if (taskController != null)
-                taskArrayList = taskController.getAll(journalId);
-        } catch (GetAllTaskException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        if (taskArrayList != null && taskArrayList.isEmpty()) {
-            session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, null);
-        } else {
-            XMLParser xmlParser = XMLParser.getInstance();
-            String allTasks = null;
-            try {
-                allTasks = xmlParser.toXML(new TaskXMLContainer(taskArrayList));
-            } catch (ParseXMLException e) {
-                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-                requestDispatcher.forward(req, resp);
-            }
-            session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
-        }*/
         requestDispatcher.forward(req, resp);
     }
 

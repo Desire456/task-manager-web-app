@@ -31,5 +31,8 @@ public class ServletConstants {
     public static final String ERROR_ADD_USER = "ERROR. May be user with this username exists or try again later.";
     public static final String ERROR_CHECK_USER = "ERROR. Incorrect password or username";
     public static final String ERROR_ADD_TASK = "ERROR. May be you have task with same name or try again later.";
-    public static final String COMMON_ERROR = "Error. Try again later.";
+    public static final String COMMON_ERROR = "ERROR. Try again later.";
+    public static final String CONTENT_TYPE = "text/xml";
+    public static final String RESP_HEADER_NAME = "Content-disposition";
+    public static final String RESP_HEADER_VALUE = "attachment; filename=sample.txt";
 }

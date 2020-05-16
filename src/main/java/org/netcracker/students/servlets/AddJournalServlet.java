@@ -49,26 +49,9 @@ public class AddJournalServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*String allJournals = null;
-        try {
-            if (journalController != null)
-                journalController.addJournal(JournalFactory.createJournal(name, description,
-                        userId, LocalDateTime.now(), isPrivate));
-        } catch (CreateJournalException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);
-            requestDispatcher.forward(req, resp);
-        }
-        try {
-            if (journalController != null)
-                allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
-        } catch (GetAllJournalByUserIdException | ParseXMLException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournalsXml);
         resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
-       // requestDispatcher.forward(req, resp);
     }
 
     private String parseJournalListToXml(int userId) throws GetConnectionException, GetAllJournalByUserIdException,

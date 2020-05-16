@@ -30,13 +30,6 @@ public class FilterTaskServlet extends HttpServlet {
         String sortCriteria = req.getParameter(ServletConstants.PARAMETER_SORT);
         String equal = req.getParameter(ServletConstants.PARAMETER_EQUAL);
         String pattern = req.getParameter(ServletConstants.PARAMETER_PATTERN);
-        /*TaskController taskController = null;
-        try {
-            taskController = TaskController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         HttpSession httpSession = req.getSession();
         int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         List<TaskDTO> tasks = null;
@@ -46,15 +39,6 @@ public class FilterTaskServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*try {
-            if (taskController != null)
-                tasks = taskController.getFilteredTasks(journalId, column, pattern,
-                        sortCriteria, equal != null);
-        } catch (GetFilteredByEqualsTaskException | GetFilteredByPatternTaskException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
-        //XMLParser xmlParser = XMLParser.getInstance();
         String tasksXml = null;
         try {
             tasksXml = this.parseTaskListToXml(tasks);
@@ -62,12 +46,6 @@ public class FilterTaskServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*try {
-            tasksXml = xmlParser.toXML(new TaskXMLContainer(tasks));
-        } catch (ParseXMLException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, tasksXml);
         requestDispatcher.forward(req, resp);
     }

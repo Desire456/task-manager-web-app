@@ -31,13 +31,6 @@ public class DeleteJournalServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*try {
-            if (journalController != null)
-                journalController.deleteJournal(ids);
-        } catch (DeleteJournalException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         String allJournals = null;
@@ -47,23 +40,9 @@ public class DeleteJournalServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
-        /*try {
-            if (journalController != null)
-                journalController.deleteJournal(ids);
-        } catch (DeleteJournalException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        try {
-            allJournals = xmlParser.toXML(new JournalXMLContainer(journalController.getAll(userId)));
-        } catch (GetAllJournalByUserIdException | ParseXMLException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournals);
         resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
-        //requestDispatcher.forward(req, resp);
     }
 
     private void deleteJournal(String ids) throws DeleteJournalException, GetConnectionException {

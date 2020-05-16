@@ -29,14 +29,6 @@ public class AddTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
-     /*   TaskController taskController = null;
-        try {
-            taskController = TaskController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        XMLParser xmlParser = XMLParser.getInstance();*/
         String name = req.getParameter(ServletConstants.PARAMETER_NAME);
         String description = req.getParameter(ServletConstants.PARAMETER_DESCRIPTION);
         String plannedDate = req.getParameter(ServletConstants.PARAMETER_PLANNED_DATE);
@@ -58,28 +50,9 @@ public class AddTaskServlet extends HttpServlet {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
             requestDispatcher.forward(req, resp);
         }
-        /*DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
-        LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
-        try {
-            if (taskController != null)
-                taskController.addTask(TaskFactory.createTask(name, description,
-                        parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
-        } catch (CreateTaskException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
-            requestDispatcher.forward(req, resp);
-        }
-        String allTasks = null;
-        try {
-            if (taskController != null)
-                allTasks = xmlParser.toXML(new TaskXMLContainer(taskController.getAll(journalId)));
-        } catch (GetAllTaskException | ParseXMLException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }*/
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
                 allTasksXml);
         resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);
-        //requestDispatcher.forward(req, resp);
     }
 
     private void addTask(String name, String description, String plannedDate, int journalId)

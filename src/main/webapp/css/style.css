@@ -3,6 +3,56 @@ body {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
 
+.wrapper {
+    background: none repeat scroll 0% 0% #FFFFFF;
+    margin: 150px auto;
+    border: 2px solid #3DA8BA;
+    padding: 10px;
+    width: 500px;
+}
+
+fieldset {
+    border: 2px solid #efefef;
+}
+
+#filedrag {
+    border-radius: 7px 7px 7px 7px;
+    border: 2px dashed rgb(71, 66, 66);
+    width: 90%;
+    color: #555555;
+    cursor: default;
+    display: none;
+    margin: 1em 0pt;
+    padding: 1em 0pt;
+    text-align: center;
+    background: #f9f9f9;
+}
+
+#btn {
+    padding: 7px;
+    font-size: 14px;
+    border: 1px solid #333;
+    border-radius: 3px;
+    width: 75%;
+    height: 20px;
+}
+
+#filedrag.hover {
+    border-style: solid;
+    box-shadow: 0pt 3px 4px #dbdbdb inset;
+}
+
+#messages {
+    margin-top: 10px;
+    padding: 5px;
+    font-size: 14px;
+}
+
+#messages p {
+    border-bottom: 1px solid #efefef;
+    margin-bottom: 5px;
+}
+
 .modal {
     width: 50%;
     margin-left: 25%;
@@ -10,7 +60,7 @@ body {
 
 .actions {
     display: inline;
-    margin-left: 23%;
+    margin-left: 5%;
 }
 
 .filter {
