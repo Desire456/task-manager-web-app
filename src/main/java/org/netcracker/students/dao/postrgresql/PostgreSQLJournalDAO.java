@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostgreSQLJournalDAO implements JournalDAO {
+public class    PostgreSQLJournalDAO implements JournalDAO {
     private Connection connection;
 
     public PostgreSQLJournalDAO(Connection connection) {
