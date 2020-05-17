@@ -10,6 +10,4 @@ public interface IExportImport {
     void exportObjects(List<Integer> journalIds, List<Integer> tasksIds) throws ExportException;
 
     void importObjects(String xml);
-
-    String asd();
 }

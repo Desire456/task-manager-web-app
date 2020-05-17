@@ -19,6 +19,7 @@ public class ServletConstants {
     public static final String PATH_TO_VIEW_TASKS_PAGE = "view/tasks.jsp";
     public static final String PATH_TO_VIEW_SIGN_UP = "view/sign_up.jsp";
     public static final String PATH_TO_VIEW_WELL = "view/well.jsp";
+    public static final String PARAMETER_FILENAME = "fileName";
     public static final String PATH_TO_VIEW_START = "index.jsp";
     public static final String PARAMETER_PLANNED_DATE = "plannedDate";
     public static final String PARAMETER_JOURNAL_ID = "journalId";
@@ -32,7 +33,7 @@ public class ServletConstants {
     public static final String ERROR_CHECK_USER = "ERROR. Incorrect password or username";
     public static final String ERROR_ADD_TASK = "ERROR. May be you have task with same name or try again later.";
     public static final String COMMON_ERROR = "ERROR. Try again later.";
-    public static final String CONTENT_TYPE = "text/xml";
     public static final String RESP_HEADER_NAME = "Content-disposition";
-    public static final String RESP_HEADER_VALUE = "attachment; filename=sample.txt";
+    public static final String RESP_HEADER_VALUE = "attachment; filename=\"";
+    public static final String FILE_EXTENSION = ".xml\"";
 }

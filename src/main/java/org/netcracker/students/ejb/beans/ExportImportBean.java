@@ -19,17 +19,12 @@ public class ExportImportBean implements IExportImport {
     public void exportObjects(List<Integer> journalIds, List<Integer> tasksIds) throws ExportException {
         try {
             ExportList exportList = ExportListFactory.getInstance().create(journalIds, tasksIds);
-            System.out.println(exportList.getJournals());
         } catch (GetConnectionException | ReadTaskException | GetAllTaskException
                 | ReadJournalException | PropertyFileException e) {
             throw new ExportException(EJBConstants.EXPORT_EXCEPTION_MESSAGE + e.getMessage());
         }
 
         //marshal export list
-    }
-
-    public String asd() {
-        return "123";
     }
 
     public void importObjects(String xml) {

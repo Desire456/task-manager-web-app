@@ -2,7 +2,7 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 
 
-<html lang = "en">
+<html lang="en">
 <head>
     <link rel="stylesheet" href="../css/style.css">
     <meta charset="UTF-8"/>
@@ -109,16 +109,27 @@
         <form action="${pageContext.request.contextPath}/importJournal" enctype="multipart/form-data" method="POST">
             <span class="close">X</span>
             <div>
-                <div id = "btn">
-                <label for="fileSelect">Select file to upload</label>
+                <div id="btn">
+                    <label for="fileSelect">Browse...</label>
                 </div>
                 <input type="file" id="fileSelect" style="visibility: hidden" name="importFile" lang="en"/>
                 <div id="fileDrag">Or drag them here</div>
             </div>
-            <p id = "messages"></p>
+            <p id="messages"></p>
             <div id="submitButton">
-                <input type ="submit" class = "button" id="submitImportButt" value = "Upload file" disabled/>
+                <input type="submit" class="button" id="submitImportButt" value="Upload file" disabled/>
             </div>
+        </form>
+    </div>
+
+    <div class="window" id="exportWindow">
+        <form action = "${pageContext.request.contextPath}/exportJournal" method = "POST" id ="exportForm">
+            <span class="close">X</span>
+            Save as: <input name="fileName" id="fileName" required>
+            <input type = "hidden" name="ids" id = "exportIds" value="">
+            <br>
+            <br>
+            <input type="submit" class="button" id="submitExportButt" value="Download" disabled/>
         </form>
     </div>
 </div>
@@ -183,6 +194,7 @@
     let editButton = document.getElementById("editButt");
     let deleteButton = document.getElementById("deleteButt");
     let exportButton = document.getElementById("exportButt");
+    let submitExportButt = document.getElementById("submitExportButt");
 
     editButton.onclick = function () {
         let id = getCheckJournal()[0].value;
@@ -211,22 +223,24 @@
             form.submit();
         }
     };
-
     exportButton.onclick = function () {
-        let form = document.createElement('form');
-        form.action = '/exportJournal';
-        form.method = 'POST';
-
-        form.innerHTML = '<input type = "hidden" name="ids" id = "exportIds" value="">';
+        document.getElementById('exportWindow').style.display = 'block';
+    }
+    submitExportButt.onclick = function () {
         let strIds = "";
         let ids = getCheckJournal();
         for (let i = 0; i < ids.length; ++i) {
             strIds += ids[i].value + " ";
         }
-        document.body.append(form);
-        document.getElementById("exportIds").value = strIds;
-        form.submit();
+        document.getElementById('exportIds').value = strIds;
+
+        document.getElementById('exportForm').submit();
+        document.getElementById('exportWindow').style.display ='none';
     }
+
+    let fileName = document.getElementById('fileName');
+
+    fileName.addEventListener('input', () => submitExportButt.disabled = fileName.value === "");
 
 
     function goToJournal(id) {
@@ -338,17 +352,17 @@
     function FileSelectHandler(e) {
         FileDragHover(e);
         var files = e.target.files || e.dataTransfer.files;
-        if(files.length > 1) {
+        if (files.length > 1) {
             alert("Only one file");
             return;
         }
         let file = files[0];
-        if(file.type !== "text/plain" && file.type !== "text/xml") {
+        if (file.type !== "text/plain" && file.type !== "text/xml") {
             alert("Incorrect type");
             return;
         }
         $id("messages").innerHTML = "File information <br> name: " + file.name + ", type:" + file.type + ", size: " + file.size
-        + " bytes";
+            + " bytes";
 
         let submitButton = $id("submitImportButt");
         submitButton.disabled = false;
