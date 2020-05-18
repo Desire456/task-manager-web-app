@@ -19,6 +19,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class XMLMarshaller {
+    private static XMLMarshaller instance;
+
+    private XMLMarshaller() {}
+
+    public static XMLMarshaller getInstance() {
+        if (instance == null) instance = new XMLMarshaller();
+        return instance;
+    }
 
     public String marshal(ExportList exportList) throws XMLMarshallerException {
         String outputString = null;
@@ -102,8 +110,7 @@ public class XMLMarshaller {
 
     private String formatLocalDateTime(LocalDateTime localDateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-        String formattedDateTime = localDateTime.format(formatter);
-        return formattedDateTime;
+        return localDateTime.format(formatter);
     }
 
 }

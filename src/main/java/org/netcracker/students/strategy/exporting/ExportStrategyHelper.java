@@ -1,6 +1,10 @@
 package org.netcracker.students.strategy.exporting;
 
 import org.netcracker.students.strategy.StrategyConstants;
+import org.netcracker.students.strategy.exporting.config.ExportConfigItem;
+import org.netcracker.students.strategy.exporting.journal.JournalExportStrategy;
+import org.netcracker.students.strategy.exporting.journal.JournalWithChildrenExportStrategy;
+import org.netcracker.students.strategy.exporting.task.TaskExportStrategy;
 
 import java.util.HashMap;
 import java.util.Map;

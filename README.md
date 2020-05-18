@@ -20,6 +20,6 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 Non yet
 
 ## How to run our application 
- - Download Tomcat Apache Server version 8.5.51
+ - Download TomEE Apache Server version 1.7.5
   - Edit your Tomcat configuration
   - Move "script.sql" from resources package to Tomcat directory "bin/jdbc" and "queryResult.xsd" from to "bin/xml"

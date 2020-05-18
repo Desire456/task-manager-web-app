@@ -2,14 +2,21 @@ package org.netcracker.students.strategy.importing;
 
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
+import org.netcracker.students.strategy.StrategyConstants;
+import org.netcracker.students.strategy.importing.journal.JournalConflictImportStrategy;
+import org.netcracker.students.strategy.importing.journal.JournalIgnoreImportStrategy;
+import org.netcracker.students.strategy.importing.journal.JournalOverwriteImportStrategy;
+import org.netcracker.students.strategy.importing.task.TaskConflictImportStrategy;
+import org.netcracker.students.strategy.importing.task.TaskIgnoreImportStrategy;
+import org.netcracker.students.strategy.importing.task.TaskOverwriteImportStrategy;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class ImportStrategyHelper {
     private static ImportStrategyHelper instance;
-    private Map<Integer, ImportStrategy<Journal>> journalsStrategies; //journal strategies?
-    private Map<Integer, ImportStrategy<Task>> taskStrategies;
+    private final Map<Integer, ImportStrategy<Journal>> journalsStrategies;
+    private final Map<Integer, ImportStrategy<Task>> taskStrategies;
 
     public static ImportStrategyHelper getInstance() {
         if(instance == null) {
@@ -20,9 +27,16 @@ public class ImportStrategyHelper {
 
     private ImportStrategyHelper() {
         this.taskStrategies = new HashMap<>();
-        this.taskStrategies.put(1, new TaskOverwriteImportStrategy());
-        this.taskStrategies.put(2, new TaskIgnoreImportStrategy());
-        this.taskStrategies.put(3, new TaskConflictImportStrategy());
+        this.taskStrategies.put(StrategyConstants.TASK_OVERWRITE_IMPORT_ID, new TaskOverwriteImportStrategy());
+        this.taskStrategies.put(StrategyConstants.TASK_IGNORE_IMPORT_ID, new TaskIgnoreImportStrategy());
+        this.taskStrategies.put(StrategyConstants.TASK_CONFLICT_IMPORT_ID, new TaskConflictImportStrategy());
+        this.journalsStrategies = new HashMap<>();
+        this.journalsStrategies.put(StrategyConstants.JOURNAL_OVERWRITE_IMPORT_ID,
+                new JournalOverwriteImportStrategy());
+        this.journalsStrategies.put(StrategyConstants.JOURNAL_IGNORE_IMPORT_ID,
+                new JournalIgnoreImportStrategy());
+        this.journalsStrategies.put(StrategyConstants.JOURNAL_CONFLICT_IMPORT_ID,
+                new JournalConflictImportStrategy());
     }
 
     public ImportStrategy<Journal> resolveJournalStrategy(int strategyID) {

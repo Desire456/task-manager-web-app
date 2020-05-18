@@ -1,4 +1,4 @@
-package org.netcracker.students.strategy.exporting;
+package org.netcracker.students.strategy.exporting.config;
 
 public class ExportConfigItem {
     private final String type;

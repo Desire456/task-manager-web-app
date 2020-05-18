@@ -15,10 +15,10 @@ public class XmlValidator {
 
     private static XmlValidator instance;
 
-    private XmlValidator(){
+    private XmlValidator() {
     }
 
-    public static synchronized XmlValidator getInstance(){
+    public static synchronized XmlValidator getInstance() {
         if (instance == null)
             instance = new XmlValidator();
         return instance;
@@ -44,15 +44,12 @@ public class XmlValidator {
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(xmlPath));
             return true;
-        }
-        catch(NotFoundXMLException e){
+        } catch (NotFoundXMLException e) {
             throw new XmlValidatorException(e.getMessage());
-        }
-        catch (NotFoundXSDException e){
+        } catch (NotFoundXSDException e) {
             throw new XmlValidatorException(e.getMessage());
-        }
-        catch (SAXException | IOException e) {
-            throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE +" "+ e.getMessage());
+        } catch (SAXException | IOException e) {
+            throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
         }
 
     }
@@ -71,12 +68,10 @@ public class XmlValidator {
             Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new StringReader(xml)));
             return true;
-        }
-        catch (NotFoundXSDException e){
+        } catch (NotFoundXSDException e) {
             throw new XmlValidatorException(e.getMessage());
-        }
-        catch (SAXException | IOException e) {
-            throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE +" "+ e.getMessage());
+        } catch (SAXException | IOException e) {
+            throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
         }
 
     }

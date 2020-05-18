@@ -1,4 +1,4 @@
-package org.netcracker.students.strategy.importing;
+package org.netcracker.students.strategy.importing.exceptions;
 
 public class ImportConflictException extends Exception{
     public ImportConflictException() {
