@@ -2,20 +2,30 @@ package org.netcracker.students.controller.utils.xml.importer;
 
 import org.netcracker.students.controller.utils.xml.validator.XmlValidator;
 import org.netcracker.students.controller.utils.xml.validator.XmlValidatorException;
+import org.netcracker.students.factories.JournalFactory;
+import org.netcracker.students.factories.TaskFactory;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 import org.netcracker.students.strategy.exporting.ExportList;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class XMLMarshaller {
@@ -51,7 +61,7 @@ public class XMLMarshaller {
                         description.setTextContent(journalList.get(i).getDescription());
                         journal.appendChild(description);
                         Element creationDate = document.createElement("creationDate");
-                        creationDate.setTextContent(formatLocalDateTime(journalList.get(i).getCreationDate()));
+                        creationDate.setTextContent(localDateTimeToString(journalList.get(i).getCreationDate()));
                         journal.appendChild(creationDate);
                         Element isPrivate = document.createElement("isPrivate");
                         isPrivate.setTextContent(String.valueOf(journalList.get(i).getIsPrivate()));
@@ -77,11 +87,11 @@ public class XMLMarshaller {
                     status.setTextContent(taskList.get(i).getStatus());
                     task.appendChild(status);
                     Element plannedDate = document.createElement("plannedDate");
-                    plannedDate.setTextContent(formatLocalDateTime(taskList.get(i).getPlannedDate()));
+                    plannedDate.setTextContent(localDateTimeToString(taskList.get(i).getPlannedDate()));
                     task.appendChild(plannedDate);
                     if(taskList.get(i).getDateOfDone()!= null){
                     Element dateOfDone = document.createElement("dateOfDone");
-                        dateOfDone.setTextContent(formatLocalDateTime(taskList.get(i).getDateOfDone()));
+                        dateOfDone.setTextContent(localDateTimeToString(taskList.get(i).getDateOfDone()));
                         task.appendChild(dateOfDone);
                     }
                     Element journalId = document.createElement("journalId");
@@ -106,11 +116,84 @@ public class XMLMarshaller {
         return outputString;
     }
 
-    public void unmarshal(){}
+    public void unmarshal(List<Journal> journalList, List<Task> taskList, String xml) throws XMLMarshallerException {
+        journalList = new ArrayList<>();
+        taskList = new ArrayList<>();
+        try{
+            XmlValidator.getInstance().checkStringXMLforXSD(xml);
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document document = builder.parse(new InputSource(new StringReader(xml)));
+            document.getDocumentElement().normalize();
+            NodeList journalsNodeList = document.getElementsByTagName("journals");
+            if (journalsNodeList.getLength() !=0){
+                NodeList journalNodeList = document.getElementsByTagName("journal");
+                for(int i = 0; i < journalNodeList.getLength(); i++){
+                    journalList.add(getJournal(journalNodeList.item(i)));
+                }
+            }
+            NodeList tasksNodeList = document.getElementsByTagName("tasks");
+            if(tasksNodeList.getLength() != 0){
+                NodeList taskNodeList = document.getElementsByTagName("task");
+                    for (int i = 0; i < taskNodeList.getLength(); i++){
+                        taskList.add(getTask(taskNodeList.item(i)));
+                    }
+            }
+        }
+        catch (XmlValidatorException e) {
+            throw new XMLMarshallerException("XML validate error: "+e.getMessage());
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new XMLMarshallerException("XML parse error: "+e.getMessage());
+        }
+    }
 
-    private String formatLocalDateTime(LocalDateTime localDateTime){
+    private Journal getJournal(Node node){
+        Journal journal = null;
+        if (node.getNodeType() == Node.ELEMENT_NODE){
+            Element element = (Element) node;
+            journal = JournalFactory.createJournal(Integer.parseInt(getTagValue("id", element)),getTagValue("name", element),
+                    getTagValue("description", element), 2147483646, stringToLocalDateTime(getTagValue("creationDate", element)),
+                    true);
+        }
+        return journal;
+    }
+
+    private Task getTask(Node node){
+        Task task = null;
+        if (node.getNodeType() == Node.ELEMENT_NODE) {
+            Element element = (Element) node;
+            task = TaskFactory.createTask(Integer.parseInt(getTagValue("id", element)),Integer.parseInt(getTagValue("journalId", element)),
+                    getTagValue("name", element),getTagValue("description", element),stringToLocalDateTime(getTagValue("plannedDate", element)),
+                    stringToLocalDateTime(getTagValue("dateOfDone", element)),getTagValue("status", element));
+        }
+        return task;
+    }
+
+    private String getTagValue(String tag, Element element){
+        String nodeValue = null;
+        NodeList nodeList = element.getElementsByTagName(tag);
+        Node node1 = nodeList.item(0);
+        if (node1 != null)
+        {
+            NodeList nodeList1 = node1.getChildNodes();
+            Node node = (Node) nodeList1.item(0);
+            nodeValue = node.getNodeValue();
+        }
+        return nodeValue;
+    }
+
+    private String localDateTimeToString(LocalDateTime localDateTime){
         DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
         return localDateTime.format(formatter);
+    }
+
+    private LocalDateTime stringToLocalDateTime(String str){
+        LocalDateTime localDateTime = null;
+        if(str != null){
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+            localDateTime = LocalDateTime.parse(str, formatter);
+        }
+        return localDateTime;
     }
 
 }
