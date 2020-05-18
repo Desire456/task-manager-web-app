@@ -20,6 +20,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -116,7 +117,7 @@ public class XMLMarshaller {
         return outputString;
     }
 
-    public void unmarshal(List<Journal> journalList, List<Task> taskList, String xml) throws XMLMarshallerException {
+    public void unmarshal(List<Journal> journalList, List<Task> taskList, String xml, int userID) throws XMLMarshallerException {
         journalList = new ArrayList<>();
         taskList = new ArrayList<>();
         try{
@@ -129,7 +130,7 @@ public class XMLMarshaller {
             if (journalsNodeList.getLength() !=0){
                 NodeList journalNodeList = document.getElementsByTagName("journal");
                 for(int i = 0; i < journalNodeList.getLength(); i++){
-                    journalList.add(getJournal(journalNodeList.item(i)));
+                    journalList.add(getJournal(journalNodeList.item(i), userID));
                 }
             }
             NodeList tasksNodeList = document.getElementsByTagName("tasks");
@@ -147,12 +148,12 @@ public class XMLMarshaller {
         }
     }
 
-    private Journal getJournal(Node node){
+    private Journal getJournal(Node node, int userID){
         Journal journal = null;
         if (node.getNodeType() == Node.ELEMENT_NODE){
             Element element = (Element) node;
             journal = JournalFactory.createJournal(Integer.parseInt(getTagValue("id", element)),getTagValue("name", element),
-                    getTagValue("description", element), 2147483646, stringToLocalDateTime(getTagValue("creationDate", element)),
+                    getTagValue("description", element), userID, stringToLocalDateTime(getTagValue("creationDate", element)),
                     true);
         }
         return journal;
