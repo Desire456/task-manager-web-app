@@ -31,10 +31,8 @@ public class Journal implements Serializable {
     @Column(name = "journal_id")
     private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
     @Column(name = "user_id")
-    private User user;
+    private int userId;
 
     @Column(name = "isprivate")
     private boolean isPrivate;
@@ -54,7 +52,7 @@ public class Journal implements Serializable {
 
         this.id = id;
         this.isPrivate = isPrivate;
-        this.user = UserController.getInstance().getUser(userId);
+        this.userId = userId;
         this.name = name;
         this.creationDate = creationDate;
         this.description = description;
@@ -63,7 +61,7 @@ public class Journal implements Serializable {
     public Journal(String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) throws GetConnectionException, ReadUserException {
         this.name = name;
         this.description = description;
-        this.user = UserController.getInstance().getUser(userId);
+        this.userId = userId;
         this.creationDate = creationDate;
         this.isPrivate = isPrivate;
     }
@@ -78,15 +76,7 @@ public class Journal implements Serializable {
         this.name = journal.name;
         this.creationDate = journal.creationDate;
         this.description = journal.description;
-        this.user = journal.user;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+        this.userId = journal.userId;
     }
 
     public int getId() {
@@ -98,11 +88,11 @@ public class Journal implements Serializable {
     }
 
     public int getUserId() {
-        return getUser().getId();
+        return userId;
     }
 
-    public void setUserId(int userId) throws GetConnectionException, ReadUserException {
-        this.user = UserController.getInstance().getUser(userId);
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public boolean getIsPrivate() {

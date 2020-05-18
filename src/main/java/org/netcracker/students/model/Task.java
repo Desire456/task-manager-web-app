@@ -47,16 +47,14 @@ public class Task implements Serializable {
     @Column(name = "status")
     private String status;
 
-    @ManyToOne
-    @JoinColumn(name = "journal_id", nullable = false)
     @Column(name = "journal_id")
-    private Journal journal;
+    private int journalId;
 
 
     public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate,
                 LocalDateTime dateOfDone, String status) throws GetConnectionException, ReadJournalException {
         this.id = id;
-        this.journal= JournalController.getInstance().getJournal(journalId);
+        this.journalId = journalId;
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
@@ -66,7 +64,7 @@ public class Task implements Serializable {
 
     public Task(Task task) {
         id = task.id;
-        journal = task.journal;
+        journalId = task.journalId;
         name = task.name;
         description = task.description;
         plannedDate = task.plannedDate;
@@ -108,7 +106,7 @@ public class Task implements Serializable {
         this.description = description;
         this.plannedDate = plannedDate;
         this.status = status;
-        this.journal = JournalController.getInstance().getJournal(journalId);
+        this.journalId = journalId;
     }
 
     @Override
@@ -172,18 +170,10 @@ public class Task implements Serializable {
     }
 
     public int getJournalId() {
-        return journal.getId();
+        return journalId;
     }
 
-    public void setJournalId(int journalId) throws GetConnectionException, ReadJournalException {
-        this.journal = JournalController.getInstance().getJournal(journalId);
-    }
-
-    public Journal getJournal() {
-        return journal;
-    }
-
-    public void setJournal(Journal journal) {
-        this.journal = journal;
+    public void setJournalId(int journalId) {
+        this.journalId = journalId;
     }
 }

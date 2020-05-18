@@ -1,16 +1,29 @@
 package org.netcracker.students.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name ="users")
 public class User {
+
+    @Id
+    @Column(name = "user_id")
     private int id;
+
+    @Column(name = "login")
     private String login;
+
+    @Column(name = "password")
     private String password;
+
+    @Column(name = "dateofregistration")
     private LocalDateTime dateOfRegistration;
+
+    public User() {}
 
     public User(String login, String password, LocalDateTime dateOfRegistration) {
         this.login = login;
