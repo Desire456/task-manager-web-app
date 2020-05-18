@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <xsd:element name="importJournal">
-            <xsd:complexType>
-                <xsd:sequence>
-                    <xsd:element name="journal" type="JournalType" minOccurs="0" maxOccurs="unbounded"/>
-                    <xsd:element name="tasks">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="task" type="TaskType" minOccurs="0" maxOccurs="unbounded"/>
-                            </xsd:sequence>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:sequence>
-            </xsd:complexType>
-    </xsd:element>
-    <xsd:complexType name="JournalType">
-        <xsd:sequence>
-            <xsd:element name="id" type="xsd:nonNegativeInteger"/>
-            <xsd:element name="name" type="xsd:string"/>
-            <xsd:element name="description" type="xsd:string"/>
-            <xsd:element name="creationDate" type="xsd:string"/>
-            <xsd:element name="isPrivate" type="xsd:boolean"/>
-        </xsd:sequence>
-    </xsd:complexType>
-    <xsd:complexType name="TaskType">
-        <xsd:sequence>
-            <xsd:element name="id" type="xsd:nonNegativeInteger"/>
-            <xsd:element name="name" type="xsd:string"/>
-            <xsd:element name="description" type="xsd:string"/>
-            <xsd:element name="status" type="xsd:string"/>
-            <xsd:element name="plannedDate" type="xsd:string"/>
-            <xsd:element name="dateOfDone" type="xsd:string" minOccurs="0"/>
-            <xsd:element name="journalId" type="xsd:nonNegativeInteger"/>
-        </xsd:sequence>
-    </xsd:complexType>
-</xsd:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="importData">
+            <xs:complexType>
+                <xs:sequence>
+                    <xs:element name="journals" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="journal" type="JournalType" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                        <xs:unique name="uniqueJournalID">
+                            <xs:selector xpath="journal"/>
+                            <xs:field xpath="id"/>
+                        </xs:unique>
+                        <xs:unique name="uniqueJournalName">
+                            <xs:selector xpath="journal"/>
+                            <xs:field xpath="name"/>
+                        </xs:unique>
+                    </xs:element>
+                    <xs:element name="tasks" minOccurs="0">
+                        <xs:complexType>
+                            <xs:sequence>
+                                <xs:element name="task" type="TaskType" minOccurs="0" maxOccurs="unbounded"/>
+                            </xs:sequence>
+                        </xs:complexType>
+                    </xs:element>
+                </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <xs:complexType name="JournalType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:nonNegativeInteger"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="creationDate" type="xs:string"/>
+            <xs:element name="isPrivate" type="xs:boolean"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TaskType">
+        <xs:sequence>
+            <xs:element name="id" type="xs:nonNegativeInteger"/>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="description" type="xs:string"/>
+            <xs:element name="status" type="xs:string"/>
+            <xs:element name="plannedDate" type="xs:string"/>
+            <xs:element name="dateOfDone" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="journalId" type="xs:nonNegativeInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>
