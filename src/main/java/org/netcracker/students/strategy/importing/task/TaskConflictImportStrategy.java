@@ -18,7 +18,7 @@ public class TaskConflictImportStrategy implements ImportStrategy<Task> {
         try {
             TaskController taskController = TaskController.getInstance();
             Task oldTask = taskController.getTask(task.getId());
-            if (isMatchId(task, oldTask)) throw new ImportConflictException();
+            if (oldTask != null) throw new ImportConflictException();
 
             taskController.addTask(task);
         } catch (GetConnectionException | ReadTaskException e) {
@@ -32,9 +32,5 @@ public class TaskConflictImportStrategy implements ImportStrategy<Task> {
                     StrategyConstants.TASK_TYPE.toLowerCase(), task.getName());
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + exceptionMessage);
         }
-    }
-
-    private boolean isMatchId(Task task1, Task task2) {
-        return task1.getId() == task2.getId();
     }
 }

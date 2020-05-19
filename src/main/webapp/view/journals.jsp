@@ -106,27 +106,30 @@
     </div>
 
     <div class="window" id="importWindow">
-        <form action="${pageContext.request.contextPath}/importJournal" enctype="multipart/form-data" method="POST">
+        <div>
             <span class="close">X</span>
-            <div>
-                <div id="btn">
-                    <label for="fileSelect">Browse...</label>
-                </div>
+        </div>
+        <div id="importDiv">
+            <div id="btn">
+                <label for="fileSelect">Browse...</label>
+            </div>
+            <div id="fileDrag">
+                Or drag them here
                 <input type="file" id="fileSelect" style="visibility: hidden" name="importFile" lang="en"/>
-                <div id="fileDrag">Or drag them here</div>
             </div>
-            <p id="messages"></p>
-            <div id="submitButton">
-                <input type="submit" class="button" id="submitImportButt" value="Upload file" disabled/>
-            </div>
-        </form>
+        </div>
+        <p id="messages"></p>
+        <div id="submitButton">
+            <input type="submit" class="button" id="submitImportButt" onclick="sendFile()" value="Upload file"
+                   disabled/>
+        </div>
     </div>
 
     <div class="window" id="exportWindow">
-        <form action = "${pageContext.request.contextPath}/exportJournal" method = "POST" id ="exportForm">
+        <form action="${pageContext.request.contextPath}/exportJournal" method="POST" id="exportForm">
             <span class="close">X</span>
             Save as: <input name="fileName" id="fileName" required>
-            <input type = "hidden" name="ids" id = "exportIds" value="">
+            <input type="hidden" name="ids" id="exportIds" value="">
             <br>
             <br>
             <input type="submit" class="button" id="submitExportButt" value="Download" disabled/>
@@ -235,7 +238,7 @@
         document.getElementById('exportIds').value = strIds;
 
         document.getElementById('exportForm').submit();
-        document.getElementById('exportWindow').style.display ='none';
+        document.getElementById('exportWindow').style.display = 'none';
     }
 
     let fileName = document.getElementById('fileName');
@@ -326,10 +329,13 @@
         Init();
     }
 
+
+    var fileSelect;
+
     function Init() {
 
-        var fileSelect = $id("fileSelect"),
-            fileDrag = $id("fileDrag");
+        fileSelect = $id("fileSelect");
+        var fileDrag = $id("fileDrag");
 
         fileSelect.addEventListener("change", FileSelectHandler, false);
 
@@ -343,11 +349,14 @@
 
     }
 
+
     function FileDragHover(e) {
         e.stopPropagation();
         e.preventDefault();
         e.target.className = (e.type === "dragover" ? "hover" : "");
     }
+
+    var file;
 
     function FileSelectHandler(e) {
         FileDragHover(e);
@@ -356,16 +365,38 @@
             alert("Only one file");
             return;
         }
-        let file = files[0];
+        file = files[0];
         if (file.type !== "text/plain" && file.type !== "text/xml") {
             alert("Incorrect type");
             return;
         }
+
         $id("messages").innerHTML = "File information <br> name: " + file.name + ", type:" + file.type + ", size: " + file.size
             + " bytes";
 
         let submitButton = $id("submitImportButt");
         submitButton.disabled = false;
+    }
+
+    async function sendFile() {
+        try {
+            let url = "/importJournal";
+            let formData = new FormData();
+            formData.append("file", file);
+
+            let response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            let result = await response;
+            if (result.ok) {
+                let answer = result.headers.get('error');
+                if (answer === "0") window.location.href = '/journals';
+                else alert(answer);
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 </script>
 </html>

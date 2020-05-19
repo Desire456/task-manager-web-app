@@ -6,9 +6,9 @@ import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.strategy.StrategyConstants;
+import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.ImportConflictException;
 import org.netcracker.students.strategy.importing.exceptions.ImportException;
-import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
 public class JournalConflictImportStrategy implements ImportStrategy<Journal> {
@@ -18,7 +18,7 @@ public class JournalConflictImportStrategy implements ImportStrategy<Journal> {
             JournalController journalController = JournalController.getInstance();
 
             Journal oldJournal = journalController.getJournal(journal.getId());
-            if (isMatchId(journal, oldJournal)) throw new ImportConflictException();
+            if (oldJournal != null) throw new ImportConflictException();
 
             journalController.addJournal(journal);
         } catch (GetConnectionException | ReadJournalException e) {
@@ -32,9 +32,5 @@ public class JournalConflictImportStrategy implements ImportStrategy<Journal> {
                     StrategyConstants.JOURNAL_TYPE.toLowerCase(), journal.getName());
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + exceptionMessage);
         }
-    }
-
-    private boolean isMatchId(Journal task1, Journal task2) {
-        return task1.getId() == task2.getId();
     }
 }
