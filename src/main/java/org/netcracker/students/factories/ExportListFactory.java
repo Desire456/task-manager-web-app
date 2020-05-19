@@ -7,6 +7,7 @@ import org.netcracker.students.strategy.exporting.ExportStrategyHelper;
 import org.netcracker.students.strategy.exporting.config.ExportConfig;
 import org.netcracker.students.strategy.exporting.config.ExportConfigItem;
 import org.netcracker.students.strategy.exporting.exceptions.ExportException;
+import org.netcracker.students.strategy.exporting.exceptions.PrintableExportException;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class ExportListFactory {
     private ExportListFactory() {
     }
 
-    public ExportList create(List<Integer> journalIds, List<Integer> taskIds) throws ExportException {
+    public ExportList create(List<Integer> journalIds, List<Integer> taskIds) throws ExportException, PrintableExportException {
         ExportList exportList = new ExportList();
 
         this.fillExportByType(exportList, StrategyConstants.JOURNAL_TYPE, journalIds);
@@ -32,7 +33,7 @@ public class ExportListFactory {
         return exportList;
     }
 
-    private void fillExportByType(ExportList exportList, String type, List<Integer> ids) throws ExportException {
+    private void fillExportByType(ExportList exportList, String type, List<Integer> ids) throws ExportException, PrintableExportException {
         ExportConfigItem configItem = ExportConfig.getInstance().get(type);
         ExportStrategy exportStrategy = ExportStrategyHelper.getInstance().resolveStrategy(configItem);
         exportStrategy.collectExportIds(exportList, ids);

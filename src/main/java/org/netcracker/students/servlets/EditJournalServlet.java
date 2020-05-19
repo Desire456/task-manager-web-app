@@ -38,14 +38,16 @@ public class EditJournalServlet extends HttpServlet {
         } catch (GetConnectionException | ReadJournalException | UpdateJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
 
-        String allJournalsXml = null;
+        String allJournalsXml;
         try {
             allJournalsXml = this.parseJournalListToXml(userId);
         } catch (GetConnectionException | ParseXMLException | GetAllJournalByUserIdException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournalsXml);

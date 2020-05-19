@@ -330,11 +330,9 @@
     }
 
 
-    var fileSelect;
-
     function Init() {
 
-        fileSelect = $id("fileSelect");
+        var fileSelect = $id("fileSelect");
         var fileDrag = $id("fileDrag");
 
         fileSelect.addEventListener("change", FileSelectHandler, false);
@@ -361,10 +359,6 @@
     function FileSelectHandler(e) {
         FileDragHover(e);
         var files = e.target.files || e.dataTransfer.files;
-        if (files.length > 1) {
-            alert("Only one file");
-            return;
-        }
         file = files[0];
         if (file.type !== "text/plain" && file.type !== "text/xml") {
             alert("Incorrect type");
@@ -392,7 +386,10 @@
             if (result.ok) {
                 let answer = result.headers.get('error');
                 if (answer === "0") window.location.href = '/journals';
-                else alert(answer);
+                else {
+                    alert(answer);
+                    $id("messages").innerHTML = "";
+                }
             }
         } catch (error) {
             console.error(error);

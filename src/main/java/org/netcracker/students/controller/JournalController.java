@@ -1,5 +1,6 @@
 package org.netcracker.students.controller;
 
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.interfaces.ManagerDAO;
@@ -39,8 +40,13 @@ public class JournalController {
         return this.journalDAO.read(id);
     }
 
-    public void addJournal(Journal journal) throws CreateJournalException {
+    public void addJournal(Journal journal) throws CreateJournalException, NameAlreadyExistException {
         journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
+                Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
+    }
+
+    public void addJournalWithId(Journal journal) throws CreateJournalException, NameAlreadyExistException {
+        journalDAO.create(journal.getId(), journal.getName(), journal.getDescription(), journal.getUserId(),
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }
 

@@ -38,6 +38,7 @@ public class EditTaskServlet extends HttpServlet {
         } catch (GetConnectionException | UpdateTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         String allTasks = null;
         try {
@@ -45,6 +46,7 @@ public class EditTaskServlet extends HttpServlet {
         } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);

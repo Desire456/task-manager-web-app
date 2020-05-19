@@ -7,8 +7,6 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.netcracker.students.controller.utils.PropertyFileException;
 import org.netcracker.students.ejb.interfaces.IExportImport;
-import org.netcracker.students.model.Journal;
-import org.netcracker.students.model.Task;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
 import org.netcracker.students.strategy.importing.exceptions.ImportException;
@@ -21,7 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(MappingConstants.IMPORT_JOURNAL_MAPPING)
@@ -41,28 +38,17 @@ public class ImportJournalServlet extends HttpServlet {
         }
         String xml = null;
         if (files != null) {
-            System.out.println(files.get(0).getName());
-            xml = files.get(0).getString();
+            xml = files.get(ServletConstants.FIRST_POS).getString();
         }
 
-
-        List<Journal> journals = new ArrayList<>();
-        List<Task> tasks = new ArrayList<>();
-
-
-        resp.addHeader("answer" , "0");
+        resp.addHeader(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.NOT_ERROR_VALUE);
+        int userId = (int) req.getSession().getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         try {
-            EIBean.importObjects(journals, tasks, xml,
-                    (int) req.getSession().getAttribute(ServletConstants.ATTRIBUTE_USER_ID));
-
+            EIBean.importObjects(xml, userId);
         } catch (PropertyFileException | ImportException e) {
-            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
-            resp.setHeader("answer", ServletConstants.COMMON_ERROR);
-          //  req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            resp.setHeader(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
         } catch (PrintableImportException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, e.getMessage());
-            resp.setHeader("answer", e.getMessage());
-            //req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE).forward(req, resp);
+            resp.setHeader(ServletConstants.ATTRIBUTE_ERROR, e.getMessage());
         }
     }
 }

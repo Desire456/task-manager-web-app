@@ -4,6 +4,7 @@ import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
@@ -11,7 +12,6 @@ import org.netcracker.students.factories.JournalFactory;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
 
-import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -34,24 +34,29 @@ public class AddJournalServlet extends HttpServlet {
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         try {
-            this.addJournal(name, description, userId, isPrivate);
-        } catch (GetConnectionException e) {
+           this.addJournal(name, description, userId, isPrivate);
+        } catch (GetConnectionException | CreateJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
-        } catch (CreateJournalException e) {
+            return;
+        } catch (NameAlreadyExistException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        String allJournalsXml = null;
+        String allJournalsXml;
         try {
             allJournalsXml = this.parseJournalListToXml(userId);
         } catch (GetConnectionException | GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
-                allJournalsXml);
-        resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
+        if (allJournalsXml != null) {
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
+                    allJournalsXml);
+            resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
+        }
     }
 
     private String parseJournalListToXml(int userId) throws GetConnectionException, GetAllJournalByUserIdException,
@@ -62,7 +67,7 @@ public class AddJournalServlet extends HttpServlet {
     }
 
     private void addJournal(String name, String description, int userId, boolean isPrivate)
-            throws GetConnectionException, CreateJournalException {
+            throws GetConnectionException, CreateJournalException, NameAlreadyExistException {
         JournalController journalController = JournalController.getInstance();
         journalController.addJournal(JournalFactory.createJournal(name, description,
                 userId, LocalDateTime.now(), isPrivate));

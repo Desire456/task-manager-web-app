@@ -1,13 +1,10 @@
 package org.netcracker.students.ejb.beans;
 
-import org.netcracker.students.controller.TaskController;
 import org.netcracker.students.controller.utils.PropertyFileException;
 import org.netcracker.students.controller.utils.PropertyParser;
 import org.netcracker.students.controller.utils.xml.importer.MarshalException;
 import org.netcracker.students.controller.utils.xml.importer.UnmarshalException;
 import org.netcracker.students.controller.utils.xml.importer.XMLMarshaller;
-import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
-import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
 import org.netcracker.students.ejb.interfaces.IExportImport;
 import org.netcracker.students.factories.ExportListFactory;
 import org.netcracker.students.model.Journal;
@@ -22,6 +19,7 @@ import org.netcracker.students.strategy.importing.exceptions.ImportException;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
 import javax.ejb.Stateless;
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -40,9 +38,13 @@ public class ExportImportBean implements IExportImport {
         return xml;
     }
 
-    public void importObjects(List<Journal> journals, List<Task> tasks, String xml, int userId)
+    public void importObjects(String xml, int userId)
             throws PrintableImportException, ImportException {
         XMLMarshaller xmlMarshaller = new XMLMarshaller();
+
+        List<Journal> journals = new ArrayList<>();
+        List<Task> tasks = new ArrayList<>();
+
         try {
             xmlMarshaller.unmarshal(journals, tasks, xml, userId);
         } catch (UnmarshalException e) {

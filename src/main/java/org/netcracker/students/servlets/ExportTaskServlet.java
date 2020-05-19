@@ -18,18 +18,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet(MappingConstants.EXPORT_JOURNAL_MAPPING)
-public class ExportJournalServlet extends HttpServlet {
+@WebServlet(MappingConstants.EXPORT_TASK_MAPPING)
+public class ExportTaskServlet extends HttpServlet {
     @EJB
     private IExportImport exportImportBean;
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
-        List<Integer> journalIds = this.parseStrIds(req.getParameter(ServletConstants.PARAMETER_IDS));
+        List<Integer> taskIds = this.parseStrIds(req.getParameter(ServletConstants.PARAMETER_IDS));
         String xml = null;
         try {
-            xml = exportImportBean.exportObjects(journalIds, new ArrayList<>());
+            xml = exportImportBean.exportObjects(new ArrayList<>(), taskIds);
         } catch (ExportException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
