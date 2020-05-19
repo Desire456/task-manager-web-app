@@ -20,7 +20,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -39,85 +38,94 @@ public class XMLMarshaller {
         return instance;
     }
 
-    public String marshal(ExportList exportList) throws XMLMarshallerException {
+    public String marshal(ExportList exportList) throws MarshalException {
         String outputString = null;
         List<Journal> journalList = exportList.getJournals();
         List<Task> taskList = exportList.getTasks();
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element importData = document.createElement("importData");
+            Element importData = document.createElement(XMLMarshallerConstants.XML_ROOT_ELEMENT_TAG_NAME);
             document.appendChild(importData);
             if (journalList.size()!=0){
-                Element journals = document.createElement("journals");
+                Element journals = document.createElement(XMLMarshallerConstants.XML_JOURNALS_ELEMENT_TAG_NAME);
                 importData.appendChild(journals);
-                for (int i = 0; i < journalList.size(); i++){
-                        Element journal = document.createElement("journal");
-                        Element id = document.createElement("id");
-                        id.setTextContent(String.valueOf(journalList.get(i).getId()));
-                        journal.appendChild(id);
-                        Element name = document.createElement("name");
-                        name.setTextContent(journalList.get(i).getName());
-                        journal.appendChild(name);
-                        Element description = document.createElement("description");
-                        description.setTextContent(journalList.get(i).getDescription());
-                        journal.appendChild(description);
-                        Element creationDate = document.createElement("creationDate");
-                        creationDate.setTextContent(localDateTimeToString(journalList.get(i).getCreationDate()));
-                        journal.appendChild(creationDate);
-                        Element isPrivate = document.createElement("isPrivate");
-                        isPrivate.setTextContent(String.valueOf(journalList.get(i).getIsPrivate()));
-                        journal.appendChild(isPrivate);
-                        journals.appendChild(journal);
-                }
+                createJournalElementXml(journalList, document, journals);
             }
             if (taskList.size() != 0) {
-                Element tasks = document.createElement("tasks");
+                Element tasks = document.createElement(XMLMarshallerConstants.XML_TASKS_ELEMENT_TAG_NAME);
                 importData.appendChild(tasks);
-                for (int i = 0; i < taskList.size(); i++){
-                    Element task = document.createElement("task");
-                    Element id = document.createElement("id");
-                    id.setTextContent(String.valueOf(taskList.get(i).getId()));
-                    task.appendChild(id);
-                    Element name = document.createElement("name");
-                    name.setTextContent(taskList.get(i).getName());
-                    task.appendChild(name);
-                    Element description = document.createElement("description");
-                    description.setTextContent(taskList.get(i).getDescription());
-                    task.appendChild(description);
-                    Element status = document.createElement("status");
-                    status.setTextContent(taskList.get(i).getStatus());
-                    task.appendChild(status);
-                    Element plannedDate = document.createElement("plannedDate");
-                    plannedDate.setTextContent(localDateTimeToString(taskList.get(i).getPlannedDate()));
-                    task.appendChild(plannedDate);
-                    if(taskList.get(i).getDateOfDone()!= null){
-                    Element dateOfDone = document.createElement("dateOfDone");
-                        dateOfDone.setTextContent(localDateTimeToString(taskList.get(i).getDateOfDone()));
-                        task.appendChild(dateOfDone);
-                    }
-                    Element journalId = document.createElement("journalId");
-                    journalId.setTextContent(String.valueOf(taskList.get(i).getJournalId()));
-                    task.appendChild(journalId);
-                    tasks.appendChild(task);
-                }
+                createTaskElementXml(taskList, document, tasks);
             }
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            DOMSource source = new DOMSource(document);
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-            //StreamResult result = new StreamResult(System.out);
-            transformer.transform(source, result);
+            StringWriter writer = writeDocument(document);
             if (XmlValidator.getInstance().checkStringXMLforXSD(writer.toString())) outputString = writer.toString();
-        } catch (TransformerException | ParserConfigurationException e) {
-            throw new XMLMarshallerException("Creation XML error: "+e.getMessage());
+        } catch (ParserConfigurationException | WriteDocumentException e) {
+            throw new MarshalException(XMLMarshallerConstants.XML_CREATION_EXCEPTION_MESSAGE + e.getMessage());
         } catch (XmlValidatorException e) {
-            throw new XMLMarshallerException("XML validate error: "+e.getMessage());
+            throw new MarshalException(XMLMarshallerConstants.VALIDATE_EXCEPTION_MESSAGE + e.getMessage());
         }
         return outputString;
     }
 
-    public void unmarshal(List<Journal> journalList, List<Task> taskList, String xml, int userID) throws XMLMarshallerException {
+    private StringWriter writeDocument(Document document) throws WriteDocumentException {
+        StringWriter writer = new StringWriter();
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            DOMSource source = new DOMSource(document);
+            StreamResult result = new StreamResult(writer);
+            transformer.transform(source, result);
+        } catch (TransformerException e) {
+            throw new WriteDocumentException(XMLMarshallerConstants.XML_WRITE_EXCEPTION_MESSAGE +e.getMessage());
+        }
+        return writer;
+    }
+
+    private void createJournalElementXml(List<Journal> journalList, Document document, Element journals){
+        for (int i = 0; i < journalList.size(); i++){
+            Element journal = document.createElement(XMLMarshallerConstants.XML_JOURNAL_ELEMENT_TAG_NAME);
+            journal.appendChild(setTextContent(XMLMarshallerConstants.XML_ID_ELEMENT_TAG_NAME,
+                    document, String.valueOf(journalList.get(i).getId())));
+            journal.appendChild(setTextContent(XMLMarshallerConstants.XML_NAME_ELEMENT_TAG_NAME,
+                    document, journalList.get(i).getName()));
+            journal.appendChild(setTextContent(XMLMarshallerConstants.XML_DESCRIPTION_ELEMENT_TAG_NAME,
+                    document, journalList.get(i).getDescription()));
+            journal.appendChild(setTextContent(XMLMarshallerConstants.XML_CREATION_DATE_ELEMENT_TAG_NAME,
+                    document, localDateTimeToString(journalList.get(i).getCreationDate())));
+            journal.appendChild(setTextContent(XMLMarshallerConstants.XML_IS_PRIVATE_ELEMENT_TAG_NAME,
+                    document, String.valueOf(journalList.get(i).getIsPrivate())));
+            journals.appendChild(journal);
+        }
+    }
+
+    private void createTaskElementXml(List<Task> taskList, Document document, Element tasks){
+        for (int i = 0; i < taskList.size(); i++){
+            Element task = document.createElement(XMLMarshallerConstants.XML_TASK_ELEMENT_TAG_NAME);
+            task.appendChild(setTextContent(XMLMarshallerConstants.XML_ID_ELEMENT_TAG_NAME, document,
+                    String.valueOf(taskList.get(i).getId())));
+            task.appendChild(setTextContent(XMLMarshallerConstants.XML_NAME_ELEMENT_TAG_NAME, document,
+                    taskList.get(i).getName()));
+            task.appendChild(setTextContent(XMLMarshallerConstants.XML_DESCRIPTION_ELEMENT_TAG_NAME, document,
+                    taskList.get(i).getDescription()));
+            task.appendChild(setTextContent(XMLMarshallerConstants.XML_STATUS_ELEMENT_TAG_NAME, document,
+                    taskList.get(i).getStatus()));
+            task.appendChild(setTextContent(XMLMarshallerConstants.XML_PLANNED_DATE_ELEMENT_TAG_NAME, document,
+                    localDateTimeToString(taskList.get(i).getPlannedDate())));
+            if(taskList.get(i).getDateOfDone()!= null)
+                task.appendChild(setTextContent(XMLMarshallerConstants.XML_DATE_OF_DONE_ELEMENT_TAG_NAME, document,
+                        localDateTimeToString(taskList.get(i).getDateOfDone())));
+            task.appendChild(setTextContent(XMLMarshallerConstants.XML_JOURNAL_ID_ELEMENT_TAG_NAME, document,
+                    String.valueOf(taskList.get(i).getJournalId())));
+            tasks.appendChild(task);
+        }
+    }
+
+    private Element setTextContent(String tagName, Document document, String textContent){
+        Element element = document.createElement(tagName);
+        element.setTextContent(textContent);
+        return element;
+    }
+
+    public void unmarshal(List<Journal> journalList, List<Task> taskList, String xml, int userID) throws UnmarshalException {
         journalList = new ArrayList<>();
         taskList = new ArrayList<>();
         try{
@@ -126,25 +134,25 @@ public class XMLMarshaller {
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document document = builder.parse(new InputSource(new StringReader(xml)));
             document.getDocumentElement().normalize();
-            NodeList journalsNodeList = document.getElementsByTagName("journals");
+            NodeList journalsNodeList = document.getElementsByTagName(XMLMarshallerConstants.XML_JOURNALS_ELEMENT_TAG_NAME);
             if (journalsNodeList.getLength() !=0){
-                NodeList journalNodeList = document.getElementsByTagName("journal");
+                NodeList journalNodeList = document.getElementsByTagName(XMLMarshallerConstants.XML_JOURNAL_ELEMENT_TAG_NAME);
                 for(int i = 0; i < journalNodeList.getLength(); i++){
                     journalList.add(getJournal(journalNodeList.item(i), userID));
                 }
             }
-            NodeList tasksNodeList = document.getElementsByTagName("tasks");
+            NodeList tasksNodeList = document.getElementsByTagName(XMLMarshallerConstants.XML_TASKS_ELEMENT_TAG_NAME);
             if(tasksNodeList.getLength() != 0){
-                NodeList taskNodeList = document.getElementsByTagName("task");
+                NodeList taskNodeList = document.getElementsByTagName(XMLMarshallerConstants.XML_TASK_ELEMENT_TAG_NAME);
                     for (int i = 0; i < taskNodeList.getLength(); i++){
                         taskList.add(getTask(taskNodeList.item(i)));
                     }
             }
         }
         catch (XmlValidatorException e) {
-            throw new XMLMarshallerException("XML validate error: "+e.getMessage());
+            throw new UnmarshalException(XMLMarshallerConstants.VALIDATE_EXCEPTION_MESSAGE + e.getMessage());
         } catch (ParserConfigurationException | IOException | SAXException e) {
-            throw new XMLMarshallerException("XML parse error: "+e.getMessage());
+            throw new UnmarshalException(XMLMarshallerConstants.XML_PARSE_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
@@ -152,8 +160,10 @@ public class XMLMarshaller {
         Journal journal = null;
         if (node.getNodeType() == Node.ELEMENT_NODE){
             Element element = (Element) node;
-            journal = JournalFactory.createJournal(Integer.parseInt(getTagValue("id", element)),getTagValue("name", element),
-                    getTagValue("description", element), userID, stringToLocalDateTime(getTagValue("creationDate", element)),
+            journal = JournalFactory.createJournal(Integer.parseInt(getTagValue(XMLMarshallerConstants.XML_ID_ELEMENT_TAG_NAME,
+                    element)),getTagValue(XMLMarshallerConstants.XML_NAME_ELEMENT_TAG_NAME, element),
+                    getTagValue(XMLMarshallerConstants.XML_DESCRIPTION_ELEMENT_TAG_NAME, element), userID,
+                    stringToLocalDateTime(getTagValue(XMLMarshallerConstants.XML_CREATION_DATE_ELEMENT_TAG_NAME, element)),
                     true);
         }
         return journal;
@@ -163,9 +173,13 @@ public class XMLMarshaller {
         Task task = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
-            task = TaskFactory.createTask(Integer.parseInt(getTagValue("id", element)),Integer.parseInt(getTagValue("journalId", element)),
-                    getTagValue("name", element),getTagValue("description", element),stringToLocalDateTime(getTagValue("plannedDate", element)),
-                    stringToLocalDateTime(getTagValue("dateOfDone", element)),getTagValue("status", element));
+            task = TaskFactory.createTask(Integer.parseInt(getTagValue(XMLMarshallerConstants.XML_ID_ELEMENT_TAG_NAME, element)),
+                    Integer.parseInt(getTagValue(XMLMarshallerConstants.XML_JOURNAL_ID_ELEMENT_TAG_NAME, element)),
+                    getTagValue(XMLMarshallerConstants.XML_NAME_ELEMENT_TAG_NAME, element),
+                    getTagValue(XMLMarshallerConstants.XML_DESCRIPTION_ELEMENT_TAG_NAME, element),
+                    stringToLocalDateTime(getTagValue(XMLMarshallerConstants.XML_PLANNED_DATE_ELEMENT_TAG_NAME, element)),
+                    stringToLocalDateTime(getTagValue(XMLMarshallerConstants.XML_DATE_OF_DONE_ELEMENT_TAG_NAME, element)),
+                    getTagValue(XMLMarshallerConstants.XML_STATUS_ELEMENT_TAG_NAME, element));
         }
         return task;
     }
