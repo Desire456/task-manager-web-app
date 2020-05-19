@@ -169,7 +169,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria) throws GetFilteredByEqualsJournalException {
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         String hql = "FROM Journal  WHERE (user_id = :user_id " +
-                "OR is_private = :value) AND %s = :equal ORDER BY %s %s";
+                "OR is_private = :value) AND (%s = :equal) ORDER BY %s %s";
         String HQL = String.format(hql, column, column, criteria);
         Transaction tx1 = session.beginTransaction();
         Query query = session.createQuery(hql);
