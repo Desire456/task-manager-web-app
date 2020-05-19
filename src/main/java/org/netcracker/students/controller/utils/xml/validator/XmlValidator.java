@@ -24,36 +24,6 @@ public class XmlValidator {
         return instance;
     }
 
-    public boolean checkXMLforXSD(String xmlPath) throws XmlValidatorException {
-        try {
-            File xml = new File(xmlPath);
-            File xsd = new File(XmlValidatorConstants.PATH_TO_XSD);
-
-            if (!xml.exists()) {
-                throw new NotFoundXMLException(XmlValidatorConstants.XML_NOT_FOUND_MESSAGE +
-                        xmlPath);
-            }
-
-            if (!xsd.exists()) {
-                throw new NotFoundXSDException(XmlValidatorConstants.XSD_NOT_FOUND_MESSAGE +
-                        XmlValidatorConstants.PATH_TO_XSD);
-            }
-
-            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(XmlValidatorConstants.PATH_TO_XSD));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(xmlPath));
-            return true;
-        } catch (NotFoundXMLException e) {
-            throw new XmlValidatorException(e.getMessage());
-        } catch (NotFoundXSDException e) {
-            throw new XmlValidatorException(e.getMessage());
-        } catch (SAXException | IOException e) {
-            throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
-        }
-
-    }
-
     public boolean checkStringXMLforXSD(String xml) throws XmlValidatorException {
         try {
             File xsd = new File(XmlValidatorConstants.PATH_TO_XSD);
@@ -70,6 +40,19 @@ public class XmlValidator {
             return true;
         } catch (NotFoundXSDException e) {
             throw new XmlValidatorException(e.getMessage());
+        } catch (SAXException | IOException e) {
+            throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
+        }
+
+    }
+
+    public boolean checkStringXMLforXSD(String xml, String xsd) throws XmlValidatorException {
+        try {
+            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+            Schema schema = factory.newSchema(new StreamSource(new StringReader(xsd)));
+            Validator validator = schema.newValidator();
+            validator.validate(new StreamSource(new StringReader(xml)));
+            return true;
         } catch (SAXException | IOException e) {
             throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
         }
