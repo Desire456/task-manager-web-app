@@ -1,19 +1,20 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 /**

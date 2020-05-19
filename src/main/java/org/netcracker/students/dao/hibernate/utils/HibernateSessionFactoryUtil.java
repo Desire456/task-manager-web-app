@@ -8,23 +8,28 @@ import org.netcracker.students.model.Task;
 import org.netcracker.students.model.User;
 
 public class HibernateSessionFactoryUtil {
-    private static SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
-    private HibernateSessionFactoryUtil() {}
+    private static HibernateSessionFactoryUtil instance;
 
-    public static SessionFactory getSessionFactory() {
-        if (sessionFactory == null) {
-            try {
-                Configuration configuration = new Configuration().configure();
-                configuration.addAnnotatedClass(User.class);
-                configuration.addAnnotatedClass(Task.class);
-                configuration.addAnnotatedClass(Journal.class);
-                StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
-                sessionFactory = configuration.buildSessionFactory(builder.build());
-            } catch (Exception e) {
-                System.out.println("Исключение!" + e);
-            }
+    public static HibernateSessionFactoryUtil getInstance(){
+        if(instance == null){
+            instance = new HibernateSessionFactoryUtil();
         }
+        return instance;
+    }
+
+    private HibernateSessionFactoryUtil() {
+        Configuration configuration = new Configuration().configure();
+        configuration.addAnnotatedClass(User.class);
+        configuration.addAnnotatedClass(Task.class);
+        configuration.addAnnotatedClass(Journal.class);
+        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().
+                applySettings(configuration.getProperties());
+        sessionFactory = configuration.buildSessionFactory(builder.build());
+    }
+
+    public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 }
