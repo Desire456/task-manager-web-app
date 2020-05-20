@@ -4,6 +4,7 @@ import org.netcracker.students.controller.TaskController;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.CreateTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
@@ -46,6 +47,9 @@ public class AddTaskServlet extends HttpServlet {
                 taskController.addTask(TaskFactory.createTask(name, description,
                         parsedPlannedDate, ServletConstants.STATUS_PLANNED, journalId));
         } catch (CreateTaskException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        } catch (NameAlreadyExistException e){
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
             requestDispatcher.forward(req, resp);
         }

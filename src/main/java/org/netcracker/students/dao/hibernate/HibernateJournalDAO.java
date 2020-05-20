@@ -31,7 +31,7 @@ public class HibernateJournalDAO implements JournalDAO {
         for (Object o : query.list()) {
             journals.add((Journal)o);
         }
-        journal = journals.get(0);
+        journal = journals.size() == 0 ? null : journals.get(0);
         tx1.commit();
         session.close();
         return journal;
@@ -230,14 +230,14 @@ public class HibernateJournalDAO implements JournalDAO {
         try {
             Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
             String hql = "FROM Journal WHERE (user_id = :user_id " +
-                    "OR is_private = :value) AND (%s = :equal1) ORDER BY %s %s";
+                    "OR is_private = :value) AND (%s = :equal) ORDER BY %s %s";
             hql = String.format(hql, column, column, criteria);
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
             List<Journal> journals = new ArrayList<>();
             query.setParameter("user_id", userId);
             query.setParameter("value", false);
-            query.setParameter("equal1", equal);
+            query.setParameter("equal", equal);
             for (Object o : query.list()) {
                 journals.add((Journal)o);
             }

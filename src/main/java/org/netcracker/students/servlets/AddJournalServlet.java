@@ -4,6 +4,7 @@ import org.netcracker.students.controller.JournalController;
 import org.netcracker.students.controller.utils.JournalXMLContainer;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.GetAllJournalByUserIdException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
@@ -43,6 +44,9 @@ public class AddJournalServlet extends HttpServlet {
                 journalController.addJournal(JournalFactory.createJournal(name, description,
                         userId, LocalDateTime.now(), isPrivate));
         } catch (CreateJournalException e) {
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+            requestDispatcher.forward(req, resp);
+        } catch (NameAlreadyExistException e){
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_JOURNAL);
             requestDispatcher.forward(req, resp);
         }
