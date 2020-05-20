@@ -14,7 +14,7 @@ public class DAOErrorConstants {
     public static final String GET_SORTED_BY_CRITERIA_TASK_EXCEPTION_MESSAGE = "Can't sort tasks by this criteria ";
     public static final String READ_TASK_EXCEPTION_MESSAGE = "Can't get task ";
     public static final String UPDATE_TASK_EXCEPTION_MESSAGE = "Can't update task ";
-    public static final String TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE = "Task with this ID already exists. ID: ";
+    public static final String TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE = "task with this id already exists: id = ";
 
     public static final String CREATE_USER_EXCEPTION_MESSAGE = "Can't create user ";
     public static final String DELETE_USER_EXCEPTION_MESSAGE = "Can't delete user ";
@@ -37,7 +37,5 @@ public class DAOErrorConstants {
     public static final String READ_JOURNAL_EXCEPTION = "Can't get journal ";
     public static final String UPDATE_JOURNAL_EXCEPTION = "Can't update journal ";
 
-    public static final String GET_BY_NAME_JOURNAL_EXCEPTION_MESSAGE = "Can't get journal by this name: ";
-    public static final String GET_BY_NAME_TASK_EXCEPTION_MESSAGE = "Can't get task by this name: ";
-    public static final String JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE = "Journal with this id already exist: id = ";
+    public static final String JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE = "journal with this id already exist: id = ";
 }

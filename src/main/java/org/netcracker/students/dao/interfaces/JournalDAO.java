@@ -14,7 +14,7 @@ public interface JournalDAO {
                    Timestamp creatingDate, boolean isPrivate) throws CreateJournalException, NameAlreadyExistException;
 
     Journal create(int id, String name, String description, Integer userId, Timestamp creationDate,
-                          boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, GetByNameException, JournalIdAlreadyExistException;
+                          boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException;
 
 
 

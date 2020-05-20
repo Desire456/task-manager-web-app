@@ -23,11 +23,9 @@ public class TaskIgnoreImportStrategy implements ImportStrategy<Task> {
             TaskController taskController = TaskController.getInstance();
             JournalController journalController = JournalController.getInstance();
 
-            Task oldTask = taskController.getTask(task.getId());
-
             if (journalController.getJournal(task.getJournalId()) == null) throw new ImportJournalNotFoundException();
-            if (oldTask == null) taskController.addTaskWithId(task);
-        } catch (GetConnectionException | ReadTaskException | ReadJournalException |
+            taskController.addTaskWithId(task);
+        } catch (GetConnectionException | ReadJournalException |
                 CreateTaskException e) {
             throw new ImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         } catch (ImportJournalNotFoundException e) {

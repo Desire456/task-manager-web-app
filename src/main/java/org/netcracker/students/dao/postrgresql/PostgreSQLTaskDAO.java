@@ -23,22 +23,10 @@ public class PostgreSQLTaskDAO implements TasksDAO {
     @Override
     public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException {
         String sql = "INSERT INTO tasks VALUES (default, ?, ?, ?, ?, ?, ?)";
-        String RETURN_CREATED_TASK_SQL = "SELECT * FROM tasks WHERE (name = ?) AND (journal_id = ?)";
-        Task task = null;
+        Task task;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, journalId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                            resultSet.getString(3), resultSet.getString(4),
-                            resultSet.getTimestamp(6).toLocalDateTime(),
-                            resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
-                            resultSet.getString(5));
-                }
-                if (task != null) throw new CreateTaskException();
-            }
+            task = getByName(name, journalId);
+            if (task != null) throw new CreateTaskException();
             preparedStatement.setInt(1, journalId);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, description);
@@ -46,18 +34,7 @@ public class PostgreSQLTaskDAO implements TasksDAO {
             preparedStatement.setTimestamp(5, plannedDate);
             preparedStatement.setTimestamp(6, dateOfDone);
             preparedStatement.execute();
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, journalId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                            resultSet.getString(3), resultSet.getString(4),
-                            resultSet.getTimestamp(6).toLocalDateTime(),
-                            resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
-                            resultSet.getString(5));
-                }
-            }
+            task = getByName(name, journalId);
         } catch (SQLException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         } catch (CreateTaskException e) {
@@ -70,8 +47,7 @@ public class PostgreSQLTaskDAO implements TasksDAO {
     @Override
     public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
         String sql = "INSERT INTO tasks VALUES (?, ?, ?, ?, ?, ?, ?)";
-        String RETURN_CREATED_TASK_SQL = "SELECT * FROM tasks WHERE (name = ?) AND (journal_id = ?)";
-        Task task = null;
+        Task task;
         try{
             task = read(id);
             if (task != null) throw new CreateTaskWithIdException();
@@ -88,7 +64,7 @@ public class PostgreSQLTaskDAO implements TasksDAO {
             preparedStatement.execute();
             task = getByName(name, journalId);
         }
-        } catch (SQLException | ReadTaskException | GetByNameException e) {
+        } catch (SQLException | ReadTaskException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         } catch (CreateTaskException e) {
             throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_TASK_EXCEPTION_MESSAGE,
@@ -99,13 +75,13 @@ public class PostgreSQLTaskDAO implements TasksDAO {
         return task;
     }
 
-    public Task getByName(String name, int journalId) throws GetByNameException {
+    private Task getByName(String name, int journalId) throws SQLException {
         String RETURN_CREATED_TASK_SQL = "SELECT * FROM tasks WHERE (name = ?) AND (journal_id = ?)";
         Task task = null;
-        try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
-            preparedStatement1.setString(1, name);
-            preparedStatement1.setInt(2, journalId);
-            ResultSet resultSet = preparedStatement1.executeQuery();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, journalId);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
                         resultSet.getString(3), resultSet.getString(4),
@@ -113,8 +89,6 @@ public class PostgreSQLTaskDAO implements TasksDAO {
                         resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
                         resultSet.getString(5));
             }
-        } catch (SQLException e) {
-            throw new GetByNameException(DAOErrorConstants.GET_BY_NAME_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return task;
     }

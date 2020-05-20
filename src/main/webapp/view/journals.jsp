@@ -387,8 +387,9 @@
                 let answer = result.headers.get('error');
                 if (answer === "0") window.location.href = '/journals';
                 else {
-                    alert(answer);
+                    alert(answer)
                     $id("messages").innerHTML = "";
+                    window.location.href = '/journals';
                 }
             }
         } catch (error) {

@@ -6,6 +6,7 @@ import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.model.Task;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 

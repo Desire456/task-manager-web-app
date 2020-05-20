@@ -46,7 +46,7 @@ public class JournalController {
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }
 
-    public void addJournalWithId(Journal journal) throws CreateJournalException, NameAlreadyExistException, GetByNameException, JournalIdAlreadyExistException {
+    public void addJournalWithId(Journal journal) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException {
         journalDAO.create(journal.getId(), journal.getName(), journal.getDescription(), journal.getUserId(),
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }

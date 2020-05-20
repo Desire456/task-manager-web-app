@@ -21,19 +21,11 @@ public class TaskConflictImportStrategy implements ImportStrategy<Task> {
             TaskController taskController = TaskController.getInstance();
             JournalController journalController = JournalController.getInstance();
 
-            Task oldTask = taskController.getTask(task.getId());
-            if (oldTask != null) throw new ImportMatchIdException();
             if (journalController.getJournal(task.getJournalId()) == null) throw new ImportJournalNotFoundException();
-            if (taskController.getTask(task.getId())!= null) System.out.println();
             taskController.addTaskWithId(task);
-        } catch (GetConnectionException | ReadTaskException | ReadJournalException |
+        } catch (GetConnectionException | ReadJournalException |
                 CreateTaskException e) {
             throw new ImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
-        } catch (ImportMatchIdException e) {
-            String exceptionMessage = String.format(StrategyConstants.IMPORT_EXCEPTION_MATCH_ID_MESSAGE,
-                    StrategyConstants.TASK_TYPE.toLowerCase(), task.getId());
-            throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
-                    exceptionMessage);
         } catch (NameAlreadyExistException | TaskIdAlreadyExistException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     e.getMessage());

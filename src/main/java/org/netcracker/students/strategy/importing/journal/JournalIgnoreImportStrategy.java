@@ -21,7 +21,7 @@ public class JournalIgnoreImportStrategy implements ImportStrategy<Journal> {
             Journal oldJournal = journalController.getJournal(journal.getId());
 
             if (oldJournal == null) journalController.addJournalWithId(journal);
-        } catch (GetConnectionException | ReadJournalException | CreateJournalException | GetByNameException e) {
+        } catch (GetConnectionException | ReadJournalException | CreateJournalException e) {
             throw new ImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         } catch (NameAlreadyExistException | JournalIdAlreadyExistException ignored) {
 

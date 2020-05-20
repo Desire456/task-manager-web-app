@@ -24,11 +24,12 @@ public class JournalOverwriteImportStrategy implements ImportStrategy<Journal> {
 
             if (oldJournal != null) journalController.editJournal(journal);
             else journalController.addJournalWithId(journal);
-        } catch (GetConnectionException | UpdateJournalException | ReadJournalException | CreateJournalException | GetByNameException e) {
+        } catch (GetConnectionException | UpdateJournalException | ReadJournalException | CreateJournalException e) {
             throw new ImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
-        } catch (NameAlreadyExistException | JournalIdAlreadyExistException e) {
+        } catch (NameAlreadyExistException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     e.getMessage());
+        } catch (JournalIdAlreadyExistException ignored) {
         }
     }
 }

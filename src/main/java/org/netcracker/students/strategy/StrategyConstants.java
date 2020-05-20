@@ -11,7 +11,7 @@ public class StrategyConstants {
     public static final String EXPORT_EXCEPTION_MESSAGE = "Can't export ";
     public static final String IMPORT_EXCEPTION_MATCH_ID_MESSAGE = "%s with id = %d already exist";
     public static final String IMPORT_EXCEPTION_MATCH_NAME_MESSAGE = "%s with name = %s already exist";
-    public static final String IMPORT_EXCEPTION_JOURNAL_NOT_FOUND_MESSAGE = "Can't import task with name " +
+    public static final String IMPORT_EXCEPTION_JOURNAL_NOT_FOUND_MESSAGE = "task with name " +
             "%s because there is no journal for her";
     public static final int JOURNAL_EXPORT_ID = 1;
     public static final int JOURNAL_WITH_CHILDREN_EXPORT_ID = 2;

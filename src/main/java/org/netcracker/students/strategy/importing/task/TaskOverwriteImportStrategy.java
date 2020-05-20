@@ -38,9 +38,10 @@ public class TaskOverwriteImportStrategy implements ImportStrategy<Task> {
                     task.getName());
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     exceptionMessage);
-        } catch (NameAlreadyExistException | TaskIdAlreadyExistException e) {
+        } catch (NameAlreadyExistException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     e.getMessage());
+        } catch (TaskIdAlreadyExistException ignored) {
         }
     }
 }
