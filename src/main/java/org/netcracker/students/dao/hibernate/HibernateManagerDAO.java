@@ -42,7 +42,7 @@ public class HibernateManagerDAO implements ManagerDAO {
 
     @Override
     public TasksDAO getTasksDao() throws SQLException {
-        return null;
+        return new HibernateTaskDAO();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class HibernateManagerDAO implements ManagerDAO {
 
     @Override
     public UsersDAO getUsersDao() throws SQLException {
-        return null;
+        return new HibernateUserDAO();
     }
 
     private void executeSqlStartScript(String path) throws ExecuteSqlScriptException {
