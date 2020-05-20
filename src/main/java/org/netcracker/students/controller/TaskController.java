@@ -65,7 +65,7 @@ public class TaskController {
                 null, task.getJournalId());
     }
 
-    public void addTaskWithId(Task task) throws CreateTaskException, NameAlreadyExistException {
+    public void addTaskWithId(Task task) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
         tasksDAO.create(task.getId(), task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
                 null, task.getJournalId());
     }

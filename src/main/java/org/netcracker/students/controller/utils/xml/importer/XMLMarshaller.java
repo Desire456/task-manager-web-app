@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class XMLMarshaller {
@@ -140,14 +141,14 @@ public class XMLMarshaller {
                     taskList.add(getTask(taskNodeList.item(i)));
                 }
             }
-        } catch (XmlValidatorException e) {
+        } catch (XmlValidatorException | XMLDataParseException e) {
             throw new UnmarshalException(XMLMarshallerConstants.VALIDATE_EXCEPTION_MESSAGE + e.getMessage());
         } catch (ParserConfigurationException | IOException | SAXException e) {
             throw new UnmarshalException(XMLMarshallerConstants.XML_PARSE_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
 
-    private Journal getJournal(Node node, int userID) {
+    private Journal getJournal(Node node, int userID) throws XMLDataParseException {
         Journal journal = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
@@ -160,7 +161,7 @@ public class XMLMarshaller {
         return journal;
     }
 
-    private Task getTask(Node node) {
+    private Task getTask(Node node) throws XMLDataParseException {
         Task task = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
@@ -192,11 +193,16 @@ public class XMLMarshaller {
         return localDateTime.format(formatter);
     }
 
-    private LocalDateTime stringToLocalDateTime(String str) {
+    private LocalDateTime stringToLocalDateTime(String str) throws XMLDataParseException {
         LocalDateTime localDateTime = null;
-        if (str != null) {
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-            localDateTime = LocalDateTime.parse(str, formatter);
+        try{
+            if (str != null) {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+                localDateTime = LocalDateTime.parse(str, formatter);
+            }
+        }
+        catch (DateTimeParseException e){
+            throw new XMLDataParseException(str+" is not a date");
         }
         return localDateTime;
     }

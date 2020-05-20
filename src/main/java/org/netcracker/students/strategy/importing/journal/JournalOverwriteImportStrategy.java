@@ -1,8 +1,10 @@
 package org.netcracker.students.strategy.importing.journal;
 
 import org.netcracker.students.controller.JournalController;
+import org.netcracker.students.dao.exceptions.GetByNameException;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.JournalIdAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.UpdateJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
@@ -22,10 +24,9 @@ public class JournalOverwriteImportStrategy implements ImportStrategy<Journal> {
 
             if (oldJournal != null) journalController.editJournal(journal);
             else journalController.addJournalWithId(journal);
-        } catch (GetConnectionException | UpdateJournalException | ReadJournalException |
-                CreateJournalException e) {
+        } catch (GetConnectionException | UpdateJournalException | ReadJournalException | CreateJournalException | GetByNameException e) {
             throw new ImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
-        } catch (NameAlreadyExistException e) {
+        } catch (NameAlreadyExistException | JournalIdAlreadyExistException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     e.getMessage());
         }

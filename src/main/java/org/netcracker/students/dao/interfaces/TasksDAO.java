@@ -14,7 +14,7 @@ public interface TasksDAO {
                 Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException;
 
     Task create(int id, String name, String status, String description, Timestamp plannedDate,
-                Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException;
+                Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException;
 
     Task read(int id) throws ReadTaskException;
 

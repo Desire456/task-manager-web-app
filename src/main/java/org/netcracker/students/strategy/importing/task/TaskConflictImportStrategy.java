@@ -7,6 +7,7 @@ import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.CreateTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.ReadTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.TaskIdAlreadyExistException;
 import org.netcracker.students.model.Task;
 import org.netcracker.students.strategy.StrategyConstants;
 import org.netcracker.students.strategy.importing.exceptions.*;
@@ -23,7 +24,7 @@ public class TaskConflictImportStrategy implements ImportStrategy<Task> {
             Task oldTask = taskController.getTask(task.getId());
             if (oldTask != null) throw new ImportMatchIdException();
             if (journalController.getJournal(task.getJournalId()) == null) throw new ImportJournalNotFoundException();
-
+            if (taskController.getTask(task.getId())!= null) System.out.println();
             taskController.addTaskWithId(task);
         } catch (GetConnectionException | ReadTaskException | ReadJournalException |
                 CreateTaskException e) {
@@ -33,7 +34,7 @@ public class TaskConflictImportStrategy implements ImportStrategy<Task> {
                     StrategyConstants.TASK_TYPE.toLowerCase(), task.getId());
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     exceptionMessage);
-        } catch (NameAlreadyExistException e) {
+        } catch (NameAlreadyExistException | TaskIdAlreadyExistException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     e.getMessage());
         } catch (ImportJournalNotFoundException e) {

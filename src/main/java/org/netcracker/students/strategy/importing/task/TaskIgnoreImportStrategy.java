@@ -7,6 +7,7 @@ import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.CreateTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.ReadTaskException;
+import org.netcracker.students.dao.exceptions.taskDAO.TaskIdAlreadyExistException;
 import org.netcracker.students.model.Task;
 import org.netcracker.students.strategy.StrategyConstants;
 import org.netcracker.students.strategy.importing.exceptions.ImportException;
@@ -34,7 +35,7 @@ public class TaskIgnoreImportStrategy implements ImportStrategy<Task> {
                     task.getName());
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE +
                     exceptionMessage);
-        } catch (NameAlreadyExistException ignored) {
+        } catch (NameAlreadyExistException | TaskIdAlreadyExistException ignored) {
 
         }
     }

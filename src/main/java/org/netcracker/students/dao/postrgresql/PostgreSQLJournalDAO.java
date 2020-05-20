@@ -1,5 +1,6 @@
 package org.netcracker.students.dao.postrgresql;
 
+import org.netcracker.students.dao.exceptions.GetByNameException;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.interfaces.JournalDAO;
@@ -23,37 +24,20 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     public Journal create(String name, String description, Integer userId, Timestamp creationDate,
                           boolean isPrivate) throws CreateJournalException, NameAlreadyExistException {
         String sql = "INSERT INTO journals VALUES (default, ?, ?, ?, ?, ?)";
-        String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE (name = ?) AND (user_id = ?)";
         Journal journal = null;
+        try{
+            journal = getByName(name, userId, isPrivate);
+            if (journal != null) throw new CreateJournalException();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, userId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                            resultSet.getString(4), resultSet.getInt(2),
-                            resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
-                }
-                if (journal != null) throw new CreateJournalException();
-            }
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, description);
             preparedStatement.setTimestamp(4, creationDate);
             preparedStatement.setBoolean(5, isPrivate);
             preparedStatement.execute();
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, userId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                            resultSet.getString(4), resultSet.getInt(2),
-                            resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
-                }
-            }
-        } catch (SQLException e) {
+            journal = getByName(name, userId, isPrivate);
+        }
+        } catch (SQLException | GetByNameException e) {
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         } catch (CreateJournalException e) {
             throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE,
@@ -64,22 +48,15 @@ public class PostgreSQLJournalDAO implements JournalDAO {
 
     @Override
     public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate,
-                          boolean isPrivate) throws CreateJournalException, NameAlreadyExistException {
+                          boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, GetByNameException, JournalIdAlreadyExistException {
         String sql = "INSERT INTO journals VALUES (?, ?, ?, ?, ?, ?)";
-        String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE (name = ?) AND (user_id = ?)";
         Journal journal = null;
+        try{
+            journal = read(id);
+            if (journal != null) throw new CreateJournalByIdException();
+            journal = getByName(name, userId, isPrivate);
+            if (journal != null) throw new CreateJournalException();
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, userId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                            resultSet.getString(4), resultSet.getInt(2),
-                            resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
-                }
-                if (journal != null) throw new CreateJournalException();
-            }
             preparedStatement.setInt(1, id);
             preparedStatement.setInt(2, userId);
             preparedStatement.setString(3, name);
@@ -87,24 +64,37 @@ public class PostgreSQLJournalDAO implements JournalDAO {
             preparedStatement.setTimestamp(5, creationDate);
             preparedStatement.setBoolean(6, isPrivate);
             preparedStatement.execute();
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, userId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
-                            resultSet.getString(4), resultSet.getInt(2),
-                            resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
-                }
-            }
-        } catch (SQLException e) {
+            journal = getByName(name, userId, isPrivate);
+        }
+        } catch (SQLException | ReadJournalException e) {
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         } catch (CreateJournalException e) {
             throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE,
                     name));
+        } catch (CreateJournalByIdException e) {
+            throw new JournalIdAlreadyExistException(DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + id);
         }
         return journal;
     }
+
+    public Journal getByName(String name, int userId, boolean isPrivate) throws GetByNameException {
+        String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE (name = ?) AND (user_id = ?)";
+        Journal journal = null;
+        try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
+            preparedStatement1.setString(1, name);
+            preparedStatement1.setInt(2, userId);
+            ResultSet resultSet = preparedStatement1.executeQuery();
+            if (resultSet.next()) {
+                journal = JournalFactory.createJournal(resultSet.getInt(1), resultSet.getString(3),
+                        resultSet.getString(4), resultSet.getInt(2),
+                        resultSet.getTimestamp(5).toLocalDateTime(), isPrivate);
+            }
+        } catch (SQLException e) {
+            throw new GetByNameException(DAOErrorConstants.GET_BY_NAME_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return journal;
+    }
+
 
     @Override
     public Journal read(int id) throws ReadJournalException {

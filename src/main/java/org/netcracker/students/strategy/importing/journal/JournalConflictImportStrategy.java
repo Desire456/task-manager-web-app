@@ -1,8 +1,10 @@
 package org.netcracker.students.strategy.importing.journal;
 
 import org.netcracker.students.controller.JournalController;
+import org.netcracker.students.dao.exceptions.GetByNameException;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.JournalIdAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.model.Journal;
@@ -22,13 +24,13 @@ public class JournalConflictImportStrategy implements ImportStrategy<Journal> {
             if (oldJournal != null) throw new ImportMatchIdException();
 
             journalController.addJournalWithId(journal);
-        } catch (GetConnectionException | ReadJournalException | CreateJournalException e) {
+        } catch (GetConnectionException | ReadJournalException | CreateJournalException | GetByNameException e) {
             throw new ImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         } catch (ImportMatchIdException e) {
             String exceptionMessage = String.format(StrategyConstants.IMPORT_EXCEPTION_MATCH_ID_MESSAGE,
                     StrategyConstants.JOURNAL_TYPE.toLowerCase(), journal.getId());
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + exceptionMessage);
-        } catch (NameAlreadyExistException e) {
+        } catch (NameAlreadyExistException | JournalIdAlreadyExistException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
