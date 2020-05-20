@@ -34,13 +34,13 @@ public class Journal implements Serializable {
     @Column(name = "user_id")
     private int userId;
 
-    @Column(name = "isprivate")
+    @Column(name = "is_private")
     private boolean isPrivate;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "creation_date")
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
 
@@ -48,7 +48,7 @@ public class Journal implements Serializable {
     private String description;
 
     public Journal(int id, String name, String description, int userId,
-                   LocalDateTime creationDate, boolean isPrivate) throws GetConnectionException, ReadUserException {
+                   LocalDateTime creationDate, boolean isPrivate) {
 
         this.id = id;
         this.isPrivate = isPrivate;
@@ -58,7 +58,7 @@ public class Journal implements Serializable {
         this.description = description;
     }
 
-    public Journal(String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) throws GetConnectionException, ReadUserException {
+    public Journal(String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) {
         this.name = name;
         this.description = description;
         this.userId = userId;

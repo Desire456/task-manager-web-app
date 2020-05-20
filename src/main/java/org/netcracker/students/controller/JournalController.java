@@ -1,7 +1,9 @@
 package org.netcracker.students.controller;
 
+import org.hibernate.Hibernate;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
+import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
 import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.JournalDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
@@ -26,7 +28,7 @@ public class JournalController {
     private JournalDAO journalDAO;
 
     private JournalController() throws GetConnectionException {
-        ManagerDAO ManagerDAO = PostgreSQLManagerDAO.getInstance();
+        ManagerDAO ManagerDAO = HibernateManagerDAO.getInstance();
         try {
             this.journalDAO = ManagerDAO.getJournalDao();
         } catch (SQLException e) {

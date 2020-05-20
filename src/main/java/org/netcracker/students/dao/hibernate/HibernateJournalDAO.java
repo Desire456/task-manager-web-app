@@ -150,7 +150,7 @@ public class HibernateJournalDAO implements JournalDAO {
         List<Journal> journals = new ArrayList<>();
         query.setParameter("user_id", userId);
         query.setParameter("value", false);
-        query.setParameter("pattern", "%" + pattern + "%");
+        query.setParameter("pattern", pattern);
         for (Object o : query.list()) {
             journals.add((Journal)o);
         }

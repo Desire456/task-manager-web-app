@@ -53,7 +53,7 @@ public class Task implements Serializable {
 
 
     public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate,
-                LocalDateTime dateOfDone, String status) throws GetConnectionException, ReadJournalException {
+                LocalDateTime dateOfDone, String status) {
         this.id = id;
         this.journalId = journalId;
         this.name = name;
@@ -101,8 +101,7 @@ public class Task implements Serializable {
     public Task() {
     }
 
-    public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId)
-            throws GetConnectionException, ReadJournalException {
+    public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
