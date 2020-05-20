@@ -26,8 +26,8 @@ public class HibernateJournalDAO implements JournalDAO {
         Transaction tx1 = session.beginTransaction();
         List<Journal> journals = new ArrayList<>();
         Query query = session.createQuery(hql);
-        query.setParameter("name", name);
-        query.setParameter("user_id", userId);
+        query.setParameter(HibernateDAOConstants.NAME, name);
+        query.setParameter(HibernateDAOConstants.USER_ID, userId);
         for (Object o : query.list()) {
             journals.add((Journal)o);
         }
@@ -99,7 +99,7 @@ public class HibernateJournalDAO implements JournalDAO {
             String hql = "Delete From Journal where journal_id = :journal_id";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
-            query.setParameter("journal_id", id);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, id);
             query.executeUpdate();
             tx1.commit();
             session.close();
@@ -144,8 +144,8 @@ public class HibernateJournalDAO implements JournalDAO {
             Transaction tx1 = session.beginTransaction();
             List<Journal> journals = new ArrayList<>();
             Query query = session.createQuery(hql);
-            query.setParameter("user_id", userId);
-            query.setParameter("value", false);
+            query.setParameter(HibernateDAOConstants.USER_ID, userId);
+            query.setParameter(HibernateDAOConstants.VALUE, false);
             for (Object o : query.list()) {
                 journals.add((Journal)o);
             }
@@ -174,8 +174,8 @@ public class HibernateJournalDAO implements JournalDAO {
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
             List<Journal> journals = new ArrayList<>();
-            query.setParameter("user_id", userId);
-            query.setParameter("value", false);
+            query.setParameter(HibernateDAOConstants.USER_ID, userId);
+            query.setParameter(HibernateDAOConstants.VALUE, false);
             for (Object o : query.list()) {
                 journals.add((Journal)o);
             }
@@ -204,9 +204,9 @@ public class HibernateJournalDAO implements JournalDAO {
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
             List<Journal> journals = new ArrayList<>();
-            query.setParameter("user_id", userId);
-            query.setParameter("value", false);
-            query.setParameter("pattern", pattern);
+            query.setParameter(HibernateDAOConstants.USER_ID, userId);
+            query.setParameter(HibernateDAOConstants.VALUE, false);
+            query.setParameter(HibernateDAOConstants.PATTERN, pattern);
             for (Object o : query.list()) {
                 journals.add((Journal)o);
             }
@@ -235,9 +235,9 @@ public class HibernateJournalDAO implements JournalDAO {
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
             List<Journal> journals = new ArrayList<>();
-            query.setParameter("user_id", userId);
-            query.setParameter("value", false);
-            query.setParameter("equal", equal);
+            query.setParameter(HibernateDAOConstants.USER_ID, userId);
+            query.setParameter(HibernateDAOConstants.VALUE, false);
+            query.setParameter(HibernateDAOConstants.EQUAL, equal);
             for (Object o : query.list()) {
                 journals.add((Journal)o);
             }

@@ -63,7 +63,7 @@ public class HibernateUserDAO implements UsersDAO {
             String hql = "Delete From User where user_id = :user_id";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
-            query.setParameter("user_id", userId);
+            query.setParameter(HibernateDAOConstants.USER_ID, userId);
             query.executeUpdate();
             tx1.commit();
             session.close();
@@ -99,8 +99,8 @@ public class HibernateUserDAO implements UsersDAO {
             String hql = "From User where login = :login and password = :password";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
-            query.setParameter("login", login);
-            query.setParameter("password", password);
+            query.setParameter(HibernateDAOConstants.LOGIN, login);
+            query.setParameter(HibernateDAOConstants.PASSWORD, password);
             for (Object o : query.list()) {
                 users.add((User) o);
             }
@@ -121,7 +121,7 @@ public class HibernateUserDAO implements UsersDAO {
             String hql = "From User where login = :login";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
-            query.setParameter("login", login);
+            query.setParameter(HibernateDAOConstants.LOGIN, login);
             for (Object o : query.list()) {
                 users.add((User) o);
             }

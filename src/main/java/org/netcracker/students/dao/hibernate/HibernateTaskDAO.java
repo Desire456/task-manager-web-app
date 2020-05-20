@@ -30,8 +30,8 @@ public class HibernateTaskDAO implements TasksDAO {
         Transaction tx1 = session.beginTransaction();
         List<Task> tasks = new ArrayList<>();
         Query query = session.createQuery(hql);
-        query.setParameter("name", name);
-        query.setParameter("journal_id", journal_id);
+        query.setParameter(HibernateDAOConstants.NAME, name);
+        query.setParameter(HibernateDAOConstants.JOURNAL_ID, journal_id);
         for (Object o : query.list()) {
             tasks.add((Task)o);
         }
@@ -101,7 +101,7 @@ public class HibernateTaskDAO implements TasksDAO {
             String hql = "Delete From Task where task_id = :task_id";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
-            query.setParameter("task_id", id);
+            query.setParameter(HibernateDAOConstants.TASK_ID, id);
             query.executeUpdate();
             tx1.commit();
             session.close();
@@ -146,7 +146,7 @@ public class HibernateTaskDAO implements TasksDAO {
             Transaction tx1 = session.beginTransaction();
             List<Task> tasks = new ArrayList<>();
             Query query = session.createQuery(hql);
-            query.setParameter("journal_id", journalId);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             for (Object o : query.list()) {
                 tasks.add((Task)o);
             }
@@ -175,7 +175,7 @@ public class HibernateTaskDAO implements TasksDAO {
             Transaction tx1 = session.beginTransaction();
             List<Task> tasks = new ArrayList<>();
             Query query = session.createQuery(hql);
-            query.setParameter("journal_id", journalId);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             for (Object o : query.list()) {
                 tasks.add((Task)o);
             }
@@ -205,8 +205,8 @@ public class HibernateTaskDAO implements TasksDAO {
             Transaction tx1 = session.beginTransaction();
             List<Task> tasks = new ArrayList<>();
             Query query = session.createQuery(hql);
-            query.setParameter("journal_id", journalId);
-            query.setParameter("pattern", pattern);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
+            query.setParameter(HibernateDAOConstants.PATTERN, pattern);
             for (Object o : query.list()) {
                 tasks.add((Task)o);
             }
@@ -236,8 +236,8 @@ public class HibernateTaskDAO implements TasksDAO {
             Transaction tx1 = session.beginTransaction();
             List<Task> tasks = new ArrayList<>();
             Query query = session.createQuery(hql);
-            query.setParameter("journal_id", journalId);
-            query.setParameter("equal", equal);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
+            query.setParameter(HibernateDAOConstants.EQUAL, equal);
             for (Object o : query.list()) {
                 tasks.add((Task)o);
             }
