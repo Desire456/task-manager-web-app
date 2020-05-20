@@ -88,8 +88,8 @@
 
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-            <version>5.0.1.Final</version>
+            <artifactId>hibernate-java8</artifactId>
+            <version>5.0.12.Final</version>
         </dependency>
 
     </dependencies>
