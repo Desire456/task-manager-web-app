@@ -1,8 +1,12 @@
 package org.netcracker.students.model;
 
 
+import org.netcracker.students.controller.UserController;
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
+import org.netcracker.students.dao.exceptions.userDAO.ReadUserException;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -19,20 +23,33 @@ import java.util.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
+@Entity
+@Table(name = "journals")
 public class Journal implements Serializable {
 
-    private Map<Integer, Task> tasks;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "journal_id")
     private int id;
+
+    @Column(name = "user_id")
     private int userId;
+
+    @Column(name = "is_private")
     private boolean isPrivate;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
+
+    @Column(name = "description")
     private String description;
 
-    public Journal(int id, String name, String description, int userId,
-                   LocalDateTime creationDate, boolean isPrivate) {
-        tasks = new HashMap<>();
+    public Journal(int id, String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) {
+
         this.id = id;
         this.isPrivate = isPrivate;
         this.userId = userId;
@@ -42,7 +59,6 @@ public class Journal implements Serializable {
     }
 
     public Journal(String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) {
-        tasks = new HashMap<>();
         this.name = name;
         this.description = description;
         this.userId = userId;
@@ -52,11 +68,9 @@ public class Journal implements Serializable {
 
 
     public Journal() {
-        tasks = new HashMap<>();
     }
 
     public Journal(Journal journal) {
-        tasks = new HashMap<>();
         this.id = journal.id;
         this.isPrivate = journal.isPrivate;
         this.name = journal.name;
@@ -111,110 +125,5 @@ public class Journal implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void addTask(Task task) {
-        tasks.put(task.getId(), task);
-    }
-
-    /**
-     * Delete task from map by id
-     *
-     * @param id - desired id
-     */
-
-    public void deleteTask(int id) {
-        tasks.remove(id);
-    }
-
-    /**
-     * Getter function by id
-     *
-     * @param id - desired id
-     */
-
-
-    public Task getTask(int id) {
-        return tasks.get(id);
-    }
-
-    /**
-     * Getter function by name
-     *
-     * @param name - desired name
-     */
-
-    public Task getTaskByName(String name) {
-        Task res = null;
-        for (int i = 0; i < tasks.size(); ++i) {
-            if (name.equals(tasks.get(i).getName())) res = tasks.get(i);
-        }
-        return res;
-    }
-
-    /**
-     * Getter function by date
-     *
-     * @param date - desired date
-     * @return desired task
-     */
-
-    public Task getTaskByDate(LocalDateTime date) {
-        Task res = null;
-        for (int i = 0; i < tasks.size(); ++i) {
-            if (date == tasks.get(i).getPlannedDate()) res = tasks.get(i);
-        }
-        return res;
-    }
-
-    /**
-     * Change function by id
-     *
-     * @param id   - desired id
-     * @param task - new task
-     */
-
-    public void changeTask(int id, Task task) {
-        Task res = tasks.get(id);
-
-        res.setPlannedDate(task.getPlannedDate());
-        res.setDateOfDone(task.getDateOfDone());
-        res.setName(task.getName());
-        res.setDescription(task.getDescription());
-        res.setStatus(task.getStatus());
-    }
-
-
-    public void changeStatus(String taskName, String status) {
-        getTaskByName(taskName).setStatus(status);
-    }
-
-    /**
-     * @return unmodifiable list of all tasks
-     */
-
-    public ArrayList<Task> getAll() {
-        Task[] arr = tasks.values().toArray(new Task[0]);
-        return new ArrayList<>(Arrays.asList(arr));
-    }
-
-    public boolean isTaskInJournal(Task task) {
-        boolean res = false;
-        List<Task> taskList = this.getAll();
-        for (Task curTask : taskList) {
-            res = (task.getPlannedDate().isEqual(curTask.getPlannedDate())) && (task.getStatus() == curTask.getStatus()) &&
-                    (task.getName().equals(curTask.getName())) && (task.getDateOfDone() == curTask.getDateOfDone()) &&
-                    (task.getDescription().equals(curTask.getDescription()));
-            if (res) return true;
-        }
-        return false;
-    }
-
-    public boolean isTaskInJournal(int id) {
-        return tasks.containsKey(id);
-    }
-
-    public int size() {
-        return tasks.size();
     }
 }

@@ -2,6 +2,7 @@ package org.netcracker.students.controller;
 
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.userDAO.*;
+import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
 import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
@@ -24,7 +25,7 @@ public class UserController {
     }
 
     private UserController() throws GetConnectionException {
-        ManagerDAO ManagerDAO = PostgreSQLManagerDAO.getInstance();
+        ManagerDAO ManagerDAO = HibernateManagerDAO.getInstance();
         try {
             usersDAO = ManagerDAO.getUsersDao();
         } catch (SQLException e) {

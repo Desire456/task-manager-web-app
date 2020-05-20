@@ -3,6 +3,8 @@ package org.netcracker.students.controller;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
+import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
+import org.netcracker.students.dao.hibernate.HibernateTaskDAO;
 import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
@@ -36,7 +38,7 @@ public class TaskController {
     }
 
     private TaskController() throws GetConnectionException {
-        ManagerDAO managerDAO = PostgreSQLManagerDAO.getInstance();
+        ManagerDAO managerDAO = HibernateManagerDAO.getInstance();
         try {
             this.tasksDAO = managerDAO.getTasksDao();
         } catch (SQLException e) {

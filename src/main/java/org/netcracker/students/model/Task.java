@@ -2,14 +2,16 @@ package org.netcracker.students.model;
 
 
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
+import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
+import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 
 /**
@@ -18,28 +20,44 @@ import java.time.format.DateTimeFormatter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
+@Entity
+@Table(name = "tasks")
 public class Task implements Serializable {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id")
     private int id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "planned_date", columnDefinition = "TIMESTAMP")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime plannedDate;
+
+    @Column(name = "date_of_done", columnDefinition = "TIMESTAMP")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime dateOfDone;
+
+    @Column(name = "status")
     private String status;
-    private String formattedPlannedDate;
+
+    @Column(name = "journal_id")
     private int journalId;
 
 
-    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate, LocalDateTime dateOfDone, String status) {
+    public Task(int id, int journalId, String name, String description, LocalDateTime plannedDate,
+                LocalDateTime dateOfDone, String status) {
         this.id = id;
         this.journalId = journalId;
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
         this.dateOfDone = dateOfDone;
-        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.status = status;
     }
 
@@ -49,7 +67,6 @@ public class Task implements Serializable {
         name = task.name;
         description = task.description;
         plannedDate = task.plannedDate;
-        formattedPlannedDate = task.formattedPlannedDate;
         dateOfDone = task.dateOfDone;
         status = task.status;
     }
@@ -70,7 +87,6 @@ public class Task implements Serializable {
         this.name = name;
         this.description = description;
         this.plannedDate = plannedDate;
-        this.formattedPlannedDate = this.formatDateTime(plannedDate);
         this.dateOfDone = null;
         this.status = status;
     }
@@ -81,7 +97,6 @@ public class Task implements Serializable {
      */
 
     public Task() {
-        // id = IdGenerator.getInstance().getId();
     }
 
     public Task(String name, String description, LocalDateTime plannedDate, String status, int journalId) {
@@ -158,23 +173,5 @@ public class Task implements Serializable {
 
     public void setJournalId(int journalId) {
         this.journalId = journalId;
-    }
-
-    private String formatDateTime(LocalDateTime localDateTime) {
-        String dateTimeFormat = "yyyy-MM-dd'T'HH:mm";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(dateTimeFormat);
-        return localDateTime.format(formatter);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this.getClass() != obj.getClass()) return false;
-
-        Task task = (Task)obj;
-        return task.dateOfDone.isEqual(this.dateOfDone) && task.description.equals(this.description) &&
-                task.formattedPlannedDate.equals(this.formattedPlannedDate) && task.id == this.id &&
-                task.journalId == this.journalId && task.name.equals(this.name) && task.status.equals(this.status);
-
-
     }
 }
