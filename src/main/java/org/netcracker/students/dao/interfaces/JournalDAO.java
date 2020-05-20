@@ -1,5 +1,6 @@
 package org.netcracker.students.dao.interfaces;
 
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.Journal;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public interface JournalDAO {
     Journal create(String name, String description, Integer userId,
-                   Timestamp creatingDate, boolean isPrivate) throws CreateJournalException;
+                   Timestamp creatingDate, boolean isPrivate) throws CreateJournalException, NameAlreadyExistException;
 
     Journal read(int id) throws ReadJournalException;
 

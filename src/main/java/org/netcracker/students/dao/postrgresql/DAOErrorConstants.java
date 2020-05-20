@@ -31,4 +31,6 @@ public class DAOErrorConstants {
     public static final String GET_SORTED_BY_CRITERIA_JOURNAL_EXCEPTION_MESSAGE = "Can't sort journals by this criteria ";
     public static final String READ_JOURNAL_EXCEPTION = "Can't get journal ";
     public static final String UPDATE_JOURNAL_EXCEPTION = "Can't update journal ";
+    public static final String NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE = "journal with name %s " +
+            "already exist";
 }
