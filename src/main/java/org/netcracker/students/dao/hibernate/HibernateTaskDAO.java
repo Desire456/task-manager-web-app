@@ -69,6 +69,38 @@ public class HibernateTaskDAO implements TasksDAO {
     }
 
     @Override
+    public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
+        Task task;
+        try {
+            task = getByName(name, journalId);
+            if(task != null) {
+                throw new CreateJournalException();
+            }
+            task = read(id);
+            if(task != null) {
+                throw new CreateTaskWithIdException();
+            }
+            task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
+            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Transaction tx1 = session.beginTransaction();
+            session.save(task);
+            tx1.commit();
+            session.close();
+        }
+        catch (HibernateException | ReadTaskException e){
+            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        catch (CreateJournalException e) {
+            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
+                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
+        }
+        catch (CreateTaskWithIdException e) {
+            throw new TaskIdAlreadyExistException(DAOErrorConstants.TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE + id);
+        }
+        return task;
+    }
+
+    @Override
     public Task read(int id) throws ReadTaskException {
         Task task;
         try {
@@ -109,6 +141,27 @@ public class HibernateTaskDAO implements TasksDAO {
         catch (HibernateException e){
             throw new DeleteTaskException(DAOErrorConstants.DELETE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Task> getAllByJournalId(int journalId) throws GetAllTaskException {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            String hql = "From Task where journal_id = :journal_id";
+            Transaction tx1 = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
+            for (Object o : query.list()) {
+                tasks.add((Task)o);
+            }
+            tx1.commit();
+            session.close();
+        }
+        catch (HibernateException e){
+            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return tasks;
     }
 
     @Override
@@ -162,6 +215,28 @@ public class HibernateTaskDAO implements TasksDAO {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return taskDTOS;
+    }
+
+    @Override
+    public List<Task> getAllByNameAndJournalId(String name, int journalId) throws GetAllTaskException {
+        List<Task> tasks = new ArrayList<>();
+        try {
+            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            String hql = "From Task where journal_id = :journal_id and name = :name";
+            Transaction tx1 = session.beginTransaction();
+            Query query = session.createQuery(hql);
+            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
+            query.setParameter(HibernateDAOConstants.NAME, name);
+            for (Object o : query.list()) {
+                tasks.add((Task)o);
+            }
+            tx1.commit();
+            session.close();
+        }
+        catch (HibernateException e){
+            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return tasks;
     }
 
     @Override

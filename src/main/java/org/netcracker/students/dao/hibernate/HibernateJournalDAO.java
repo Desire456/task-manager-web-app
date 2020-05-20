@@ -67,6 +67,38 @@ public class HibernateJournalDAO implements JournalDAO {
     }
 
     @Override
+    public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException {
+        Journal journal;
+        try {
+            journal = getByName(name, userId);
+            if(journal != null) {
+                throw new CreateJournalException();
+            }
+            journal = read(id);
+            if(journal != null) {
+                throw new CreateJournalByIdException();
+            }
+            journal = JournalFactory.createJournal(name, description, userId, creationDate.toLocalDateTime(),
+                    isPrivate);
+            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Transaction tx1 = session.beginTransaction();
+            session.save(journal);
+            tx1.commit();
+            session.close();
+        }
+        catch (HibernateException | ReadJournalException e){
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        catch (CreateJournalException e) {
+            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
+                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
+        } catch (CreateJournalByIdException e) {
+            throw new JournalIdAlreadyExistException(DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + id);
+        }
+        return journal;
+    }
+
+    @Override
     public Journal read(int id) throws ReadJournalException {
         Journal journal;
         try {
