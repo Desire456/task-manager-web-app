@@ -46,7 +46,7 @@ public class HibernateManagerDAO implements ManagerDAO {
     }
 
     @Override
-    public JournalDAO getJournalDao() throws SQLException {
+    public JournalDAO getJournalDao() {
         return new HibernateJournalDAO();
     }
 

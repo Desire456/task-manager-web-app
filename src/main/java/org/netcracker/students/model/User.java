@@ -1,9 +1,6 @@
 package org.netcracker.students.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -11,6 +8,7 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private int id;
 
@@ -20,7 +18,7 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "date_of_registration")
+    @Column(name = "date_of_registration", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateOfRegistration;
 
     public User() {}

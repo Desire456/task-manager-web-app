@@ -5,10 +5,7 @@ import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
 import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -28,6 +25,7 @@ import java.time.LocalDateTime;
 public class Task implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id")
     private int id;
 
@@ -37,11 +35,11 @@ public class Task implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "planned_date")
+    @Column(name = "planned_date", columnDefinition = "TIMESTAMP")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime plannedDate;
 
-    @Column(name = "date_of_done")
+    @Column(name = "date_of_done", columnDefinition = "TIMESTAMP")
     @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime dateOfDone;
 

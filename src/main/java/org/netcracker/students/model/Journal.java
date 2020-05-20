@@ -28,6 +28,7 @@ import java.util.*;
 public class Journal implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "journal_id")
     private int id;
 
@@ -47,8 +48,7 @@ public class Journal implements Serializable {
     @Column(name = "description")
     private String description;
 
-    public Journal(int id, String name, String description, int userId,
-                   LocalDateTime creationDate, boolean isPrivate) {
+    public Journal(int id, String name, String description, int userId, LocalDateTime creationDate, boolean isPrivate) {
 
         this.id = id;
         this.isPrivate = isPrivate;
