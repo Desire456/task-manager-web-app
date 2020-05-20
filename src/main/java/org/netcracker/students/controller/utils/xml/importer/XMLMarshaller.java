@@ -65,7 +65,9 @@ public class XMLMarshaller {
         StringWriter writer = new StringWriter();
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.INDENT, XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_VALUE);
+            transformer.setOutputProperty(XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_AMOUNT,
+                    XMLMarshallerConstants.XML_TRANSFORMER_INDENT_AMOUNT_VALUE);
             DOMSource source = new DOMSource(document);
             StreamResult result = new StreamResult(writer);
             transformer.transform(source, result);
@@ -195,14 +197,13 @@ public class XMLMarshaller {
 
     private LocalDateTime stringToLocalDateTime(String str) throws XMLDataParseException {
         LocalDateTime localDateTime = null;
-        try{
+        try {
             if (str != null) {
                 DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
                 localDateTime = LocalDateTime.parse(str, formatter);
             }
-        }
-        catch (DateTimeParseException e){
-            throw new XMLDataParseException(str+" is not a date");
+        } catch (DateTimeParseException e) {
+            throw new XMLDataParseException(str + " is not a date");
         }
         return localDateTime;
     }

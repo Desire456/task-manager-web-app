@@ -2,15 +2,15 @@ package org.netcracker.students.controller.utils.xml.importer;
 
 public class UnmarshalException extends Exception {
 
-    public UnmarshalException(){
+    public UnmarshalException() {
         super();
     }
 
-    public UnmarshalException(String message){
+    public UnmarshalException(String message) {
         super(message);
     }
 
-    public UnmarshalException(Throwable e){
+    public UnmarshalException(Throwable e) {
         super(e);
     }
 }

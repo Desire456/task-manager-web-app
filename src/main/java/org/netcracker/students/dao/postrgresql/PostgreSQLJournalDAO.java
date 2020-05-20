@@ -80,7 +80,7 @@ public class PostgreSQLJournalDAO implements JournalDAO {
     private Journal getByName(String name, int userId, boolean isPrivate) throws SQLException {
         String RETURN_JOURNAL_SQL = "SELECT * FROM journals WHERE (name = ?) AND (user_id = ?)";
         Journal journal = null;
-        try(PreparedStatement preparedStatement = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
+        try (PreparedStatement preparedStatement = connection.prepareStatement(RETURN_JOURNAL_SQL)) {
             preparedStatement.setString(1, name);
             preparedStatement.setInt(2, userId);
             ResultSet resultSet = preparedStatement.executeQuery();

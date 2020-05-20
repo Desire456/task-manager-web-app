@@ -48,22 +48,22 @@ public class PostgreSQLTaskDAO implements TasksDAO {
     public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
         String sql = "INSERT INTO tasks VALUES (?, ?, ?, ?, ?, ?, ?)";
         Task task;
-        try{
+        try {
             task = read(id);
             if (task != null) throw new CreateTaskWithIdException();
             task = getByName(name, journalId);
             if (task != null) throw new CreateTaskException();
-        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-            preparedStatement.setInt(1, id);
-            preparedStatement.setInt(2, journalId);
-            preparedStatement.setString(3, name);
-            preparedStatement.setString(4, description);
-            preparedStatement.setString(5, status);
-            preparedStatement.setTimestamp(6, plannedDate);
-            preparedStatement.setTimestamp(7, dateOfDone);
-            preparedStatement.execute();
-            task = getByName(name, journalId);
-        }
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.setInt(2, journalId);
+                preparedStatement.setString(3, name);
+                preparedStatement.setString(4, description);
+                preparedStatement.setString(5, status);
+                preparedStatement.setTimestamp(6, plannedDate);
+                preparedStatement.setTimestamp(7, dateOfDone);
+                preparedStatement.execute();
+                task = getByName(name, journalId);
+            }
         } catch (SQLException | ReadTaskException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         } catch (CreateTaskException e) {
@@ -93,7 +93,7 @@ public class PostgreSQLTaskDAO implements TasksDAO {
         return task;
     }
 
-        @Override
+    @Override
     public Task read(int id) throws ReadTaskException {
         String sql = "SELECT * FROM tasks WHERE task_id = ?";
         Task task = null;

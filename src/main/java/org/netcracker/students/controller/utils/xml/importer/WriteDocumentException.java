@@ -1,16 +1,16 @@
 package org.netcracker.students.controller.utils.xml.importer;
 
-public class WriteDocumentException extends Exception{
+public class WriteDocumentException extends Exception {
 
-    public WriteDocumentException(){
+    public WriteDocumentException() {
         super();
     }
 
-    public WriteDocumentException(String message){
+    public WriteDocumentException(String message) {
         super(message);
     }
 
-    public WriteDocumentException(Throwable e){
+    public WriteDocumentException(Throwable e) {
         super(e);
     }
 }

@@ -19,4 +19,8 @@ public class XMLMarshallerConstants {
     public static final String XML_PLANNED_DATE_ELEMENT_TAG_NAME = "plannedDate";
     public static final String XML_DATE_OF_DONE_ELEMENT_TAG_NAME = "dateOfDone";
     public static final String XML_JOURNAL_ID_ELEMENT_TAG_NAME = "journalId";
+    public static final String XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_AMOUNT = "{http://xml.apache.org/xslt}indent-amount";
+    public static final String XML_TRANSFORMER_INDENT_AMOUNT_VALUE = "4";
+    public static final String XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_VALUE = "yes";
+
 }
