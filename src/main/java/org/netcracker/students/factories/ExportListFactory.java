@@ -1,6 +1,7 @@
 package org.netcracker.students.factories;
 
 import org.netcracker.students.strategy.StrategyConstants;
+import org.netcracker.students.strategy.StrategyNotFoundException;
 import org.netcracker.students.strategy.exporting.ExportList;
 import org.netcracker.students.strategy.exporting.ExportStrategy;
 import org.netcracker.students.strategy.exporting.ExportStrategyHelper;
@@ -36,8 +37,12 @@ public class ExportListFactory {
     private void fillExportByType(ExportList exportList, String type, List<Integer> ids) throws ExportException, PrintableExportException {
         ExportConfigItem configItem = ExportConfig.getInstance().get(type);
         ExportStrategy exportStrategy = ExportStrategyHelper.getInstance().resolveStrategy(configItem);
+        try {
+            if (exportStrategy == null) throw
+                    new StrategyNotFoundException(StrategyConstants.EXPORT_STRATEGY_NOT_FOUND_EXCEPTION_MESSAGE);
+        } catch (StrategyNotFoundException e) {
+            throw new PrintableExportException(StrategyConstants.EXPORT_EXCEPTION_MESSAGE + e.getMessage());
+        }
         exportStrategy.collectExportIds(exportList, ids);
     }
-
-
 }

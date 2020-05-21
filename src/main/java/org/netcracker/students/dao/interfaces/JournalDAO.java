@@ -1,6 +1,5 @@
 package org.netcracker.students.dao.interfaces;
 
-import org.netcracker.students.dao.exceptions.GetByNameException;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.model.dto.JournalDTO;

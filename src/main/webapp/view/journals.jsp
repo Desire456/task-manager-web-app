@@ -115,7 +115,7 @@
             </div>
             <div id="fileDrag">
                 Or drag them here
-                <input type="file" id="fileSelect" style="visibility: hidden" name="importFile" lang="en"/>
+                <input type="file" id="fileSelect" style="visibility: hidden" accept = ".txt,.xml" name="importFile" lang="en"/>
             </div>
         </div>
         <p id="messages"></p>

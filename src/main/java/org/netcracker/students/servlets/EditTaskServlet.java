@@ -40,7 +40,7 @@ public class EditTaskServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
             return;
         }
-        String allTasks = null;
+        String allTasks;
         try {
             allTasks = this.parseTaskListToXml(journalId);
         } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {

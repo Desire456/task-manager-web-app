@@ -5,17 +5,14 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
-import org.netcracker.students.dao.exceptions.journalDAO.*;
+import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
-import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.TaskDTOFactory;
 import org.netcracker.students.factories.TaskFactory;
-import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
-import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.dto.TaskDTO;
 
 import java.sql.Timestamp;
@@ -33,7 +30,7 @@ public class HibernateTaskDAO implements TasksDAO {
         query.setParameter(HibernateDAOConstants.NAME, name);
         query.setParameter(HibernateDAOConstants.JOURNAL_ID, journal_id);
         for (Object o : query.list()) {
-            tasks.add((Task)o);
+            tasks.add((Task) o);
         }
         task = tasks.size() == 0 ? null : tasks.get(0);
         tx1.commit();
@@ -46,10 +43,9 @@ public class HibernateTaskDAO implements TasksDAO {
         Task task;
         try {
             task = getByName(name, journalId);
-            if(task != null) {
+            if (task != null) {
                 throw new CreateJournalException();
-            }
-            else {
+            } else {
                 task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
             }
             Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
@@ -57,11 +53,9 @@ public class HibernateTaskDAO implements TasksDAO {
             session.save(task);
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
-        }
-        catch (CreateJournalException e) {
+        } catch (CreateJournalException e) {
             throw new NameAlreadyExistException(String.format(DAOErrorConstants.
                     NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
         }
@@ -73,11 +67,11 @@ public class HibernateTaskDAO implements TasksDAO {
         Task task;
         try {
             task = getByName(name, journalId);
-            if(task != null) {
+            if (task != null) {
                 throw new CreateJournalException();
             }
             task = read(id);
-            if(task != null) {
+            if (task != null) {
                 throw new CreateTaskWithIdException();
             }
             task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
@@ -86,15 +80,12 @@ public class HibernateTaskDAO implements TasksDAO {
             session.save(task);
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException | ReadTaskException e){
+        } catch (HibernateException | ReadTaskException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
-        }
-        catch (CreateJournalException e) {
+        } catch (CreateJournalException e) {
             throw new NameAlreadyExistException(String.format(DAOErrorConstants.
                     NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        }
-        catch (CreateTaskWithIdException e) {
+        } catch (CreateTaskWithIdException e) {
             throw new TaskIdAlreadyExistException(DAOErrorConstants.TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE + id);
         }
         return task;
@@ -120,8 +111,7 @@ public class HibernateTaskDAO implements TasksDAO {
             session.update(task);
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new UpdateTaskException(DAOErrorConstants.UPDATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
@@ -137,8 +127,7 @@ public class HibernateTaskDAO implements TasksDAO {
             query.executeUpdate();
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new DeleteTaskException(DAOErrorConstants.DELETE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
@@ -153,12 +142,11 @@ public class HibernateTaskDAO implements TasksDAO {
             Query query = session.createQuery(hql);
             query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return tasks;
@@ -174,7 +162,7 @@ public class HibernateTaskDAO implements TasksDAO {
             List<Task> tasks = new ArrayList<>();
             Query query = session.createQuery(hql);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             for (Task task : tasks) {
                 TaskDTO taskDTO = TaskDTOFactory.createTaskDTO(task.getId(), task.getName(), task.getDescription(),
@@ -183,8 +171,7 @@ public class HibernateTaskDAO implements TasksDAO {
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return taskDTOS;
@@ -201,7 +188,7 @@ public class HibernateTaskDAO implements TasksDAO {
             Query query = session.createQuery(hql);
             query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             for (Task task : tasks) {
                 TaskDTO taskDTO = TaskDTOFactory.createTaskDTO(task.getId(), task.getName(), task.getDescription(),
@@ -210,8 +197,7 @@ public class HibernateTaskDAO implements TasksDAO {
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return taskDTOS;
@@ -228,12 +214,11 @@ public class HibernateTaskDAO implements TasksDAO {
             query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             query.setParameter(HibernateDAOConstants.NAME, name);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return tasks;
@@ -252,7 +237,7 @@ public class HibernateTaskDAO implements TasksDAO {
             Query query = session.createQuery(hql);
             query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             for (Task task : tasks) {
                 TaskDTO taskDTO = TaskDTOFactory.createTaskDTO(task.getId(), task.getName(), task.getDescription(),
@@ -261,8 +246,7 @@ public class HibernateTaskDAO implements TasksDAO {
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetSortedByCriteriaTaskException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_TASK_EXCEPTION_MESSAGE
                     + e.getMessage());
         }
@@ -283,7 +267,7 @@ public class HibernateTaskDAO implements TasksDAO {
             query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             query.setParameter(HibernateDAOConstants.PATTERN, pattern);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             for (Task task : tasks) {
                 TaskDTO taskDTO = TaskDTOFactory.createTaskDTO(task.getId(), task.getName(), task.getDescription(),
@@ -292,8 +276,7 @@ public class HibernateTaskDAO implements TasksDAO {
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetFilteredByPatternTaskException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_TASK_EXCEPTION_MESSAGE
                     + e.getMessage());
         }
@@ -314,7 +297,7 @@ public class HibernateTaskDAO implements TasksDAO {
             query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
             query.setParameter(HibernateDAOConstants.EQUAL, equal);
             for (Object o : query.list()) {
-                tasks.add((Task)o);
+                tasks.add((Task) o);
             }
             for (Task task : tasks) {
                 TaskDTO taskDTO = TaskDTOFactory.createTaskDTO(task.getId(), task.getName(), task.getDescription(),
@@ -323,8 +306,7 @@ public class HibernateTaskDAO implements TasksDAO {
             }
             tx1.commit();
             session.close();
-        }
-        catch (HibernateException e){
+        } catch (HibernateException e) {
             throw new GetFilteredByEqualsTaskException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_TASK_EXCEPTION_MESSAGE
                     + e.getMessage());
         }

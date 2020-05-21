@@ -110,7 +110,7 @@ public class HibernateUserDAO implements UsersDAO {
             throw new GetUserByLoginAndPasswordException(DAOErrorConstants.GET_USER_BY_LOGIN_AND_PASSWORD_EXCEPTION_MESSAGE
                     + e.getMessage());
         }
-        return users.get(0);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class HibernateUserDAO implements UsersDAO {
             throw new GetUserByLoginException(DAOErrorConstants.GET_USER_BY_LOGIN_EXCEPTION_MESSAGE +
                     e.getMessage());
         }
-        return users.get(0);
+        return users.isEmpty() ? null : users.get(0);
     }
 
     @Override

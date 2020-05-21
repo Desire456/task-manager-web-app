@@ -30,11 +30,12 @@ public class TasksPageServlet extends HttpServlet {
         String allTasksXml = null;
         try {
             List<TaskDTO> taskList = this.getAllTasks(journalId);
-            if(!taskList.isEmpty()) allTasksXml = this.parseTaskListToXml(taskList);
+            if (!taskList.isEmpty()) allTasksXml = this.parseTaskListToXml(taskList);
         } catch (GetConnectionException | GetAllTaskException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
+        session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasksXml);
         requestDispatcher.forward(req, resp);
     }
 

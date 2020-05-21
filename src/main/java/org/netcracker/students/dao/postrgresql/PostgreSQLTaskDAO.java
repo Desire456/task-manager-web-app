@@ -1,13 +1,12 @@
 package org.netcracker.students.dao.postrgresql;
 
-import org.netcracker.students.dao.exceptions.GetByNameException;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.interfaces.TasksDAO;
-import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.factories.TaskDTOFactory;
 import org.netcracker.students.factories.TaskFactory;
 import org.netcracker.students.model.Task;
+import org.netcracker.students.model.dto.TaskDTO;
 
 import java.sql.*;
 import java.util.ArrayList;

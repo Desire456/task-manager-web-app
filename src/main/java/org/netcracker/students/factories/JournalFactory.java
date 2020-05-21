@@ -15,7 +15,7 @@ public class JournalFactory {
     }
 
     public static Journal createJournal(String name, String description, int userId,
-                                 LocalDateTime creatingDate, boolean accessModifier) {
+                                        LocalDateTime creatingDate, boolean accessModifier) {
         return new Journal(name, description, userId, creatingDate, accessModifier);
     }
 }

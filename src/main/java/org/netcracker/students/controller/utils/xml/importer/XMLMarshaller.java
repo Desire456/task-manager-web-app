@@ -66,7 +66,7 @@ public class XMLMarshaller {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_VALUE);
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, 
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
                     XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_DOCTYPE_PUBLIC_VALUE);
             transformer.setOutputProperty(XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_AMOUNT,
                     XMLMarshallerConstants.XML_TRANSFORMER_INDENT_AMOUNT_VALUE);
@@ -209,5 +209,4 @@ public class XMLMarshaller {
         }
         return localDateTime;
     }
-
 }

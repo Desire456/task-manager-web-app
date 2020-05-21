@@ -1,7 +1,6 @@
 package org.netcracker.students.strategy.importing.journal;
 
 import org.netcracker.students.controller.JournalController;
-import org.netcracker.students.dao.exceptions.GetByNameException;
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
 import org.netcracker.students.dao.exceptions.journalDAO.JournalIdAlreadyExistException;

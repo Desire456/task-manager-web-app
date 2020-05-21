@@ -1,13 +1,7 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -16,8 +10,7 @@ import java.time.LocalDateTime;
  * Task class, which have a name, description, date of complete, planned date and status
  */
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
+
 @Entity
 @Table(name = "tasks")
 public class Task implements Serializable {
@@ -34,11 +27,9 @@ public class Task implements Serializable {
     private String description;
 
     @Column(name = "planned_date", columnDefinition = "TIMESTAMP")
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime plannedDate;
 
     @Column(name = "date_of_done", columnDefinition = "TIMESTAMP")
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime dateOfDone;
 
     @Column(name = "status")
