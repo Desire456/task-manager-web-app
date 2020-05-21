@@ -2,8 +2,6 @@ package org.netcracker.students.model;
 
 
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
-import org.netcracker.students.dao.exceptions.journalDAO.ReadJournalException;
-import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;

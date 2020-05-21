@@ -1,10 +1,7 @@
 package org.netcracker.students.model;
 
 
-import org.netcracker.students.controller.UserController;
 import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
-import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
-import org.netcracker.students.dao.exceptions.userDAO.ReadUserException;
 
 import javax.persistence.*;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -13,7 +10,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.*;
 
 /**
  * Main shared.model class, which stores tasks
