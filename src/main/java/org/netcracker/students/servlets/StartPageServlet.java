@@ -23,7 +23,6 @@ public class StartPageServlet extends HttpServlet {
         File file = new File(ServletConstants.PATH_TO_SCRIPT_SQL);
         try {
             HibernateManagerDAO.getInstance(file.getAbsolutePath());
-            //PostgreSQLManagerDAO.getInstance(file.getAbsolutePath());
         } catch (ExecuteSqlScriptException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
