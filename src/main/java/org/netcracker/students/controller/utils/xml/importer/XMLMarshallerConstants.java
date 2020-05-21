@@ -22,5 +22,5 @@ public class XMLMarshallerConstants {
     public static final String XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_AMOUNT = "{http://xml.apache.org/xslt}indent-amount";
     public static final String XML_TRANSFORMER_INDENT_AMOUNT_VALUE = "4";
     public static final String XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_VALUE = "yes";
-
+    public static final String XML_TRANSFORMER_OUTPUT_PROPERTY_DOCTYPE_PUBLIC_VALUE = "yes";
 }
