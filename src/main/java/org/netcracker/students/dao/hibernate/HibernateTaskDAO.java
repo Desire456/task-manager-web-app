@@ -42,7 +42,7 @@ public class HibernateTaskDAO implements TasksDAO {
     }
 
     @Override
-    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException {
+    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException {
         Task task;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
@@ -55,26 +55,14 @@ public class HibernateTaskDAO implements TasksDAO {
         catch (HibernateException e){
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-//        catch (CreateJournalException e) {
-//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-//        }
         return task;
     }
 
     @Override
-    public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
+    public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException{
         Task task;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-//            task = getByName(name, journalId);
-//            if(task != null) {
-//                throw new CreateJournalException();
-//            }
-//            task = read(id);
-//            if(task != null) {
-//                throw new CreateTaskWithIdException();
-//            }
             task = TaskFactory.createTask(id, journalId, name, description, plannedDate.toLocalDateTime(),
                     dateOfDone.toLocalDateTime(), status);
             Transaction tx1 = session.beginTransaction();
@@ -85,13 +73,6 @@ public class HibernateTaskDAO implements TasksDAO {
         catch (HibernateException e){
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-//        catch (CreateJournalException e) {
-//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-//        }
-//        catch (CreateTaskWithIdException e) {
-//            throw new TaskIdAlreadyExistException(DAOErrorConstants.TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE + id);
-//        }
         return task;
     }
 

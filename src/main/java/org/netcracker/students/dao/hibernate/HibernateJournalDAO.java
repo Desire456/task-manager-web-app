@@ -39,7 +39,7 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public Journal create(String name, String description, Integer userId, Timestamp creatingDate, boolean isPrivate)
-            throws CreateJournalException, NameAlreadyExistException {
+            throws CreateJournalException {
         Journal journal;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
@@ -53,26 +53,14 @@ public class HibernateJournalDAO implements JournalDAO {
         catch (HibernateException e){
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-//        catch (CreateJournalException e) {
-//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-//        }
         return journal;
     }
 
     @Override
-    public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException {
+    public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException {
         Journal journal;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-//            journal = getByName(name, userId);
-//            if(journal != null) {
-//                throw new CreateJournalException();
-//            }
-//            journal = read(id);
-//            if(journal != null) {
-//                throw new CreateJournalByIdException();
-//            }
             journal = JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(),
                     isPrivate);
             Transaction tx1 = session.beginTransaction();
@@ -83,12 +71,6 @@ public class HibernateJournalDAO implements JournalDAO {
         catch (HibernateException e){
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-//        catch (CreateJournalException e) {
-//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-//        } catch (CreateJournalByIdException e) {
-//            throw new JournalIdAlreadyExistException(DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + id);
-//        }
         return journal;
     }
 
