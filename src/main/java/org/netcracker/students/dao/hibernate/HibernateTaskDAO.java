@@ -189,28 +189,6 @@ public class HibernateTaskDAO implements TasksDAO {
     }
 
     @Override
-    public List<Task> getAllByNameAndJournalId(String name, int journalId) throws GetAllTaskException {
-        List<Task> tasks = new ArrayList<>();
-        try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
-            String hql = "From Task where journal_id = :journal_id and name = :name";
-            Transaction tx1 = session.beginTransaction();
-            Query query = session.createQuery(hql);
-            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
-            query.setParameter(HibernateDAOConstants.NAME, name);
-            for (Object o : query.list()) {
-                tasks.add((Task)o);
-            }
-            tx1.commit();
-            session.close();
-        }
-        catch (HibernateException e){
-            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
-        }
-        return tasks;
-    }
-
-    @Override
     public List<TaskDTO> getSortedByCriteria(int journalId, String column, String criteria) throws GetSortedByCriteriaTaskException {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         try {
