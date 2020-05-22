@@ -1,9 +1,6 @@
 package org.netcracker.students.dao.hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.JournalDAO;
@@ -57,20 +54,25 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException {
-        Journal journal;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            journal = JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(),
-                    isPrivate);
             Transaction tx1 = session.beginTransaction();
-            session.save(journal);
+            Query query = session.createNativeQuery("INSERT INTO journals VALUES (?, ?, ?, ?, ?, ?)");
+            query.setParameter(1, id);
+            query.setParameter(2, userId);
+            query.setParameter(3, name);
+            query.setParameter(4, description);
+            query.setParameter(5, creationDate);
+            query.setParameter(6, isPrivate);
+            query.executeUpdate();
             tx1.commit();
             session.close();
         }
         catch (HibernateException e){
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return journal;
+        return JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(),
+                isPrivate);
     }
 
     @Override

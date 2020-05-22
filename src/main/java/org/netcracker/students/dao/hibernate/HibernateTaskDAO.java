@@ -13,6 +13,7 @@ import org.netcracker.students.factories.TaskFactory;
 import org.netcracker.students.model.Task;
 import org.netcracker.students.model.dto.TaskDTO;
 
+import javax.persistence.TemporalType;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,20 +56,26 @@ public class HibernateTaskDAO implements TasksDAO {
 
     @Override
     public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException{
-        Task task;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            task = TaskFactory.createTask(id, journalId, name, description, plannedDate.toLocalDateTime(),
-                    dateOfDone.toLocalDateTime(), status);
             Transaction tx1 = session.beginTransaction();
-            session.save(task);
+            Query query = session.createNativeQuery("INSERT INTO tasks VALUES (?, ?, ?, ?, ?, ?, ?)");
+            query.setParameter(1, id);
+            query.setParameter(2, journalId);
+            query.setParameter(3, name);
+            query.setParameter(4, description);
+            query.setParameter(5, status);
+            query.setParameter(6, plannedDate);
+            query.setParameter(7, dateOfDone, TemporalType.TIMESTAMP);
+            query.executeUpdate();
             tx1.commit();
             session.close();
         }
         catch (HibernateException e){
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return task;
+        return TaskFactory.createTask(id, journalId, name, description, plannedDate.toLocalDateTime(),
+                dateOfDone == null ? null : dateOfDone.toLocalDateTime(), status);
     }
 
     @Override

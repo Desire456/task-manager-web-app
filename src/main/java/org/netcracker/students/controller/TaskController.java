@@ -84,8 +84,9 @@ public class TaskController {
         } catch (GetTaskByNameException | ReadTaskException e) {
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
+        Timestamp dateOfDoneStamp = task.getDateOfDone() == null ? null : Timestamp.valueOf(task.getDateOfDone());
         tasksDAO.create(task.getId(), task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
-                null, task.getJournalId());
+                dateOfDoneStamp, task.getJournalId());
     }
 
     /**
