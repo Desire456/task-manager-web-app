@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HibernateJournalDAO implements JournalDAO {
-    private Journal getByName(String name, int userId) {
+    public Journal getByName(String name, int userId) {
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         String hql = "From Journal Where name = :name And user_id = :user_id";
         Journal journal = null;
@@ -29,7 +29,7 @@ public class HibernateJournalDAO implements JournalDAO {
         query.setParameter(HibernateDAOConstants.NAME, name);
         query.setParameter(HibernateDAOConstants.USER_ID, userId);
         for (Object o : query.list()) {
-            journals.add((Journal) o);
+            journals.add((Journal)o);
         }
         journal = journals.size() == 0 ? null : journals.get(0);
         tx1.commit();
@@ -41,55 +41,54 @@ public class HibernateJournalDAO implements JournalDAO {
     public Journal create(String name, String description, Integer userId, Timestamp creatingDate, boolean isPrivate)
             throws CreateJournalException, NameAlreadyExistException {
         Journal journal;
+        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            journal = getByName(name, userId);
-            if (journal != null) {
-                throw new CreateJournalException();
-            } else {
-                journal = JournalFactory.createJournal(name, description, userId, creatingDate.toLocalDateTime(),
+            journal = JournalFactory.createJournal(name, description, userId, creatingDate.toLocalDateTime(),
                         isPrivate);
-            }
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
             Transaction tx1 = session.beginTransaction();
             session.save(journal);
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
-            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
-        } catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
         }
+        catch (HibernateException e){
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
+        }
+//        catch (CreateJournalException e) {
+//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
+//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
+//        }
         return journal;
     }
 
     @Override
     public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException {
         Journal journal;
+        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            journal = getByName(name, userId);
-            if (journal != null) {
-                throw new CreateJournalException();
-            }
-            journal = read(id);
-            if (journal != null) {
-                throw new CreateJournalByIdException();
-            }
-            journal = JournalFactory.createJournal(name, description, userId, creationDate.toLocalDateTime(),
+//            journal = getByName(name, userId);
+//            if(journal != null) {
+//                throw new CreateJournalException();
+//            }
+//            journal = read(id);
+//            if(journal != null) {
+//                throw new CreateJournalByIdException();
+//            }
+            journal = JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(),
                     isPrivate);
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
             Transaction tx1 = session.beginTransaction();
             session.save(journal);
             tx1.commit();
             session.close();
-        } catch (HibernateException | ReadJournalException e) {
-            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
-        } catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        } catch (CreateJournalByIdException e) {
-            throw new JournalIdAlreadyExistException(DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + id);
         }
+        catch (HibernateException e){
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
+        }
+//        catch (CreateJournalException e) {
+//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
+//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
+//        } catch (CreateJournalByIdException e) {
+//            throw new JournalIdAlreadyExistException(DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + id);
+//        }
         return journal;
     }
 
@@ -113,7 +112,8 @@ public class HibernateJournalDAO implements JournalDAO {
             session.update(journal);
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new UpdateJournalException(DAOErrorConstants.UPDATE_JOURNAL_EXCEPTION + e.getMessage());
         }
     }
@@ -129,7 +129,8 @@ public class HibernateJournalDAO implements JournalDAO {
             query.executeUpdate();
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new DeleteJournalException(DAOErrorConstants.DELETE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
@@ -144,7 +145,7 @@ public class HibernateJournalDAO implements JournalDAO {
             List<Journal> journals = new ArrayList<>();
             Query query = session.createQuery(hql);
             for (Object o : query.list()) {
-                journals.add((Journal) o);
+                journals.add((Journal)o);
             }
             for (Journal journal : journals) {
                 JournalDTO journalDTO = JournalDTOFactory.createJournalDTO(journal.getId(), journal.getName(),
@@ -153,7 +154,8 @@ public class HibernateJournalDAO implements JournalDAO {
             }
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new GetAllJournalException(DAOErrorConstants.GET_ALL_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
         return journalDTOS;
@@ -171,7 +173,7 @@ public class HibernateJournalDAO implements JournalDAO {
             query.setParameter(HibernateDAOConstants.USER_ID, userId);
             query.setParameter(HibernateDAOConstants.VALUE, false);
             for (Object o : query.list()) {
-                journals.add((Journal) o);
+                journals.add((Journal)o);
             }
             for (Journal journal : journals) {
                 JournalDTO journalDTO = JournalDTOFactory.createJournalDTO(journal.getId(), journal.getName(),
@@ -180,7 +182,8 @@ public class HibernateJournalDAO implements JournalDAO {
             }
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new GetAllJournalByUserIdException(DAOErrorConstants.GET_ALL_JOURNAL_BY_USER_ID_EXCEPTION_MESSAGE + e.getMessage());
         }
         return journalDTOS;
@@ -200,7 +203,7 @@ public class HibernateJournalDAO implements JournalDAO {
             query.setParameter(HibernateDAOConstants.USER_ID, userId);
             query.setParameter(HibernateDAOConstants.VALUE, false);
             for (Object o : query.list()) {
-                journals.add((Journal) o);
+                journals.add((Journal)o);
             }
             for (Journal journal : journals) {
                 JournalDTO journalDTO = JournalDTOFactory.createJournalDTO(journal.getId(), journal.getName(),
@@ -209,7 +212,8 @@ public class HibernateJournalDAO implements JournalDAO {
             }
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new GetSortedByCriteriaJournalException(DAOErrorConstants.GET_SORTED_BY_CRITERIA_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
         return journalDTOS;
@@ -230,7 +234,7 @@ public class HibernateJournalDAO implements JournalDAO {
             query.setParameter(HibernateDAOConstants.VALUE, false);
             query.setParameter(HibernateDAOConstants.PATTERN, pattern);
             for (Object o : query.list()) {
-                journals.add((Journal) o);
+                journals.add((Journal)o);
             }
             for (Journal journal : journals) {
                 JournalDTO journalDTO = JournalDTOFactory.createJournalDTO(journal.getId(), journal.getName(),
@@ -239,7 +243,8 @@ public class HibernateJournalDAO implements JournalDAO {
             }
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new GetFilteredByPatternJournalException(DAOErrorConstants.GET_FILTERED_BY_PATTERN_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
         return journalDTOS;
@@ -260,7 +265,7 @@ public class HibernateJournalDAO implements JournalDAO {
             query.setParameter(HibernateDAOConstants.VALUE, false);
             query.setParameter(HibernateDAOConstants.EQUAL, equal);
             for (Object o : query.list()) {
-                journals.add((Journal) o);
+                journals.add((Journal)o);
             }
             for (Journal journal : journals) {
                 JournalDTO journalDTO = JournalDTOFactory.createJournalDTO(journal.getId(), journal.getName(),
@@ -269,7 +274,8 @@ public class HibernateJournalDAO implements JournalDAO {
             }
             tx1.commit();
             session.close();
-        } catch (HibernateException e) {
+        }
+        catch (HibernateException e){
             throw new GetFilteredByEqualsJournalException(DAOErrorConstants.GET_FILTERED_BY_EQUALS_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
         return journalDTOS;

@@ -12,7 +12,7 @@
             <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/task_manager"/>
             <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
             <property name="hibernate.connection.username" value="postgres"/>
-            <property name="hibernate.connection.password" value="admin"/>
+            <property name="hibernate.connection.password" value="root"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL9Dialect"/>
             <property name="hibernate.show_sql" value = "true"/>
             <property name="hibernate.format_sql" value = "true"/>
