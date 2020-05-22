@@ -4,7 +4,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.JournalDAO;

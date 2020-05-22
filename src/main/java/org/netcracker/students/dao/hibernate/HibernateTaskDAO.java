@@ -4,18 +4,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
-import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
-import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.TaskDTOFactory;
 import org.netcracker.students.factories.TaskFactory;
-import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
-import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.dto.TaskDTO;
 
 import java.sql.Timestamp;
