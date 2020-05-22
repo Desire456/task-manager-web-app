@@ -1,6 +1,8 @@
 package org.netcracker.students.controller;
 
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
+import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
+import org.netcracker.students.dao.exceptions.journalDAO.GetJournalByNameException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
@@ -61,11 +63,27 @@ public class TaskController {
      */
 
     public void addTask(Task task) throws CreateTaskException, NameAlreadyExistException {
+        try {
+            if (tasksDAO.getByName(task.getName(), task.getJournalId()) != null)
+                throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_TASK_EXCEPTION_MESSAGE,
+                        task.getName()));
+        } catch (GetTaskByNameException e) {
+            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
         tasksDAO.create(task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
                 null, task.getJournalId());
     }
 
     public void addTaskWithId(Task task) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
+        try {
+            if (tasksDAO.getByName(task.getName(), task.getJournalId()) != null)
+                throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_TASK_EXCEPTION_MESSAGE,
+                        task.getName()));
+            if (tasksDAO.read(task.getId()) != null)
+                throw new TaskIdAlreadyExistException(DAOErrorConstants.TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE + task.getId());
+        } catch (GetTaskByNameException | ReadTaskException e) {
+            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
         tasksDAO.create(task.getId(), task.getName(), task.getStatus(), task.getDescription(), Timestamp.valueOf(task.getPlannedDate()),
                 null, task.getJournalId());
     }

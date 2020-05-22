@@ -41,11 +41,28 @@ public class JournalController {
     }
 
     public void addJournal(Journal journal) throws CreateJournalException, NameAlreadyExistException {
+        try {
+            if (journalDAO.getByName(journal.getName(), journal.getUserId()) != null)
+                throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE,
+                        journal.getName()));
+        } catch (GetJournalByNameException e) {
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
+        }
         journalDAO.create(journal.getName(), journal.getDescription(), journal.getUserId(),
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }
 
     public void addJournalWithId(Journal journal) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException {
+        try {
+            if (journalDAO.getByName(journal.getName(), journal.getUserId()) != null)
+                throw new NameAlreadyExistException(String.format(DAOErrorConstants.NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE,
+                        journal.getName()));
+            if (journalDAO.read(journal.getId()) != null)
+                throw new JournalIdAlreadyExistException(
+                        DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + journal.getId());
+        } catch (GetJournalByNameException | ReadJournalException e) {
+            throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
+        }
         journalDAO.create(journal.getId(), journal.getName(), journal.getDescription(), journal.getUserId(),
                 Timestamp.valueOf(journal.getCreationDate()), journal.getIsPrivate());
     }
