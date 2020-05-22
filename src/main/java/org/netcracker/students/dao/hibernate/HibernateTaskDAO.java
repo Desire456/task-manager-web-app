@@ -46,13 +46,7 @@ public class HibernateTaskDAO implements TasksDAO {
         Task task;
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            task = getByName(name, journalId);
-            if(task != null) {
-                throw new CreateJournalException();
-            }
-            else {
-                task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
-            }
+            task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
             Transaction tx1 = session.beginTransaction();
             session.save(task);
             tx1.commit();
@@ -61,10 +55,10 @@ public class HibernateTaskDAO implements TasksDAO {
         catch (HibernateException e){
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-        catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        }
+//        catch (CreateJournalException e) {
+//            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
+//                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
+//        }
         return task;
     }
 
