@@ -13,6 +13,9 @@ import org.netcracker.students.strategy.importing.exceptions.ImportException;
 import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
+/**
+ * Overwrite strategy. If we have matching id we just updates this object
+ */
 public class JournalOverwriteImportStrategy implements ImportStrategy<Journal> {
     @Override
     public void store(Journal journal) throws ImportException, PrintableImportException {

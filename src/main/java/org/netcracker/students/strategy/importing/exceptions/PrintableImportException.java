@@ -1,5 +1,8 @@
 package org.netcracker.students.strategy.importing.exceptions;
 
+/**
+ * Exception that indicates an important import error
+ */
 public class PrintableImportException extends Exception{
     public PrintableImportException() {
     }

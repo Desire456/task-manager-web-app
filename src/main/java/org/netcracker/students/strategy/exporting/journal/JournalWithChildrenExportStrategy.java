@@ -15,6 +15,9 @@ import org.netcracker.students.strategy.exporting.exceptions.ExportException;
 
 import java.util.List;
 
+/**
+ * Strategy to export journals with tasks
+ */
 public class JournalWithChildrenExportStrategy implements ExportStrategy {
     @Override
     public void collectExportIds(ExportList exportList, List<Integer> ids) throws ExportException {

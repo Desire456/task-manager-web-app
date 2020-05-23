@@ -11,6 +11,9 @@ import org.netcracker.students.strategy.StrategyConstants;
 import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.ImportException;
 
+/**
+ * Ignore strategy. If we have matching id or matching name we just ignore this and continue import
+ */
 public class JournalIgnoreImportStrategy implements ImportStrategy<Journal> {
     @Override
     public void store(Journal journal) throws ImportException {

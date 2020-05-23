@@ -22,6 +22,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * Make tasks status completed and show tasks.jsp
+ */
 @WebServlet(MappingConstants.FINISH_TASK_MAPPING)
 public class FinishTaskServlet extends HttpServlet {
     @Override

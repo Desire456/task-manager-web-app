@@ -20,6 +20,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Get tasks from database, marshal to xml and set session attribute to show tasks on jsp
+ */
 @WebServlet(MappingConstants.TASKS_PAGE_MAPPING)
 public class TasksPageServlet extends HttpServlet {
     @Override

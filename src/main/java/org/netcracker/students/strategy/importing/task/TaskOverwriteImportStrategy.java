@@ -16,6 +16,9 @@ import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.ImportJournalNotFoundException;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
+/**
+ * Overwrite strategy. If we have matching id we just updates this object
+ */
 public class TaskOverwriteImportStrategy implements ImportStrategy<Task> {
 
     @Override

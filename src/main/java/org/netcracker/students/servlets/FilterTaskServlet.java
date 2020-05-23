@@ -21,6 +21,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Filter tasks by column, like pattern or equal and criteria sort, show tasks.jsp
+ */
 @WebServlet(MappingConstants.FILTER_TASK_MAPPING)
 public class FilterTaskServlet extends HttpServlet {
     @Override

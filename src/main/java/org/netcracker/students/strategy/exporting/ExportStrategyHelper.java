@@ -9,6 +9,9 @@ import org.netcracker.students.strategy.exporting.task.TaskExportStrategy;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class helper contains strategies by type and can return needed strategy by strategy config
+ */
 public class ExportStrategyHelper {
     private static ExportStrategyHelper instance;
     private final Map<String, Map<Integer, ExportStrategy>> strategiesByType;
@@ -20,6 +23,9 @@ public class ExportStrategyHelper {
         return instance;
     }
 
+    /**
+     * Fill strategies map
+     */
     private ExportStrategyHelper() {
         Map<Integer, ExportStrategy> journalStrategies = new HashMap<>();
         journalStrategies.put(StrategyConstants.JOURNAL_EXPORT_ID, new JournalExportStrategy());
@@ -36,6 +42,11 @@ public class ExportStrategyHelper {
 
     }
 
+    /**
+     * Resolve strategy by config
+     * @param item export config
+     * @return needed export strategy
+     */
     public ExportStrategy resolveStrategy(ExportConfigItem item) {
         return this.strategiesByType.get(item.getType()).get(item.getStrategyID());
     }

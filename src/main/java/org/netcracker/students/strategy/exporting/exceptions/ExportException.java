@@ -1,5 +1,8 @@
 package org.netcracker.students.strategy.exporting.exceptions;
 
+/**
+ * Exception that indicates a common export error
+ */
 public class ExportException extends Exception {
     public ExportException() {
     }

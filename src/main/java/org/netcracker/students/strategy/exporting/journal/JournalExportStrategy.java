@@ -11,6 +11,9 @@ import org.netcracker.students.strategy.exporting.exceptions.ExportException;
 
 import java.util.List;
 
+/**
+ * Strategy to export only journals
+ */
 public class JournalExportStrategy implements ExportStrategy {
 
     @Override

@@ -23,6 +23,12 @@ import javax.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * ExportImportBean is the interface implementation
+ *
+ * Please see the {@link IExportImport} bean interface
+ */
 @Stateless
 public class ExportImportBean implements IExportImport {
     public String exportObjects(List<Integer> journalIds, List<Integer> tasksIds) throws ExportException, PrintableExportException {
@@ -60,8 +66,6 @@ public class ExportImportBean implements IExportImport {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         }
 
-
-
         int strategyId = Integer.parseInt(propertyParser.getProperty(StrategyConstants.JOURNAL_IMPORT_STRATEGY));
         ImportStrategy<Journal> journalImportStrategy =
                 importStrategyHelper.resolveJournalStrategy(strategyId);
@@ -78,7 +82,7 @@ public class ExportImportBean implements IExportImport {
 
         try {
             if (taskImportStrategy == null) throw
-            new StrategyNotFoundException(StrategyConstants.IMPORT_STRATEGY_NOT_FOUND_EXCEPTION_MESSAGE);
+                    new StrategyNotFoundException(StrategyConstants.IMPORT_STRATEGY_NOT_FOUND_EXCEPTION_MESSAGE);
         } catch (StrategyNotFoundException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         }

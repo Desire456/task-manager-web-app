@@ -13,6 +13,9 @@ import org.netcracker.students.strategy.StrategyConstants;
 import org.netcracker.students.strategy.importing.exceptions.*;
 import org.netcracker.students.strategy.importing.ImportStrategy;
 
+/**
+ * Conflict strategy. If we have id matching or name matching inform the user about it and stop import
+ */
 public class TaskConflictImportStrategy implements ImportStrategy<Task> {
 
     @Override

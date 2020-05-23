@@ -15,6 +15,9 @@ import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.ImportJournalNotFoundException;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
+/**
+ * Ignore strategy. If we have matching id or matching name we just ignore this and continue import
+ */
 public class TaskIgnoreImportStrategy implements ImportStrategy<Task> {
 
     @Override

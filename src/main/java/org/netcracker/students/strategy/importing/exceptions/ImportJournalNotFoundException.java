@@ -1,8 +1,10 @@
 package org.netcracker.students.strategy.importing.exceptions;
 
-public class ImportJournalNotFoundException extends Exception{
+/**
+ * Indicates lack of journal for import task
+ */
+public class ImportJournalNotFoundException extends Exception {
     public ImportJournalNotFoundException() {
-        super();
     }
 
     public ImportJournalNotFoundException(String message) {

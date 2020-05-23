@@ -275,7 +275,8 @@
         if (generalCheckbox.checked) {
             for (let i = 0; i < checkboxes.length; ++i) {
                 checkboxes[i].checked = true;
-                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                if (checkboxes[i].getAttribute("status") === "PLANNED" ||
+                    [i].getAttribute("status") === "DEFERRED") {
                     countCheckedFinish++;
                 } else {
                     notPlannedIsChecked = true;
@@ -323,7 +324,8 @@
                 generalCheckbox.checked = false;
             } else {
                 ++countChecked;
-                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                if (checkboxes[i].getAttribute("status") === "PLANNED" ||
+                    checkboxes[i].getAttribute("status") === "DEFERRED") {
                     countCheckedFinish++;
                 } else {
                     notPlannedIsChecked = true;
@@ -348,7 +350,8 @@
         let checkboxes = document.getElementsByClassName("checkbox");
         let checkedCheckboxes = [];
         for (let i = 0; i < checkboxes.length; ++i) {
-            if (checkboxes[i].checked && checkboxes[i].getAttribute("status") === "PLANNED") {
+            if (checkboxes[i].checked && (checkboxes[i].getAttribute("status") === "PLANNED"
+                || checkboxes[i].getAttribute("status") === "DEFERRED")) {
                 checkedCheckboxes.push(checkboxes[i]);
             }
         }

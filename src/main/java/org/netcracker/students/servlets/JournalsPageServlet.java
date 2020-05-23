@@ -25,6 +25,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Get journals from database, marshal to xml and set session attribute to show journals on jsp
+ */
 @WebServlet(MappingConstants.JOURNALS_PAGE_MAPPING)
 public class JournalsPageServlet extends HttpServlet {
     @Override

@@ -9,10 +9,20 @@ import org.netcracker.students.strategy.exporting.exceptions.PrintableExportExce
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Config class contains export strategies
+ */
 public class ExportConfig {
     private static ExportConfig instance;
+    /**
+     * Map contains strategies
+     */
     private final Map<String, ExportConfigItem> configItems;
 
+    /**
+     * Fill strategies map
+     * @throws PrintableExportException
+     */
     private ExportConfig() throws PrintableExportException {
         PropertyParser propertyParser;
         try {
@@ -49,6 +59,11 @@ public class ExportConfig {
         return instance;
     }
 
+    /**
+     * Getter method for config strategy by type
+     * @param type entity type
+     * @return strategy config
+     */
     public ExportConfigItem get(String type) {
         return this.configItems.get(type);
     }

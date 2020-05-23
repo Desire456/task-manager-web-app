@@ -1,5 +1,8 @@
 package org.netcracker.students.strategy;
 
+/**
+ * Indicates lack of strategy in properties file
+ */
 public class StrategyNotFoundException extends Exception {
     public StrategyNotFoundException() {
     }

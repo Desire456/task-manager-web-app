@@ -19,8 +19,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+/**
+ * Import journals from file to database
+ */
 @WebServlet(MappingConstants.IMPORT_JOURNAL_MAPPING)
 public class ImportJournalServlet extends HttpServlet {
+    /**
+     * Bean for import
+     */
     @EJB
     private IExportImport EIBean;
 
@@ -43,7 +49,7 @@ public class ImportJournalServlet extends HttpServlet {
         int userId = (int) req.getSession().getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         try {
             EIBean.importObjects(xml, userId);
-        } catch (PropertyFileException | ImportException e) {
+        } catch (ImportException e) {
             resp.setHeader(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
         } catch (PrintableImportException e) {
             resp.setHeader(ServletConstants.ATTRIBUTE_ERROR, e.getMessage());

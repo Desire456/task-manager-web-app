@@ -13,6 +13,9 @@ import org.netcracker.students.strategy.importing.task.TaskOverwriteImportStrate
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class helper contains strategies by type and id and can return needed strategy by strategy id
+ */
 public class ImportStrategyHelper {
     private static ImportStrategyHelper instance;
     private final Map<Integer, ImportStrategy<Journal>> journalsStrategies;
@@ -25,6 +28,9 @@ public class ImportStrategyHelper {
         return instance;
     }
 
+    /**
+     * Fill strategies map
+     */
     private ImportStrategyHelper() {
         this.taskStrategies = new HashMap<>();
         this.taskStrategies.put(StrategyConstants.TASK_OVERWRITE_IMPORT_ID, new TaskOverwriteImportStrategy());
@@ -39,10 +45,20 @@ public class ImportStrategyHelper {
                 new JournalConflictImportStrategy());
     }
 
+    /**
+     * Resolve journal strategy by id
+     * @param strategyID
+     * @return needed import strategy
+     */
     public ImportStrategy<Journal> resolveJournalStrategy(int strategyID) {
         return this.journalsStrategies.get(strategyID);
     }
 
+    /**
+     * Resolve task strategy by id
+     * @param strategyId
+     * @return needed import strategy
+     */
     public ImportStrategy<Task> resolveTaskStrategy(int strategyId) {
         return this.taskStrategies.get(strategyId);
     }

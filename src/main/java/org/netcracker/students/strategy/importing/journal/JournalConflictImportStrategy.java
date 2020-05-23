@@ -11,6 +11,9 @@ import org.netcracker.students.strategy.importing.ImportStrategy;
 import org.netcracker.students.strategy.importing.exceptions.ImportException;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
+/**
+ * Conflict strategy. If we have id matching or name matching inform the user about it and stop import
+ */
 public class JournalConflictImportStrategy implements ImportStrategy<Journal> {
     @Override
     public void store(Journal journal) throws ImportException, PrintableImportException {

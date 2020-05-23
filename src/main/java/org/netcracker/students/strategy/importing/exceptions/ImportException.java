@@ -1,5 +1,8 @@
 package org.netcracker.students.strategy.importing.exceptions;
 
+/**
+ * Indicates a common import error
+ */
 public class ImportException extends Exception {
     public ImportException() {
     }

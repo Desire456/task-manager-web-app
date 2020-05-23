@@ -21,6 +21,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Filter journals by column, like pattern or equal and criteria sort, show journals.jsp
+ */
 @WebServlet(MappingConstants.FILTER_JOURNAL_MAPPING)
 public class FilterJournalServlet extends HttpServlet {
     @Override

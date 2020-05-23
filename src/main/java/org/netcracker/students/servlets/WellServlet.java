@@ -18,6 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Add user to database and show well.jsp
+ */
 @WebServlet(MappingConstants.WELL_PAGE_MAPPING)
 public class WellServlet extends HttpServlet {
     @Override
