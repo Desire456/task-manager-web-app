@@ -19,7 +19,7 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 
 Non yet
 
-##Export and import strategies by type and id
+## Export and import strategies by type and id
                            Export strategies
               Journal                         Task
            1 - only journals               1 - only tasks
