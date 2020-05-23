@@ -32,11 +32,7 @@ public class XmlValidator {
                 throw new NotFoundXSDException(XmlValidatorConstants.XSD_NOT_FOUND_MESSAGE +
                         XmlValidatorConstants.PATH_TO_XSD);
             }
-
-            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(XmlValidatorConstants.PATH_TO_XSD));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new StringReader(xml)));
+            validateXml(xml);
             return true;
         } catch (NotFoundXSDException e) {
             throw new XmlValidatorException(e.getMessage());
@@ -46,16 +42,26 @@ public class XmlValidator {
 
     }
 
+    private void validateXml(String xml) throws SAXException, IOException {
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = factory.newSchema(new StreamSource(XmlValidatorConstants.PATH_TO_XSD));
+        Validator validator = schema.newValidator();
+        validator.validate(new StreamSource(new StringReader(xml)));
+    }
+
+    private void validateXml(String xml, String xsd) throws SAXException, IOException {
+        SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = factory.newSchema(new StreamSource(new StringReader(xsd)));
+        Validator validator = schema.newValidator();
+        validator.validate(new StreamSource(new StringReader(xml)));
+    }
+
     public boolean checkStringXMLforXSD(String xml, String xsd) throws XmlValidatorException {
         try {
-            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(new StringReader(xsd)));
-            Validator validator = schema.newValidator();
-            validator.validate(new StreamSource(new StringReader(xml)));
+            validateXml(xml, xsd);
             return true;
         } catch (SAXException | IOException e) {
             throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
         }
-
     }
 }

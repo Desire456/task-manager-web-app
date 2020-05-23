@@ -66,7 +66,7 @@ public class XMLMarshaller {
         try {
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_VALUE);
-            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, 
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC,
                     XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_DOCTYPE_PUBLIC_VALUE);
             transformer.setOutputProperty(XMLMarshallerConstants.XML_TRANSFORMER_OUTPUT_PROPERTY_INDENT_AMOUNT,
                     XMLMarshallerConstants.XML_TRANSFORMER_INDENT_AMOUNT_VALUE);
@@ -90,8 +90,6 @@ public class XMLMarshaller {
                     document, journalList.get(i).getDescription()));
             journal.appendChild(setTextContent(XMLMarshallerConstants.XML_CREATION_DATE_ELEMENT_TAG_NAME,
                     document, localDateTimeToString(journalList.get(i).getCreationDate())));
-            journal.appendChild(setTextContent(XMLMarshallerConstants.XML_IS_PRIVATE_ELEMENT_TAG_NAME,
-                    document, String.valueOf(journalList.get(i).getIsPrivate())));
             journals.appendChild(journal);
         }
     }
@@ -156,11 +154,12 @@ public class XMLMarshaller {
         Journal journal = null;
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
+            boolean JOURNAL_IS_PRIVATE_FLAG = true;
             journal = JournalFactory.createJournal(Integer.parseInt(getTagValue(XMLMarshallerConstants.XML_ID_ELEMENT_TAG_NAME,
                     element)), getTagValue(XMLMarshallerConstants.XML_NAME_ELEMENT_TAG_NAME, element),
                     getTagValue(XMLMarshallerConstants.XML_DESCRIPTION_ELEMENT_TAG_NAME, element), userID,
                     stringToLocalDateTime(getTagValue(XMLMarshallerConstants.XML_CREATION_DATE_ELEMENT_TAG_NAME, element)),
-                    true);
+                    JOURNAL_IS_PRIVATE_FLAG);
         }
         return journal;
     }

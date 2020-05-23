@@ -34,7 +34,7 @@
             <xs:element name="name" type="xs:string"/>
             <xs:element name="description" type="xs:string"/>
             <xs:element name="creationDate" type="xs:string"/>
-            <xs:element name="isPrivate" type="xs:boolean"/>
+            <xs:element name="isPrivate" type="xs:boolean" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TaskType">
@@ -44,7 +44,7 @@
             <xs:element name="description" type="xs:string"/>
             <xs:element name="status" type="xs:string"/>
             <xs:element name="plannedDate" type="xs:string"/>
-            <xs:element name="dateOfDone" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="dateOfDone" type="xs:string" minOccurs="0"/>
             <xs:element name="journalId" type="xs:nonNegativeInteger"/>
         </xs:sequence>
     </xs:complexType>

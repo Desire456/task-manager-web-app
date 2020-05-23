@@ -1,29 +1,45 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<importJournal>
-    <journal>
-        <name>Journal 0</name>
-        <description>Journal 0 description</description>
-        <creationDate>2020-05-01T00:15:17.142074580</creationDate>
-        <isPrivate>true</isPrivate>
-    </journal>
-<tasks>
-    <task>
-        <name>Task 0</name>
-        <description>Task 0 description</description>
-        <status>PLANNED</status>
-        <plannedDate>2020-05-01T00:16:17.142074580</plannedDate>
-    </task>
-    <task>
-        <name>Task 1</name>
-        <description>Task 1 description</description>
-        <status>PLANNED</status>
-        <plannedDate>2020-05-01T00:17:17.142074580</plannedDate>
-    </task>
-    <task>
-        <name>Task 3</name>
-        <description>Task 3 description</description>
-        <status>PLANNED</status>
-        <plannedDate>2020-05-01T00:18:17.142074580</plannedDate>
-    </task>
-</tasks>
-</importJournal>
+<importData>
+    <journals>
+        <journal>
+            <id>0</id>
+            <name>Journal 0</name>
+            <description>Journal 0 description</description>
+            <creationDate>2020-05-01T00:15:17.142074580</creationDate>
+            <isPrivate>true</isPrivate>
+        </journal>
+        <journal>
+            <id>0</id>
+            <name>Journal 0</name>
+            <description>Journal 0 description</description>
+            <creationDate>2020-05-01T00:15:17.142074580</creationDate>
+            <isPrivate>true</isPrivate>
+        </journal>
+    </journals>
+    <tasks>
+        <task>
+            <id>0</id>
+            <name>Task 0</name>
+            <description>Task 0 description</description>
+            <status>PLANNED</status>
+            <plannedDate>2020-05-01T00:16:17.142074580</plannedDate>
+            <journalId>0</journalId>
+        </task>
+        <task>
+            <id>1</id>
+            <name>Task 1</name>
+            <description>Task 1 description</description>
+            <status>PLANNED</status>
+            <plannedDate>2020-05-01T00:17:17.142074580</plannedDate>
+            <journalId>0</journalId>
+        </task>
+        <task>
+            <id>3</id>
+            <name>Task 3</name>
+            <description>Task 3 description</description>
+            <status>PLANNED</status>
+            <plannedDate>2020-05-01T00:18:17.142074580</plannedDate>
+            <journalId>0</journalId>
+        </task>
+    </tasks>
+</importData>
