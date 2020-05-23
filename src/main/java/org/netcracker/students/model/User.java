@@ -4,12 +4,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name ="users")
+@Table(name = "users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "login")
@@ -21,7 +21,8 @@ public class User {
     @Column(name = "date_of_registration", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateOfRegistration;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String login, String password, LocalDateTime dateOfRegistration) {
         this.login = login;

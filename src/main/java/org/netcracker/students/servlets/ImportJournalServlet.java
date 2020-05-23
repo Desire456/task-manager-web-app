@@ -13,12 +13,10 @@ import org.netcracker.students.strategy.importing.exceptions.ImportException;
 import org.netcracker.students.strategy.importing.exceptions.PrintableImportException;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 @WebServlet(MappingConstants.IMPORT_JOURNAL_MAPPING)
@@ -27,7 +25,7 @@ public class ImportJournalServlet extends HttpServlet {
     private IExportImport EIBean;
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
         FileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
         List<FileItem> files = null;

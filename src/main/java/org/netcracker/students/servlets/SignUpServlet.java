@@ -1,10 +1,8 @@
 package org.netcracker.students.servlets;
 
-import org.netcracker.students.ejb.interfaces.IExportImport;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
 
-import javax.ejb.EJB;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

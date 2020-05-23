@@ -21,7 +21,7 @@ public class PropertyParser {
     }
 
     public static PropertyParser getInstance() throws PropertyFileException {
-        if(instance == null) {
+        if (instance == null) {
             instance = new PropertyParser();
         }
         return instance;

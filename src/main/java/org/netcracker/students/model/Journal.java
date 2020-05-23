@@ -1,13 +1,6 @@
 package org.netcracker.students.model;
 
-
-import org.netcracker.students.controller.utils.LocalDateTimeAdapter;
-
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -17,15 +10,14 @@ import java.time.LocalDateTime;
  * @see Task
  */
 
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
+
 @Entity
 @Table(name = "journals")
 public class Journal implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "journal_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(name = "user_id")
@@ -38,7 +30,6 @@ public class Journal implements Serializable {
     private String name;
 
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
-    @XmlJavaTypeAdapter(LocalDateTimeAdapter.class)
     private LocalDateTime creationDate;
 
     @Column(name = "description")

@@ -34,7 +34,7 @@ public class AddJournalServlet extends HttpServlet {
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         try {
-           this.addJournal(name, description, userId, isPrivate);
+            this.addJournal(name, description, userId, isPrivate);
         } catch (GetConnectionException | CreateJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

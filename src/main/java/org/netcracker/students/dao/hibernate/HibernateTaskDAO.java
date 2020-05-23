@@ -4,26 +4,22 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
-import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.TasksDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
-import org.netcracker.students.factories.JournalDTOFactory;
 import org.netcracker.students.factories.TaskDTOFactory;
 import org.netcracker.students.factories.TaskFactory;
-import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
-import org.netcracker.students.model.dto.JournalDTO;
 import org.netcracker.students.model.dto.TaskDTO;
 
+import javax.persistence.TemporalType;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HibernateTaskDAO implements TasksDAO {
-    private Task getByName(String name, int journal_id) {
+    public Task getByName(String name, int journal_id) {
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         String hql = "From Task where name = :name AND journal_id = :journal_id";
         Task task = null;
@@ -42,17 +38,11 @@ public class HibernateTaskDAO implements TasksDAO {
     }
 
     @Override
-    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException {
+    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException {
         Task task;
+        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            task = getByName(name, journalId);
-            if(task != null) {
-                throw new CreateJournalException();
-            }
-            else {
-                task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
-            }
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
             Transaction tx1 = session.beginTransaction();
             session.save(task);
             tx1.commit();
@@ -61,43 +51,31 @@ public class HibernateTaskDAO implements TasksDAO {
         catch (HibernateException e){
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-        catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        }
         return task;
     }
 
     @Override
-    public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException {
-        Task task;
+    public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException{
+        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            task = getByName(name, journalId);
-            if(task != null) {
-                throw new CreateJournalException();
-            }
-            task = read(id);
-            if(task != null) {
-                throw new CreateTaskWithIdException();
-            }
-            task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
             Transaction tx1 = session.beginTransaction();
-            session.save(task);
+            Query query = session.createNativeQuery("INSERT INTO tasks VALUES (?, ?, ?, ?, ?, ?, ?)");
+            query.setParameter(1, id);
+            query.setParameter(2, journalId);
+            query.setParameter(3, name);
+            query.setParameter(4, description);
+            query.setParameter(5, status);
+            query.setParameter(6, plannedDate);
+            query.setParameter(7, dateOfDone, TemporalType.TIMESTAMP);
+            query.executeUpdate();
             tx1.commit();
             session.close();
         }
-        catch (HibernateException | ReadTaskException e){
+        catch (HibernateException e){
             throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
-        catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        }
-        catch (CreateTaskWithIdException e) {
-            throw new TaskIdAlreadyExistException(DAOErrorConstants.TASK_ID_ALREADY_EXIST_EXCEPTION_MESSAGE + id);
-        }
-        return task;
+        return TaskFactory.createTask(id, journalId, name, description, plannedDate.toLocalDateTime(),
+                dateOfDone == null ? null : dateOfDone.toLocalDateTime(), status);
     }
 
     @Override
@@ -215,28 +193,6 @@ public class HibernateTaskDAO implements TasksDAO {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
         return taskDTOS;
-    }
-
-    @Override
-    public List<Task> getAllByNameAndJournalId(String name, int journalId) throws GetAllTaskException {
-        List<Task> tasks = new ArrayList<>();
-        try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
-            String hql = "From Task where journal_id = :journal_id and name = :name";
-            Transaction tx1 = session.beginTransaction();
-            Query query = session.createQuery(hql);
-            query.setParameter(HibernateDAOConstants.JOURNAL_ID, journalId);
-            query.setParameter(HibernateDAOConstants.NAME, name);
-            for (Object o : query.list()) {
-                tasks.add((Task)o);
-            }
-            tx1.commit();
-            session.close();
-        }
-        catch (HibernateException e){
-            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
-        }
-        return tasks;
     }
 
     @Override

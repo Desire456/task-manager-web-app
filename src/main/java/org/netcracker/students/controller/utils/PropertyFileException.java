@@ -1,6 +1,6 @@
 package org.netcracker.students.controller.utils;
 
-public class PropertyFileException extends Exception{
+public class PropertyFileException extends Exception {
     public PropertyFileException() {
     }
 

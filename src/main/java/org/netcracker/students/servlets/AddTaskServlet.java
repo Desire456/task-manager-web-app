@@ -45,7 +45,7 @@ public class AddTaskServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
             return;
         }
-        String allTasksXml = null;
+        String allTasksXml;
         try {
             allTasksXml = this.parseTaskListToXml(journalId);
         } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {

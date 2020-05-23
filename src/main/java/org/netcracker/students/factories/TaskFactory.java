@@ -17,7 +17,7 @@ public class TaskFactory {
     }
 
     public static Task createTask(int id, int journalId, String name, String description, LocalDateTime plannedDate,
-                           LocalDateTime dateOfDone, String status) {
+                                  LocalDateTime dateOfDone, String status) {
         return new Task(id, journalId, name, description, plannedDate, dateOfDone, status);
     }
 

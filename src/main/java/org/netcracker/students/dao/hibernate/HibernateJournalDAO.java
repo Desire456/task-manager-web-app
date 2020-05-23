@@ -1,10 +1,6 @@
 package org.netcracker.students.dao.hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
+import org.hibernate.*;
 import org.netcracker.students.dao.exceptions.journalDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.JournalDAO;
@@ -19,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HibernateJournalDAO implements JournalDAO {
-    private Journal getByName(String name, int userId) {
+    public Journal getByName(String name, int userId) {
         Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         String hql = "From Journal Where name = :name And user_id = :user_id";
         Journal journal = null;
@@ -39,18 +35,12 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public Journal create(String name, String description, Integer userId, Timestamp creatingDate, boolean isPrivate)
-            throws CreateJournalException, NameAlreadyExistException {
+            throws CreateJournalException {
         Journal journal;
+        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            journal = getByName(name, userId);
-            if(journal != null) {
-                throw new CreateJournalException();
-            }
-            else {
-                journal = JournalFactory.createJournal(name, description, userId, creatingDate.toLocalDateTime(),
+            journal = JournalFactory.createJournal(name, description, userId, creatingDate.toLocalDateTime(),
                         isPrivate);
-            }
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
             Transaction tx1 = session.beginTransaction();
             session.save(journal);
             tx1.commit();
@@ -59,43 +49,30 @@ public class HibernateJournalDAO implements JournalDAO {
         catch (HibernateException e){
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-        catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        }
         return journal;
     }
 
     @Override
-    public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException, NameAlreadyExistException, JournalIdAlreadyExistException {
-        Journal journal;
+    public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException {
+        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
         try {
-            journal = getByName(name, userId);
-            if(journal != null) {
-                throw new CreateJournalException();
-            }
-            journal = read(id);
-            if(journal != null) {
-                throw new CreateJournalByIdException();
-            }
-            journal = JournalFactory.createJournal(name, description, userId, creationDate.toLocalDateTime(),
-                    isPrivate);
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
             Transaction tx1 = session.beginTransaction();
-            session.save(journal);
+            Query query = session.createNativeQuery("INSERT INTO journals VALUES (?, ?, ?, ?, ?, ?)");
+            query.setParameter(1, id);
+            query.setParameter(2, userId);
+            query.setParameter(3, name);
+            query.setParameter(4, description);
+            query.setParameter(5, creationDate);
+            query.setParameter(6, isPrivate);
+            query.executeUpdate();
             tx1.commit();
             session.close();
         }
-        catch (HibernateException | ReadJournalException e){
+        catch (HibernateException e){
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-        catch (CreateJournalException e) {
-            throw new NameAlreadyExistException(String.format(DAOErrorConstants.
-                    NAME_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE, name));
-        } catch (CreateJournalByIdException e) {
-            throw new JournalIdAlreadyExistException(DAOErrorConstants.JOURNAL_ID_ALREADY_EXIST_JOURNAL_EXCEPTION_MESSAGE + id);
-        }
-        return journal;
+        return JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(),
+                isPrivate);
     }
 
     @Override

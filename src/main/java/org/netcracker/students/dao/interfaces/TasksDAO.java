@@ -3,21 +3,22 @@ package org.netcracker.students.dao.interfaces;
 
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
-import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.model.Task;
+import org.netcracker.students.model.dto.TaskDTO;
 
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
 public interface TasksDAO {
     Task create(String name, String status, String description, Timestamp plannedDate,
-                Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException;
+                Timestamp dateOfDone, Integer journalId) throws CreateTaskException;
 
     Task create(int id, String name, String status, String description, Timestamp plannedDate,
-                Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException, TaskIdAlreadyExistException;
+                Timestamp dateOfDone, Integer journalId) throws CreateTaskException, NameAlreadyExistException;
 
     Task read(int id) throws ReadTaskException;
+
+    Task getByName(String name, int journalId) throws GetTaskByNameException;
 
     void update(Task task) throws UpdateTaskException;
 
@@ -28,8 +29,6 @@ public interface TasksDAO {
     List<TaskDTO> getAll() throws GetAllTaskException;
 
     List<TaskDTO> getAll(int journalId) throws GetAllTaskException;
-
-    List<Task> getAllByNameAndJournalId(String name, int journalId) throws GetAllTaskException;
 
     List<TaskDTO> getSortedByCriteria(int journalId, String column,
                                       String criteria) throws GetSortedByCriteriaTaskException;

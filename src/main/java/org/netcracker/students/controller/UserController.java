@@ -6,7 +6,6 @@ import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
 import org.netcracker.students.dao.interfaces.ManagerDAO;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
-import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 import org.netcracker.students.model.User;
 
 import java.sql.SQLException;

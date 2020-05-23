@@ -54,11 +54,11 @@ public class JournalsPageServlet extends HttpServlet {
             user = this.getUser(login, password);
         } catch (GetConnectionException | HashPasswordException | GetUserByLoginException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         if (user == null) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         int userId = user.getId();
         String allJournalsXml = null;
@@ -67,38 +67,11 @@ public class JournalsPageServlet extends HttpServlet {
             if (!journalList.isEmpty()) allJournalsXml = this.parseJournalListToXml(journalList);
         } catch (GetConnectionException | GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         HttpSession httpSession = req.getSession();
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_USER_ID, userId);
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, allJournalsXml);
-        /*JournalController journalController = null;
-        try {
-            journalController = JournalController.getInstance();
-        } catch (GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        List<JournalDTO> journalArrayList = null;
-        try {
-            if (journalController != null)
-                journalArrayList = journalController.getAll(userId);
-        } catch (GetAllJournalByUserIdException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-        }
-        if (journalArrayList != null && journalArrayList.isEmpty()) {
-            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, null);
-        } else {
-            String allJournals = null;
-            try {
-                allJournals = parseListToXml(journalArrayList);
-            } catch (ParseXMLException e) {
-                req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-                requestDispatcher.forward(req, resp);
-            }
-            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, allJournals);
-        }*/
         requestDispatcher.forward(req, resp);
     }
 

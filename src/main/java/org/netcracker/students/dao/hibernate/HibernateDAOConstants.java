@@ -10,4 +10,5 @@ public class HibernateDAOConstants {
     public static final String TASK_ID = "task_id";
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
+
 }

@@ -10,6 +10,7 @@ import org.netcracker.students.factories.ExportListFactory;
 import org.netcracker.students.model.Journal;
 import org.netcracker.students.model.Task;
 import org.netcracker.students.strategy.StrategyConstants;
+import org.netcracker.students.strategy.StrategyNotFoundException;
 import org.netcracker.students.strategy.exporting.ExportList;
 import org.netcracker.students.strategy.exporting.exceptions.ExportException;
 import org.netcracker.students.strategy.exporting.exceptions.PrintableExportException;
@@ -56,17 +57,31 @@ public class ExportImportBean implements IExportImport {
         try {
             propertyParser = PropertyParser.getInstance();
         } catch (PropertyFileException e) {
-            throw new PrintableImportException(StrategyConstants.EXPORT_EXCEPTION_MESSAGE + e.getMessage());
+            throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         }
+
+
 
         int strategyId = Integer.parseInt(propertyParser.getProperty(StrategyConstants.JOURNAL_IMPORT_STRATEGY));
         ImportStrategy<Journal> journalImportStrategy =
                 importStrategyHelper.resolveJournalStrategy(strategyId);
+        try {
+            if (journalImportStrategy == null) throw
+                    new StrategyNotFoundException(StrategyConstants.IMPORT_STRATEGY_NOT_FOUND_EXCEPTION_MESSAGE);
+        } catch (StrategyNotFoundException e) {
+            throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
+        }
         for (Journal journal : journals) journalImportStrategy.store(journal);
-
 
         strategyId = Integer.parseInt(propertyParser.getProperty(StrategyConstants.TASK_IMPORT_STRATEGY));
         ImportStrategy<Task> taskImportStrategy = importStrategyHelper.resolveTaskStrategy(strategyId);
+
+        try {
+            if (taskImportStrategy == null) throw
+            new StrategyNotFoundException(StrategyConstants.IMPORT_STRATEGY_NOT_FOUND_EXCEPTION_MESSAGE);
+        } catch (StrategyNotFoundException e) {
+            throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
+        }
         for (Task task : tasks) taskImportStrategy.store(task);
     }
 

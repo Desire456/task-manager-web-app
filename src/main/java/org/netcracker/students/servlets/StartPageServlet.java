@@ -2,7 +2,6 @@ package org.netcracker.students.servlets;
 
 import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
 import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
-import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
 
