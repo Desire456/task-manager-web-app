@@ -1,8 +1,6 @@
 package org.netcracker.students.controller;
 
 import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
-import org.netcracker.students.dao.exceptions.journalDAO.CreateJournalException;
-import org.netcracker.students.dao.exceptions.journalDAO.GetJournalByNameException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
