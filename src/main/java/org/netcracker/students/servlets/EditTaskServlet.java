@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Edit task and show tasks.jsp
+ */
 @WebServlet(MappingConstants.EDIT_TASK_MAPPING)
 public class EditTaskServlet extends HttpServlet {
     @Override

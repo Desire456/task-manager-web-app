@@ -33,9 +33,8 @@ Non yet
 ## How to run our application 
  - Download TomEE plus Apache Server version 8.0.1
  - Edit your Tomcat configuration (make start page url: "http://localhost:8081/start")
- - Move "script.sql" from resources package to Tomcat directory "bin/jdbc", "queryResult.xsd" to "bin/xml", 
+ - Move "script.sql" from resources package to Tomcat directory "bin/jdbc", "queryResult.xsd", "xmlExample.xsd" to "bin/xml", 
   "config.properties" to "bin/properties"
   - Add to {Tomcat directory}/lib this jars: hibernate-core-5.4.14.Final, hibernate-commons-annotations-5.1.0.Final, 
  jboss-logging-3.3.0.Final, antlr-2.7.7, byte-buddy-1.10.7, classmate-1.5.1, dom4j-1.6.1,
   hibernate-entitymanager-5.4.12.Final, xalan-2.7.2, serializer-2.7.2. To download jars you can use https://mvnrepository.com/
-   - Delete xalan-2.7.2.jar, serializer-2.7.2.jar from classpath

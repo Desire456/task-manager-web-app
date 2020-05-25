@@ -22,6 +22,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+/**
+ * Add new journal and show journals.jsp
+ */
 @WebServlet(MappingConstants.ADD_JOURNAL_MAPPING)
 public class AddJournalServlet extends HttpServlet {
 

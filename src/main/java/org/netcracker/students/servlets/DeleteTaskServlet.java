@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Delete tasks and show tasks.jsp
+ */
 @WebServlet(MappingConstants.DELETE_TASK_MAPPING)
 public class DeleteTaskServlet extends HttpServlet {
     @Override

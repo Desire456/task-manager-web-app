@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Export xml with tasks
+ */
 @WebServlet(MappingConstants.EXPORT_TASK_MAPPING)
 public class ExportTaskServlet extends HttpServlet {
     @EJB

@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Add new task and show tasks.jsp
+ */
 @WebServlet(MappingConstants.ADD_TASK_MAPPING)
 public class AddTaskServlet extends HttpServlet {
 

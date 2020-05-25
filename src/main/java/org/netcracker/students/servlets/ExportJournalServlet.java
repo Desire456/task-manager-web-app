@@ -18,6 +18,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Export xml with journals
+ */
 @WebServlet(MappingConstants.EXPORT_JOURNAL_MAPPING)
 public class ExportJournalServlet extends HttpServlet {
     @EJB

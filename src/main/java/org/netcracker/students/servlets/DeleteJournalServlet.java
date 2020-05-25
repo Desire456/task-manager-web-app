@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Delete journals and show journals.jsp
+ */
 @WebServlet(MappingConstants.DELETE_JOURNAL_MAPPING)
 public class DeleteJournalServlet extends HttpServlet {
     @Override

@@ -23,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Edit journal and show journals.jsp
+ */
 @WebServlet(MappingConstants.EDIT_JOURNAL_MAPPING)
 public class EditJournalServlet extends HttpServlet {
     @Override
