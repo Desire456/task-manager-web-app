@@ -15,8 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HibernateJournalDAO implements JournalDAO {
+    private final SessionFactory sessionFactory;
+
+    public HibernateJournalDAO(SessionFactory sessionFactory){ this.sessionFactory = sessionFactory; }
+
     public Journal getByName(String name, int userId) {
-        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         String hql = "From Journal Where name = :name And user_id = :user_id";
         Journal journal = null;
         Transaction tx1 = session.beginTransaction();
@@ -37,7 +41,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public Journal create(String name, String description, Integer userId, Timestamp creatingDate, boolean isPrivate)
             throws CreateJournalException {
         Journal journal;
-        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         try {
             journal = JournalFactory.createJournal(name, description, userId, creatingDate.toLocalDateTime(),
                         isPrivate);
@@ -54,7 +58,7 @@ public class HibernateJournalDAO implements JournalDAO {
 
     @Override
     public Journal create(int id, String name, String description, Integer userId, Timestamp creationDate, boolean isPrivate) throws CreateJournalException {
-        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         try {
             Transaction tx1 = session.beginTransaction();
             Query query = session.createNativeQuery("INSERT INTO journals VALUES (?, ?, ?, ?, ?, ?)");
@@ -71,15 +75,14 @@ public class HibernateJournalDAO implements JournalDAO {
         catch (HibernateException e){
             throw new CreateJournalException(DAOErrorConstants.CREATE_JOURNAL_EXCEPTION_MESSAGE + e.getMessage());
         }
-        return JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(),
-                isPrivate);
+        return JournalFactory.createJournal(id, name, description, userId, creationDate.toLocalDateTime(), isPrivate);
     }
 
     @Override
     public Journal read(int id) throws ReadJournalException {
         Journal journal;
         try {
-            journal = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession().
+            journal = sessionFactory.openSession().
                     get(Journal.class, id);
         } catch (HibernateException e) {
             throw new ReadJournalException(DAOErrorConstants.READ_JOURNAL_EXCEPTION + e.getMessage());
@@ -90,7 +93,7 @@ public class HibernateJournalDAO implements JournalDAO {
     @Override
     public void update(Journal journal) throws UpdateJournalException {
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             Transaction tx1 = session.beginTransaction();
             session.update(journal);
             tx1.commit();
@@ -104,7 +107,7 @@ public class HibernateJournalDAO implements JournalDAO {
     @Override
     public void delete(int id) throws DeleteJournalException {
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "Delete From Journal where journal_id = :journal_id";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
@@ -122,7 +125,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public List<JournalDTO> getAll() throws GetAllJournalException {
         List<JournalDTO> journalDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Journal";
             Transaction tx1 = session.beginTransaction();
             List<Journal> journals = new ArrayList<>();
@@ -148,7 +151,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public List<JournalDTO> getAll(int userId) throws GetAllJournalByUserIdException {
         List<JournalDTO> journalDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Journal where user_id = :user_id or is_private = :value";
             Transaction tx1 = session.beginTransaction();
             List<Journal> journals = new ArrayList<>();
@@ -176,7 +179,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public List<JournalDTO> getSortedByCriteria(int userId, String column, String criteria) throws GetSortedByCriteriaJournalException {
         List<JournalDTO> journalDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Journal where user_id = :user_id " +
                     "or is_private = :value order by %s %s";
             hql = String.format(hql, column, criteria);
@@ -206,7 +209,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public List<JournalDTO> getFilteredByPattern(int userId, String column, String pattern, String criteria) throws GetFilteredByPatternJournalException {
         List<JournalDTO> journalDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "FROM Journal WHERE (user_id = :user_id OR is_private = :value) AND (%s LIKE :pattern) " +
                     "ORDER BY %s %s";
             hql = String.format(hql, column, column, criteria);
@@ -237,7 +240,7 @@ public class HibernateJournalDAO implements JournalDAO {
     public List<JournalDTO> getFilteredByEquals(int userId, String column, String equal, String criteria) throws GetFilteredByEqualsJournalException {
         List<JournalDTO> journalDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "FROM Journal WHERE (user_id = :user_id " +
                     "OR is_private = :value) AND (%s = :equal) ORDER BY %s %s";
             hql = String.format(hql, column, column, criteria);

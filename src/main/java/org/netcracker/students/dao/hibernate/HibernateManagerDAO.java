@@ -1,9 +1,6 @@
 package org.netcracker.students.dao.hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.JournalDAO;
@@ -19,13 +16,15 @@ import java.sql.SQLException;
 
 public class HibernateManagerDAO implements ManagerDAO {
     private static HibernateManagerDAO instance;
+    private SessionFactory sessionFactory;
 
     private HibernateManagerDAO(String path) throws ExecuteSqlScriptException {
         executeSqlStartScript(path);
+        sessionFactory = HibernateSessionFactoryUtil.getInstance().getSessionFactory();
     }
 
     private HibernateManagerDAO() {
-
+        sessionFactory = HibernateSessionFactoryUtil.getInstance().getSessionFactory();
     }
 
     public static HibernateManagerDAO getInstance() {
@@ -40,19 +39,23 @@ public class HibernateManagerDAO implements ManagerDAO {
         return instance;
     }
 
+    public SessionFactory getSessionFactory(){
+        return sessionFactory;
+    }
+
     @Override
-    public TasksDAO getTasksDao() throws SQLException {
-        return new HibernateTaskDAO();
+    public TasksDAO getTasksDao() {
+        return new HibernateTaskDAO(getSessionFactory());
     }
 
     @Override
     public JournalDAO getJournalDao() {
-        return new HibernateJournalDAO();
+        return new HibernateJournalDAO(getSessionFactory());
     }
 
     @Override
-    public UsersDAO getUsersDao() throws SQLException {
-        return new HibernateUserDAO();
+    public UsersDAO getUsersDao() {
+        return new HibernateUserDAO(getSessionFactory());
     }
 
     private void executeSqlStartScript(String path) throws ExecuteSqlScriptException {

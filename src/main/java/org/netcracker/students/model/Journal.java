@@ -17,7 +17,8 @@ public class Journal implements Serializable {
 
     @Id
     @Column(name = "journal_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="journals_seq")
+    @SequenceGenerator(name="journals_seq", sequenceName="journals_journal_id_seq")
     private int id;
 
     @Column(name = "user_id")

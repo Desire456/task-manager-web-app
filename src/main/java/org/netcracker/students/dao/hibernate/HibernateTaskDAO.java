@@ -1,9 +1,6 @@
 package org.netcracker.students.dao.hibernate;
 
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.TasksDAO;
@@ -19,8 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HibernateTaskDAO implements TasksDAO {
+    private final SessionFactory sessionFactory;
+
+    public HibernateTaskDAO(SessionFactory sessionFactory){ this.sessionFactory = sessionFactory; }
+
     public Task getByName(String name, int journal_id) {
-        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         String hql = "From Task where name = :name AND journal_id = :journal_id";
         Task task = null;
         Transaction tx1 = session.beginTransaction();
@@ -40,7 +41,7 @@ public class HibernateTaskDAO implements TasksDAO {
     @Override
     public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException {
         Task task;
-        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         try {
             task = TaskFactory.createTask(name, description, plannedDate.toLocalDateTime(), status, journalId);
             Transaction tx1 = session.beginTransaction();
@@ -56,7 +57,7 @@ public class HibernateTaskDAO implements TasksDAO {
 
     @Override
     public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException{
-        Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+        Session session = sessionFactory.openSession();
         try {
             Transaction tx1 = session.beginTransaction();
             Query query = session.createNativeQuery("INSERT INTO tasks VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -82,7 +83,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public Task read(int id) throws ReadTaskException {
         Task task;
         try {
-            task = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession().
+            task = sessionFactory.openSession().
                     get(Task.class, id);
         } catch (HibernateException e) {
             throw new ReadTaskException(DAOErrorConstants.READ_TASK_EXCEPTION_MESSAGE + e.getMessage());
@@ -93,7 +94,7 @@ public class HibernateTaskDAO implements TasksDAO {
     @Override
     public void update(Task task) throws UpdateTaskException {
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             Transaction tx1 = session.beginTransaction();
             session.update(task);
             tx1.commit();
@@ -107,7 +108,7 @@ public class HibernateTaskDAO implements TasksDAO {
     @Override
     public void deleteByTaskId(int id) throws DeleteTaskException {
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "Delete From Task where task_id = :task_id";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
@@ -125,7 +126,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public List<Task> getAllByJournalId(int journalId) throws GetAllTaskException {
         List<Task> tasks = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Task where journal_id = :journal_id";
             Transaction tx1 = session.beginTransaction();
             Query query = session.createQuery(hql);
@@ -146,7 +147,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public List<TaskDTO> getAll() throws GetAllTaskException {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Task";
             Transaction tx1 = session.beginTransaction();
             List<Task> tasks = new ArrayList<>();
@@ -172,7 +173,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public List<TaskDTO> getAll(int journalId) throws GetAllTaskException {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Task where journal_id = :journal_id";
             Transaction tx1 = session.beginTransaction();
             List<Task> tasks = new ArrayList<>();
@@ -199,7 +200,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public List<TaskDTO> getSortedByCriteria(int journalId, String column, String criteria) throws GetSortedByCriteriaTaskException {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Task where journal_id = :journal_id " +
                     "ORDER BY %s %s";
             hql = String.format(hql, column, criteria);
@@ -229,7 +230,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public List<TaskDTO> getFilteredByPattern(int journalId, String column, String pattern, String criteria) throws GetFilteredByPatternTaskException {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Task where journal_id = :journal_id and (%s LIKE :pattern) " +
                     "ORDER BY %s %s";
             hql = String.format(hql, column, column, criteria);
@@ -260,7 +261,7 @@ public class HibernateTaskDAO implements TasksDAO {
     public List<TaskDTO> getFilteredByEquals(int journalId, String column, String equal, String criteria) throws GetFilteredByEqualsTaskException {
         List<TaskDTO> taskDTOS = new ArrayList<>();
         try {
-            Session session = HibernateSessionFactoryUtil.getInstance().getSessionFactory().openSession();
+            Session session = sessionFactory.openSession();
             String hql = "From Task where journal_id = :journal_id and (%s = :equal) " +
                     "ORDER BY %s %s";
             hql = String.format(hql, column, column, criteria);
