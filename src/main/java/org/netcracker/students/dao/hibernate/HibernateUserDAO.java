@@ -2,7 +2,6 @@ package org.netcracker.students.dao.hibernate;
 
 import org.hibernate.*;
 import org.netcracker.students.dao.exceptions.userDAO.*;
-import org.netcracker.students.dao.hibernate.utils.HibernateSessionFactoryUtil;
 import org.netcracker.students.dao.interfaces.UsersDAO;
 import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
 import org.netcracker.students.factories.UserFactory;

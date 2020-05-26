@@ -12,7 +12,6 @@ import org.netcracker.students.dao.postrgresql.DAOErrorConstants;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.SQLException;
 
 public class HibernateManagerDAO implements ManagerDAO {
     private static HibernateManagerDAO instance;
