@@ -16,8 +16,8 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 ![alt text](https://user-images.githubusercontent.com/33430830/73350679-ef98e300-42a6-11ea-8093-a34c6d227afc.png "Issue priority")
 
 ## Releases
-- [v2.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v2.0)
 - [v1.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v1.0)
+- [v2.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v2.0)
 
 ## Export and import strategies by type and id
                            Export strategies
