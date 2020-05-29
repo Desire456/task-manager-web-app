@@ -7,10 +7,9 @@ import java.time.LocalDateTime;
 
 
 /**
- * Task class, which have a name, description, date of complete, planned date and status
+ * Task entity stores in journal
+ * @see Journal
  */
-
-
 @Entity
 @Table(name = "tasks")
 public class Task implements Serializable {
@@ -20,21 +19,39 @@ public class Task implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
+    /**
+     * Name of task
+     */
     @Column(name = "name")
     private String name;
 
+    /**
+     * Description of task
+     */
     @Column(name = "description")
     private String description;
 
+    /**
+     * The date on which this task is scheduled to be completed
+     */
     @Column(name = "planned_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime plannedDate;
 
+    /**
+     * The date when the task was completed
+     */
     @Column(name = "date_of_done", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateOfDone;
 
+    /**
+     *  Task status to monitor productivity
+     */
     @Column(name = "status")
     private String status;
 
+    /**
+     * Id of journal which store this task
+     */
     @Column(name = "journal_id")
     private int journalId;
 

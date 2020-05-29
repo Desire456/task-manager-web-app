@@ -5,12 +5,9 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * Main shared.model class, which stores tasks
- *
+ * Journal is main entity we'll be using to store tasks
  * @see Task
  */
-
-
 @Entity
 @Table(name = "journals")
 public class Journal implements Serializable {
@@ -20,18 +17,33 @@ public class Journal implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
 
+    /**
+     * Id of user, which store this journal
+     */
     @Column(name = "user_id")
     private int userId;
 
+    /**
+     * Private flag. Journals can be private and public
+     */
     @Column(name = "is_private")
     private boolean isPrivate;
 
+    /**
+     * Name of journal
+     */
     @Column(name = "name")
     private String name;
 
+    /**
+     * Date when this journal was created
+     */
     @Column(name = "creation_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime creationDate;
 
+    /**
+     * Description of journal
+     */
     @Column(name = "description")
     private String description;
 
