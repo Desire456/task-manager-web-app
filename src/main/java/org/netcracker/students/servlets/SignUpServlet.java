@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Show sign_up.jsp page
+ */
 @WebServlet(MappingConstants.SIGN_UP_PAGE_MAPPING)
 public class SignUpServlet extends HttpServlet {
 

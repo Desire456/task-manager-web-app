@@ -4,11 +4,11 @@ import org.netcracker.students.controller.TaskController;
 import org.netcracker.students.controller.utils.ParseXMLException;
 import org.netcracker.students.controller.utils.TaskXMLContainer;
 import org.netcracker.students.controller.utils.XMLParser;
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.managerDAO.GetConnectionException;
 import org.netcracker.students.dao.exceptions.taskDAO.CreateTaskException;
 import org.netcracker.students.dao.exceptions.taskDAO.GetAllTaskException;
 import org.netcracker.students.factories.TaskFactory;
-import org.netcracker.students.model.Task;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
 
@@ -23,6 +23,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Add new task and show tasks.jsp
+ */
 @WebServlet(MappingConstants.ADD_TASK_MAPPING)
 public class AddTaskServlet extends HttpServlet {
 
@@ -36,27 +39,32 @@ public class AddTaskServlet extends HttpServlet {
         int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         try {
             this.addTask(name, description, plannedDate, journalId);
-        } catch (GetConnectionException e) {
+        } catch (GetConnectionException | CreateTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
-        } catch (CreateTaskException e) {
+            return;
+        } catch (NameAlreadyExistException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        String allTasksXml = null;
+        String allTasksXml;
         try {
             allTasksXml = this.parseTaskListToXml(journalId);
         } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_TASK);
+            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
-                allTasksXml);
-        resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);
+        if (allTasksXml != null) {
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS,
+                    allTasksXml);
+            resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);
+        }
     }
 
     private void addTask(String name, String description, String plannedDate, int journalId)
-            throws GetConnectionException, CreateTaskException {
+            throws GetConnectionException, CreateTaskException, NameAlreadyExistException {
         TaskController taskController = TaskController.getInstance();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
         LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);

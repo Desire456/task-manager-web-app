@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Delete tasks and show tasks.jsp
+ */
 @WebServlet(MappingConstants.DELETE_TASK_MAPPING)
 public class DeleteTaskServlet extends HttpServlet {
     @Override
@@ -32,13 +35,15 @@ public class DeleteTaskServlet extends HttpServlet {
         } catch (GetConnectionException | DeleteTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        String allTasks = null;
+        String allTasks;
         try {
             allTasks = parseTaskListToXml(journalId);
         } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);

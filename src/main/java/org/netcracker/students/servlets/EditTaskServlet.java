@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Edit task and show tasks.jsp
+ */
 @WebServlet(MappingConstants.EDIT_TASK_MAPPING)
 public class EditTaskServlet extends HttpServlet {
     @Override
@@ -38,13 +41,15 @@ public class EditTaskServlet extends HttpServlet {
         } catch (GetConnectionException | UpdateTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        String allTasks = null;
+        String allTasks;
         try {
             allTasks = this.parseTaskListToXml(journalId);
         } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);

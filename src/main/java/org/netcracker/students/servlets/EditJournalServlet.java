@@ -23,6 +23,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Edit journal and show journals.jsp
+ */
 @WebServlet(MappingConstants.EDIT_JOURNAL_MAPPING)
 public class EditJournalServlet extends HttpServlet {
     @Override
@@ -38,13 +41,15 @@ public class EditJournalServlet extends HttpServlet {
         } catch (GetConnectionException | ReadJournalException | UpdateJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        String allJournalsXml = null;
+        String allJournalsXml;
         try {
             allJournalsXml = this.parseJournalListToXml(userId);
         } catch (GetConnectionException | ParseXMLException | GetAllJournalByUserIdException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
                 allJournalsXml);

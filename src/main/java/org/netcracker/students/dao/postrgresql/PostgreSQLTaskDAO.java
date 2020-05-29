@@ -1,11 +1,12 @@
 package org.netcracker.students.dao.postrgresql;
 
+import org.netcracker.students.dao.exceptions.NameAlreadyExistException;
 import org.netcracker.students.dao.exceptions.taskDAO.*;
 import org.netcracker.students.dao.interfaces.TasksDAO;
-import org.netcracker.students.model.dto.TaskDTO;
 import org.netcracker.students.factories.TaskDTOFactory;
 import org.netcracker.students.factories.TaskFactory;
 import org.netcracker.students.model.Task;
+import org.netcracker.students.model.dto.TaskDTO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ public class PostgreSQLTaskDAO implements TasksDAO {
     }
 
     @Override
-    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId) throws CreateTaskException {
+    public Task create(String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId)
+            throws CreateTaskException {
         String sql = "INSERT INTO tasks VALUES (default, ?, ?, ?, ?, ?, ?)";
-        String RETURN_CREATED_TASK_SQL = "SELECT * FROM tasks WHERE (name = ?) AND (journal_id = ?)";
-        Task task = null;
+        Task task;
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, journalId);
             preparedStatement.setString(2, name);
@@ -31,20 +32,53 @@ public class PostgreSQLTaskDAO implements TasksDAO {
             preparedStatement.setTimestamp(5, plannedDate);
             preparedStatement.setTimestamp(6, dateOfDone);
             preparedStatement.execute();
-            try (PreparedStatement preparedStatement1 = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
-                preparedStatement1.setString(1, name);
-                preparedStatement1.setInt(2, journalId);
-                ResultSet resultSet = preparedStatement1.executeQuery();
-                if (resultSet.next()) {
-                    task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
-                            resultSet.getString(3), resultSet.getString(4),
-                            resultSet.getTimestamp(6).toLocalDateTime(),
-                            resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
-                            resultSet.getString(5));
-                }
+            task = getByName(name, journalId);
+        } catch (SQLException | GetTaskByNameException e) {
+            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return task;
+    }
+
+    @Override
+    public Task create(int id, String name, String status, String description, Timestamp plannedDate, Timestamp dateOfDone, Integer journalId)
+            throws CreateTaskException {
+        String sql = "INSERT INTO tasks VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Task task;
+        try {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setInt(1, id);
+                preparedStatement.setInt(2, journalId);
+                preparedStatement.setString(3, name);
+                preparedStatement.setString(4, description);
+                preparedStatement.setString(5, status);
+                preparedStatement.setTimestamp(6, plannedDate);
+                preparedStatement.setTimestamp(7, dateOfDone);
+                preparedStatement.execute();
+                task = getByName(name, journalId);
+            }
+        } catch (SQLException | GetTaskByNameException e) {
+            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
+        return task;
+    }
+
+    @Override
+    public Task getByName(String name, int journalId) throws GetTaskByNameException {
+        String RETURN_CREATED_TASK_SQL = "SELECT * FROM tasks WHERE (name = ?) AND (journal_id = ?)";
+        Task task = null;
+        try (PreparedStatement preparedStatement = connection.prepareStatement(RETURN_CREATED_TASK_SQL)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.setInt(2, journalId);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                task = TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                        resultSet.getString(3), resultSet.getString(4),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
+                        resultSet.getTimestamp(7) == null ? null : resultSet.getTimestamp(7).toLocalDateTime(),
+                        resultSet.getString(5));
             }
         } catch (SQLException e) {
-            throw new CreateTaskException(DAOErrorConstants.CREATE_TASK_EXCEPTION_MESSAGE + e.getMessage());
+            throw new GetTaskByNameException();
         }
         return task;
     }
@@ -133,6 +167,28 @@ public class PostgreSQLTaskDAO implements TasksDAO {
             throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
         }
     }
+
+    @Override
+    public List<Task> getAllByJournalId(int journalId) throws GetAllTaskException {
+        String sql = "SELECT * FROM tasks WHERE journal_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            preparedStatement.setInt(1, journalId);
+            List<Task> tasks = new ArrayList<>();
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                tasks.add(TaskFactory.createTask(resultSet.getInt(1), resultSet.getInt(2),
+                        resultSet.getString(3), resultSet.getString(4),
+                        resultSet.getTimestamp(6).toLocalDateTime(),
+                        resultSet.getTimestamp(7) == null ?
+                                null : resultSet.getTimestamp(7).toLocalDateTime(),
+                        resultSet.getString(5)));
+            }
+            return tasks;
+        } catch (SQLException e) {
+            throw new GetAllTaskException(DAOErrorConstants.GET_ALL_TASK_EXCEPTION_MESSAGE + e.getMessage());
+        }
+    }
+
 
     @Override
     public List<TaskDTO> getSortedByCriteria(int journalId, String column, String criteria) throws GetSortedByCriteriaTaskException {

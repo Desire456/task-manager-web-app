@@ -19,7 +19,22 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 
 - [v1.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v1.0)
 
+## Export and import strategies by type and id
+                           Export strategies
+              Journal                         Task
+           1 - only journals               1 - only tasks
+           2 - journals with tasks
+
+                           Import strategies
+               Journal                         Task
+           1 - overwrite                   1 - overwrite
+           2 - ignore                      2 - ignore
+           3 - conflict                    3 - conflict
 ## How to run our application 
- - Download Tomcat Apache Server version 8.5.51
-  - Edit your Tomcat configuration
-  - Move "script.sql" from resources package to Tomcat directory "bin/jdbc" and "queryResult.xsd" from to "bin/xml"
+ - Download TomEE plus Apache Server version 8.0.1
+ - Edit your Tomcat configuration (make start page url: "http://localhost:8081/start")
+ - Move "script.sql" from resources package to Tomcat directory "bin/jdbc", "queryResult.xsd", "xmlExample.xsd" to "bin/xml", 
+  "config.properties" to "bin/properties"
+  - Add to {Tomcat directory}/lib this jars: hibernate-core-5.4.14.Final, hibernate-commons-annotations-5.1.0.Final, 
+ jboss-logging-3.3.0.Final, antlr-2.7.7, byte-buddy-1.10.7, classmate-1.5.1, dom4j-1.6.1,
+  hibernate-entitymanager-5.4.12.Final, xalan-2.7.2, serializer-2.7.2. To download jars you can use https://mvnrepository.com/

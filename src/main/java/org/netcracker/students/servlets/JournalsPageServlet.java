@@ -25,6 +25,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Get journals from database, marshal to xml and set session attribute to show journals on jsp
+ */
 @WebServlet(MappingConstants.JOURNALS_PAGE_MAPPING)
 public class JournalsPageServlet extends HttpServlet {
     @Override
@@ -54,11 +57,11 @@ public class JournalsPageServlet extends HttpServlet {
             user = this.getUser(login, password);
         } catch (GetConnectionException | HashPasswordException | GetUserByLoginException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         if (user == null) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         int userId = user.getId();
         String allJournalsXml = null;
@@ -67,7 +70,7 @@ public class JournalsPageServlet extends HttpServlet {
             if (!journalList.isEmpty()) allJournalsXml = this.parseJournalListToXml(journalList);
         } catch (GetConnectionException | GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
+            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
         }
         HttpSession httpSession = req.getSession();
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_USER_ID, userId);

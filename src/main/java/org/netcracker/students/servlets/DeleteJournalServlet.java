@@ -19,6 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Delete journals and show journals.jsp
+ */
 @WebServlet(MappingConstants.DELETE_JOURNAL_MAPPING)
 public class DeleteJournalServlet extends HttpServlet {
     @Override
@@ -30,19 +33,23 @@ public class DeleteJournalServlet extends HttpServlet {
         } catch (DeleteJournalException | GetConnectionException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         HttpSession httpSession = req.getSession();
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
-        String allJournals = null;
+        String allJournals;
         try {
             allJournals = this.parseJournalListToXml(userId);
         } catch (GetConnectionException | GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
-        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
-                allJournals);
-        resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
+        if (allJournals != null) {
+            httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS,
+                    allJournals);
+            resp.sendRedirect(MappingConstants.JOURNALS_PAGE_MAPPING);
+        }
     }
 
     private void deleteJournal(String ids) throws DeleteJournalException, GetConnectionException {

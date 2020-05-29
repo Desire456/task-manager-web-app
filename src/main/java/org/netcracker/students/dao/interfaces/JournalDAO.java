@@ -11,7 +11,12 @@ public interface JournalDAO {
     Journal create(String name, String description, Integer userId,
                    Timestamp creatingDate, boolean isPrivate) throws CreateJournalException;
 
+    Journal create(int id, String name, String description, Integer userId, Timestamp creationDate,
+                          boolean isPrivate) throws CreateJournalException;
+
     Journal read(int id) throws ReadJournalException;
+
+    Journal getByName(String name, int userId) throws GetJournalByNameException;
 
     void update(Journal journal) throws UpdateJournalException;
 

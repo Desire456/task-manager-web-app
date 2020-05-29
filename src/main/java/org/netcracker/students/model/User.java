@@ -1,12 +1,40 @@
 package org.netcracker.students.model;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * User entity
+ */
+@Entity
+@Table(name = "users")
 public class User {
+
+    @Id
+    @Column(name = "user_id")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private int id;
+
+    /**
+     * Login of user
+     */
+    @Column(name = "login")
     private String login;
+
+    /**
+     * Password of user
+     */
+    @Column(name = "password")
     private String password;
+
+    /**
+     * Date when user was registered
+     */
+    @Column(name = "date_of_registration", columnDefinition = "TIMESTAMP")
     private LocalDateTime dateOfRegistration;
+
+    public User() {
+    }
 
     public User(String login, String password, LocalDateTime dateOfRegistration) {
         this.login = login;

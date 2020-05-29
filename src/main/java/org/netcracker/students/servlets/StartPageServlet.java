@@ -1,6 +1,7 @@
 package org.netcracker.students.servlets;
 
 import org.netcracker.students.dao.exceptions.managerDAO.ExecuteSqlScriptException;
+import org.netcracker.students.dao.hibernate.HibernateManagerDAO;
 import org.netcracker.students.dao.postrgresql.PostgreSQLManagerDAO;
 import org.netcracker.students.servlets.constants.MappingConstants;
 import org.netcracker.students.servlets.constants.ServletConstants;
@@ -14,6 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Execute start script sql and connect to database and show index.jsp
+ */
 @WebServlet(MappingConstants.START_PAGE_MAPPING)
 public class StartPageServlet extends HttpServlet {
     @Override

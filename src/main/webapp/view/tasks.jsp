@@ -1,11 +1,5 @@
 <%@ page import="java.time.LocalDateTime" %>
-<%@ page import="java.time.format.DateTimeFormatter" %><%--
-Created by IntelliJ IDEA.
-User: user
-Date: 28.02.2020
-Time: 9:16
-To change this template use File | Settings | File Templates.
---%>
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 
@@ -112,6 +106,7 @@ To change this template use File | Settings | File Templates.
         <input type="button" id="addButt" class="button" value="Add">
         <input type="button" id="editButt" class="button" value="Edit" title="You can edit only one task" disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type="button" id="exportButt" class="button" value="Export" disabled>
         <input type="button" id="finishButt" class="button" value="Finish"
                title="You can finish tasks only with status PLANNED" disabled>
         <input type="button" id="showButt" class="button" value="Show all tasks">
@@ -129,6 +124,18 @@ To change this template use File | Settings | File Templates.
             <br><br><br><br>
             Planned date: <input type="datetime-local" name="plannedDate" min=<%=formatDateTimeNow%> required>
             <button type="submit">Add</button>
+        </form>
+    </div>
+
+
+    <div class="window" id="exportWindow">
+        <form action="${pageContext.request.contextPath}/exportTask" method="POST" id="exportForm">
+            <span class="close">X</span>
+            Save as: <input name="fileName" id="fileName" required>
+            <input type="hidden" name="ids" id="exportIds" value="">
+            <br>
+            <br>
+            <input type="submit" class="button" id="submitExportButt" value="Download" disabled/>
         </form>
     </div>
 </div>
@@ -183,6 +190,8 @@ To change this template use File | Settings | File Templates.
     let editButton = document.getElementById("editButt");
     let deleteButton = document.getElementById("deleteButt");
     let finishButton = document.getElementById("finishButt");
+    let exportButton = document.getElementById("exportButt");
+    let submitExportButt = document.getElementById("submitExportButt");
 
     editButton.onclick = function () {
         let id = getCheckTask()[0].value;
@@ -239,6 +248,24 @@ To change this template use File | Settings | File Templates.
         }
     };
 
+    exportButton.onclick = function () {
+        document.getElementById('exportWindow').style.display = 'block';
+    }
+    submitExportButt.onclick = function () {
+        let strIds = "";
+        let ids = getCheckTask();
+        for (let i = 0; i < ids.length; ++i) {
+            strIds += ids[i].value + " ";
+        }
+        document.getElementById('exportIds').value = strIds;
+
+        document.getElementById('exportForm').submit();
+        document.getElementById('exportWindow').style.display = 'none';
+    }
+
+    let fileName = document.getElementById('fileName');
+
+    fileName.addEventListener('input', () => submitExportButt.disabled = fileName.value === "");
 
     function setCheck() {
         let generalCheckbox = document.getElementById("generalCheckbox");
@@ -248,7 +275,8 @@ To change this template use File | Settings | File Templates.
         if (generalCheckbox.checked) {
             for (let i = 0; i < checkboxes.length; ++i) {
                 checkboxes[i].checked = true;
-                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                if (checkboxes[i].getAttribute("status") === "PLANNED" ||
+                    [i].getAttribute("status") === "DEFERRED") {
                     countCheckedFinish++;
                 } else {
                     notPlannedIsChecked = true;
@@ -269,12 +297,15 @@ To change this template use File | Settings | File Templates.
             editButton.disabled = true;
             deleteButton.disabled = true;
             finishButton.disabled = true;
+            exportButton.disabled = true;
         } else if (countChecked === 1) {
             editButton.disabled = false;
             deleteButton.disabled = false;
+            exportButton.disabled = false;
         } else if (countChecked > 1) {
             editButton.disabled = true;
             deleteButton.disabled = false;
+            exportButton.disabled = false;
         }
         if (countCheckedFinish >= 1 && !notPlannedIsChecked) {
             finishButton.disabled = false;
@@ -293,7 +324,8 @@ To change this template use File | Settings | File Templates.
                 generalCheckbox.checked = false;
             } else {
                 ++countChecked;
-                if (checkboxes[i].getAttribute("status") === "PLANNED") {
+                if (checkboxes[i].getAttribute("status") === "PLANNED" ||
+                    checkboxes[i].getAttribute("status") === "DEFERRED") {
                     countCheckedFinish++;
                 } else {
                     notPlannedIsChecked = true;
@@ -318,7 +350,8 @@ To change this template use File | Settings | File Templates.
         let checkboxes = document.getElementsByClassName("checkbox");
         let checkedCheckboxes = [];
         for (let i = 0; i < checkboxes.length; ++i) {
-            if (checkboxes[i].checked && checkboxes[i].getAttribute("status") === "PLANNED") {
+            if (checkboxes[i].checked && (checkboxes[i].getAttribute("status") === "PLANNED"
+                || checkboxes[i].getAttribute("status") === "DEFERRED")) {
                 checkedCheckboxes.push(checkboxes[i]);
             }
         }

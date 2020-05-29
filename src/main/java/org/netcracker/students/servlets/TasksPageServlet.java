@@ -20,6 +20,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * Get tasks from database, marshal to xml and set session attribute to show tasks on jsp
+ */
 @WebServlet(MappingConstants.TASKS_PAGE_MAPPING)
 public class TasksPageServlet extends HttpServlet {
     @Override
@@ -30,11 +33,12 @@ public class TasksPageServlet extends HttpServlet {
         String allTasksXml = null;
         try {
             List<TaskDTO> taskList = this.getAllTasks(journalId);
-            if(!taskList.isEmpty()) allTasksXml = this.parseTaskListToXml(taskList);
+            if (!taskList.isEmpty()) allTasksXml = this.parseTaskListToXml(taskList);
         } catch (GetConnectionException | GetAllTaskException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
+        session.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasksXml);
         requestDispatcher.forward(req, resp);
     }
 

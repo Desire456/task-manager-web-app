@@ -2,7 +2,7 @@
 <%@ taglib prefix="x" uri="http://java.sun.com/jsp/jstl/xml" %>
 
 
-<html>
+<html lang="en">
 <head>
     <link rel="stylesheet" href="../css/style.css">
     <meta charset="UTF-8"/>
@@ -70,7 +70,7 @@
         <x:set var="id" select="$journal/id"/>
         <div class="window" id="editWindow<x:out select="$id"/>">
             <form action="${pageContext.request.contextPath}/editJournal" method="POST">
-                <span class="close" id="close<x:out select="$id"/>">X</span>
+                <span class="close">X</span>
                 Name: <input type="text" name="name" value="<x:out select="$journal/name"/>" required>
                 Description: <input type="text" name="description"
                                     value="<x:out select="$journal/description"/>" required>
@@ -87,6 +87,8 @@
         <input type="button" id="editButt" class="button" value="Edit" title="You can edit only one journal"
                disabled>
         <input type="button" id="deleteButt" class="button" value="Delete" disabled>
+        <input type="button" id="exportButt" class="button" value="Export" disabled>
+        <input type="button" id="importButt" class="button" value="Import">
         <input type="button" id="showButt" class="button" value="Show all journals">
         <input type="button" class="button" onclick="direct()" value="Return to sign in page"
                style="display: block; margin-left: 30% ">
@@ -94,12 +96,43 @@
 
     <div class="window" id="addWindow">
         <form action="${pageContext.request.contextPath}/addJournal" method="POST">
-            <span class="close" id="addClose">X</span>
+            <span class="close">X</span>
             Name: <input type="text" name="name" required>
             Description: <input type="text" name="description" required>
             <br><br><br><br>
             Do you want to make it public? <input type="checkbox" name="accessModifier" id="accessId">
             <button type="submit">Add</button>
+        </form>
+    </div>
+
+    <div class="window" id="importWindow">
+        <div>
+            <span class="close">X</span>
+        </div>
+        <div id="importDiv">
+            <div id="btn">
+                <label for="fileSelect">Browse...</label>
+            </div>
+            <div id="fileDrag">
+                Or drag them here
+                <input type="file" id="fileSelect" style="visibility: hidden" accept = ".txt,.xml" name="importFile" lang="en"/>
+            </div>
+        </div>
+        <p id="messages"></p>
+        <div id="submitButton">
+            <input type="submit" class="button" id="submitImportButt" onclick="sendFile()" value="Upload file"
+                   disabled/>
+        </div>
+    </div>
+
+    <div class="window" id="exportWindow">
+        <form action="${pageContext.request.contextPath}/exportJournal" method="POST" id="exportForm">
+            <span class="close">X</span>
+            Save as: <input name="fileName" id="fileName" required>
+            <input type="hidden" name="ids" id="exportIds" value="">
+            <br>
+            <br>
+            <input type="submit" class="button" id="submitExportButt" value="Download" disabled/>
         </form>
     </div>
 </div>
@@ -124,6 +157,15 @@
         alert(msgError);
         <%}%>
     }
+
+    for (let close of document.getElementsByClassName('close')) {
+        close.addEventListener('click', () => close.parentElement.parentElement.style.display = 'none');
+    }
+
+    document.getElementById('importButt').addEventListener('click', () => {
+        document.getElementById('importWindow').style.display = 'block';
+        document.getElementById('submitImportButt').disabled = true;
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
 
@@ -154,15 +196,13 @@
     let addButton = document.getElementById("addButt");
     let editButton = document.getElementById("editButt");
     let deleteButton = document.getElementById("deleteButt");
+    let exportButton = document.getElementById("exportButt");
+    let submitExportButt = document.getElementById("submitExportButt");
 
     editButton.onclick = function () {
         let id = getCheckJournal()[0].value;
         document.getElementById("editId" + id).value = id;
         document.getElementById("editWindow" + id).style.display = "block";
-        let closeButton = document.getElementById("close" + id);
-        closeButton.onclick = function () {
-            document.getElementById("editWindow" + id).style.display = "none";
-        }
     };
 
     addButton.onclick = function () {
@@ -186,11 +226,25 @@
             form.submit();
         }
     };
+    exportButton.onclick = function () {
+        document.getElementById('exportWindow').style.display = 'block';
+    }
+    submitExportButt.onclick = function () {
+        let strIds = "";
+        let ids = getCheckJournal();
+        for (let i = 0; i < ids.length; ++i) {
+            strIds += ids[i].value + " ";
+        }
+        document.getElementById('exportIds').value = strIds;
 
-    let addCloseButton = document.getElementById("addClose");
-    addCloseButton.onclick = function () {
-        addWindow.style.display = "none";
-    };
+        document.getElementById('exportForm').submit();
+        document.getElementById('exportWindow').style.display = 'none';
+    }
+
+    let fileName = document.getElementById('fileName');
+
+    fileName.addEventListener('input', () => submitExportButt.disabled = fileName.value === "");
+
 
     function goToJournal(id) {
         if (confirm("Are you really want to open this journal?")) {
@@ -226,15 +280,19 @@
     function setDisabledAttribute(countChecked) {
         let editButton = document.getElementById("editButt");
         let deleteButton = document.getElementById("deleteButt");
+        let exportButton = document.getElementById("exportButt");
         if (countChecked === 0) {
             editButton.disabled = true;
             deleteButton.disabled = true;
+            exportButton.disabled = true;
         } else if (countChecked === 1) {
             editButton.disabled = false;
             deleteButton.disabled = false;
+            exportButton.disabled = false;
         } else if (countChecked > 1) {
             editButton.disabled = true;
             deleteButton.disabled = false;
+            exportButton.disabled = false;
         }
     }
 
@@ -261,6 +319,82 @@
             }
         }
         return checkedCheckboxes;
+    }
+
+    function $id(id) {
+        return document.getElementById(id);
+    }
+
+    if (window.File && window.FileList && window.FileReader) {
+        Init();
+    }
+
+
+    function Init() {
+
+        var fileSelect = $id("fileSelect");
+        var fileDrag = $id("fileDrag");
+
+        fileSelect.addEventListener("change", FileSelectHandler, false);
+
+        var xhr = new XMLHttpRequest();
+        if (xhr.upload) {
+            fileDrag.addEventListener("dragover", FileDragHover, false);
+            fileDrag.addEventListener("dragleave", FileDragHover, false);
+            fileDrag.addEventListener("drop", FileSelectHandler, false);
+            fileDrag.style.display = "block";
+        }
+
+    }
+
+
+    function FileDragHover(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.className = (e.type === "dragover" ? "hover" : "");
+    }
+
+    var file;
+
+    function FileSelectHandler(e) {
+        FileDragHover(e);
+        var files = e.target.files || e.dataTransfer.files;
+        file = files[0];
+        if (file.type !== "text/plain" && file.type !== "text/xml") {
+            alert("Incorrect type");
+            return;
+        }
+
+        $id("messages").innerHTML = "File information <br> name: " + file.name + ", type:" + file.type + ", size: " + file.size
+            + " bytes";
+
+        let submitButton = $id("submitImportButt");
+        submitButton.disabled = false;
+    }
+
+    async function sendFile() {
+        try {
+            let url = "/importJournal";
+            let formData = new FormData();
+            formData.append("file", file);
+
+            let response = await fetch(url, {
+                method: 'POST',
+                body: formData
+            });
+            let result = await response;
+            if (result.ok) {
+                let answer = result.headers.get('error');
+                if (answer === "0") window.location.href = '/journals';
+                else {
+                    alert(answer)
+                    $id("messages").innerHTML = "";
+                    window.location.href = '/journals';
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
     }
 </script>
 </html>
