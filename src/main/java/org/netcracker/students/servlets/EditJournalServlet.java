@@ -43,7 +43,6 @@ public class EditJournalServlet extends HttpServlet {
             requestDispatcher.forward(req, resp);
             return;
         }
-
         String allJournalsXml;
         try {
             allJournalsXml = this.parseJournalListToXml(userId);

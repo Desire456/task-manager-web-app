@@ -17,7 +17,7 @@ See ours [issues](https://github.com/Desire456/task-manager-web-app/issues) for 
 
 ## Releases
 
-Non yet
+- [v1.0](https://github.com/Desire456/task-manager-web-app/releases/tag/v1.0)
 
 ## Export and import strategies by type and id
                            Export strategies
