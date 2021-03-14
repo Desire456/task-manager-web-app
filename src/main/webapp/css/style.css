@@ -1,6 +1,131 @@
 body {
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+h2{
+    text-align: center;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: white;
+    padding: 30px 0;
+}
+
+/* Table Styles */
+
+.table-wrapper{
+   /* margin: 10px 70px 70px;*/
+    box-shadow: 0 5px 5px rgba( 0, 0, 0, 0.2 );
+}
+
+.fl-table {
+    border-radius: 5px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+}
+
+.fl-table td, .fl-table th {
+    text-align: center;
+    padding: 8px;
+}
+
+.fl-table td {
+    border-right: 1px solid #f8f8f8;
+}
+
+.fl-table thead th {
+    color: #ffffff;
+    background: #3cc5c9;
+}
+
+
+.fl-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #324960;
+}
+
+.fl-table tr:nth-child(even) {
+    background: #F8F8F8;
+}
+
+.fl-table caption {
+    margin-top: 20px;
+}
+
+/* Responsive */
+
+@media (max-width: 767px) {
+    .fl-table {
+        display: block;
+        width: 100%;
+    }
+
+    .fl-table caption {
+        margin-top: 20px;
+    }
+
+    .table-wrapper:before{
+        content: "Scroll horizontally >";
+        display: block;
+        text-align: right;
+        color: white;
+        padding: 0 0 10px;
+    }
+    .fl-table thead, .fl-table tbody, .fl-table thead th {
+        display: block;
+    }
+    .fl-table thead th:last-child{
+        border-bottom: none;
+    }
+    .fl-table thead {
+        float: left;
+    }
+    .fl-table tbody {
+        width: auto;
+        position: relative;
+        overflow-x: auto;
+    }
+    .fl-table td, .fl-table th {
+        padding: 20px .625em .625em .625em;
+        height: 60px;
+        vertical-align: middle;
+        box-sizing: border-box;
+        overflow-x: hidden;
+        overflow-y: auto;
+        width: 120px;
+        text-overflow: ellipsis;
+    }
+    .fl-table thead th {
+        text-align: left;
+        border-bottom: 1px solid #f7f7f9;
+    }
+    .fl-table tbody tr {
+        display: table-cell;
+    }
+    .fl-table tbody tr:nth-child(odd) {
+        background: none;
+    }
+    .fl-table tr:nth-child(even) {
+        background: transparent;
+    }
+    .fl-table tr td:nth-child(odd) {
+        background: #F8F8F8;
+        border-right: 1px solid #E6E4E4;
+    }
+    .fl-table tr td:nth-child(even) {
+        border-right: 1px solid #E6E4E4;
+    }
+    .fl-table tbody td {
+        display: block;
+        text-align: center;
+    }
 }
 
 .wrapper {
@@ -53,32 +178,51 @@ fieldset {
     margin-bottom: 5px;
 }
 
+.container {
+    margin-top: 2%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
 .modal {
-    width: 50%;
-    margin-left: 25%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .actions {
-    display: inline;
-    margin-left: 5%;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+.return-btn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
 }
 
 .filter {
-    margin: 0 20%;
     width: 375px;
     padding: 10px;
     outline: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-table {
+/*table {
     margin-top: 3%;
     border: 3px solid grey;
     width: 100%;
     border-collapse: collapse;
 }
 
-
-table th, td {
+table th,
+td {
     border: 1px solid grey;
 }
 
@@ -90,7 +234,7 @@ table thead tr {
 
 table tr {
     border-bottom: 1px solid #e8e9eb;
-}
+}*/
 
 table tbody tr:hover {
     cursor: pointer;
@@ -117,7 +261,6 @@ th.sorted[data-order="1"]::after {
     content: "\2191";
 }
 
-
 .window {
     display: none;
     border: 3px solid black;
@@ -138,10 +281,12 @@ th.sorted[data-order="1"]::after {
 }
 
 .button {
+    cursor: pointer;
+    background-color: rgba(50, 73, 96, 0.7);
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    border-style: none;
     padding: 4px 20px;
-    background-color: #e7e7e7;
     color: black;
 }
 
@@ -149,7 +294,7 @@ th.sorted[data-order="1"]::after {
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
     padding: 4px 20px;
-    background-color: #00aacc;
+    background-color: #324960;
     color: #ffffff;
 }
 
@@ -157,10 +302,9 @@ th.sorted[data-order="1"]::after {
     font-size: 15px;
     font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
     padding: 4px 20px;
-    background-color: #cccccc;
+    background-color: rgba(50, 73, 96, 0.5);
     color: #666666;
 }
-
 
 .close {
     background: #606061;

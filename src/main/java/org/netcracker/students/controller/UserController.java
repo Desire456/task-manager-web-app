@@ -29,7 +29,7 @@ public class UserController {
     }
 
     private UserController() throws GetConnectionException {
-        ManagerDAO ManagerDAO = PostgreSQLManagerDAO.getInstance();
+        ManagerDAO ManagerDAO = HibernateManagerDAO.getInstance();
         try {
             usersDAO = ManagerDAO.getUsersDao();
         } catch (SQLException e) {

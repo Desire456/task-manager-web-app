@@ -16,6 +16,7 @@ public class MappingConstants {
     public static final String SIGN_UP_PAGE_MAPPING = "/sign_up";
     public static final String START_PAGE_MAPPING = "/start";
     public static final String IMPORT_JOURNAL_MAPPING = "/importJournal";
+    public static final String IMPORT_TASK_MAPPING = "/importTask";
     public static final String EXPORT_JOURNAL_MAPPING = "/exportJournal";
     public static final String EXPORT_TASK_MAPPING = "/exportTask";
 }

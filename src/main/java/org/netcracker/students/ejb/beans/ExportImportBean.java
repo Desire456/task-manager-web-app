@@ -75,6 +75,7 @@ public class ExportImportBean implements IExportImport {
         } catch (StrategyNotFoundException e) {
             throw new PrintableImportException(StrategyConstants.IMPORT_EXCEPTION_MESSAGE + e.getMessage());
         }
+
         for (Journal journal : journals) journalImportStrategy.store(journal);
 
         strategyId = Integer.parseInt(propertyParser.getProperty(StrategyConstants.TASK_IMPORT_STRATEGY));

@@ -33,7 +33,7 @@ public class JournalController {
     private JournalDAO journalDAO;
 
     private JournalController() throws GetConnectionException {
-        ManagerDAO ManagerDAO = PostgreSQLManagerDAO.getInstance();
+        ManagerDAO ManagerDAO = HibernateManagerDAO.getInstance();
         try {
             this.journalDAO = ManagerDAO.getJournalDao();
         } catch (SQLException e) {
@@ -119,10 +119,9 @@ public class JournalController {
      * @throws DeleteJournalException can't delete journals by this ids or problem with connection to DB
      */
     public void deleteJournal(String ids) throws DeleteJournalException {
-        int id;
         String[] mas = ids.split(" ");
         for (String str : mas) {
-            id = Integer.parseInt(str);
+            int id = Integer.parseInt(str);
             this.deleteJournal(id);
         }
     }

@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * Import journals from file to database
  */
-@WebServlet(MappingConstants.IMPORT_JOURNAL_MAPPING)
+@WebServlet(MappingConstants.IMPORT_TASK_MAPPING)
 public class ImportJournalServlet extends HttpServlet {
     /**
      * Bean for import
@@ -42,7 +42,7 @@ public class ImportJournalServlet extends HttpServlet {
         }
         String xml = null;
         if (files != null) {
-            xml = files.get(ServletConstants.FIRST_POS).getString();
+            xml = files.get(0).getString();
         }
 
         resp.addHeader(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.NOT_ERROR_VALUE);

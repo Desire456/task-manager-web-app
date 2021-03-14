@@ -26,7 +26,7 @@ public interface IExportImport {
             PrintableExportException;
 
     /**
-     * Method that export journals and tasks from xml
+     * Method that import journals and tasks from xml
      *
      * @param xml    string containing journals and tasks
      * @param userId id of user needed for import journal to current user

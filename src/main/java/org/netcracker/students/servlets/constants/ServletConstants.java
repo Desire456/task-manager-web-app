@@ -37,5 +37,4 @@ public class ServletConstants {
     public static final String RESP_HEADER_VALUE = "attachment; filename=\"";
     public static final String FILE_EXTENSION = ".xml\"";
     public static final String NOT_ERROR_VALUE = "0";
-    public static final int FIRST_POS = 0;
 }

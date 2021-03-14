@@ -7,7 +7,7 @@
             maxWait="5000"
             name="jdbc/taskManager"
             username="postgres"
-            password="admin"
+            password="root"
             type="javax.sql.DataSource"
             url="jdbc:postgresql://localhost/task_manager"
             validationQuery="SELECT 1"/>

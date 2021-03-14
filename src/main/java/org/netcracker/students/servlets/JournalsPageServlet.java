@@ -93,8 +93,7 @@ public class JournalsPageServlet extends HttpServlet {
         User user = userController.getUserByLogin(login);
         HashingClass hashingClass = HashingClass.getInstance();
         if (user != null) {
-            String hashPassword = hashingClass.hashPassword(password);
-            user = hashingClass.validatePassword(password, hashPassword) ? user : null;
+            user = hashingClass.validatePassword(password, user.getPassword()) ? user : null;
         }
         return user;
     }
