@@ -39,7 +39,6 @@ public class XmlValidator {
         } catch (SAXException | IOException e) {
             throw new XmlValidatorException(XmlValidatorConstants.XML_NOT_VERIFIED_MESSAGE + " " + e.getMessage());
         }
-
     }
 
     private void validateXml(String xml) throws SAXException, IOException {

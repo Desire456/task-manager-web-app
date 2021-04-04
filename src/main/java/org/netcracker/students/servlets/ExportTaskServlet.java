@@ -29,7 +29,7 @@ public class ExportTaskServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_TASKS_PAGE);
-        List<Integer> taskIds = this.parseStrIds(req.getParameter(ServletConstants.PARAMETER_IDS));
+        List<Integer> taskIds = parseStrIds(req.getParameter(ServletConstants.PARAMETER_IDS));
         String xml = null;
         try {
             xml = exportImportBean.exportObjects(new ArrayList<>(), taskIds);

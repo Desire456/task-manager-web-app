@@ -23,29 +23,31 @@ import java.time.LocalDateTime;
  */
 @WebServlet(MappingConstants.WELL_PAGE_MAPPING)
 public class WellServlet extends HttpServlet {
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_WELL);
-        String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
-        String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
-        LocalDateTime dateOfRegistration = LocalDateTime.now();
-        try {
-            this.addUser(login, password, dateOfRegistration);
-        } catch (GetConnectionException | HashPasswordException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP);
-        } catch (CreateUserException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
-            req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
-        }
-        requestDispatcher.forward(req, resp);
-    }
+	@Override
+	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_WELL);
+		String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
+		String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
+		LocalDateTime dateOfRegistration = LocalDateTime.now();
+		try {
+			addUser(login, password, dateOfRegistration);
+		} catch (GetConnectionException | HashPasswordException e) {
+			req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
+			req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP);
+			return;
+		} catch (CreateUserException e) {
+			req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_ADD_USER);
+			req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_SIGN_UP).forward(req, resp);
+			return;
+		}
+		requestDispatcher.forward(req, resp);
+	}
 
-    private void addUser(String login, String password, LocalDateTime dateOfRegistration)
-            throws GetConnectionException, HashPasswordException, CreateUserException {
-        UserController userController = UserController.getInstance();
-        HashingClass hashingClass = HashingClass.getInstance();
-        String hashPassword = hashingClass.hashPassword(password);
-        userController.addUser(UserFactory.createUser(login, hashPassword, dateOfRegistration));
-    }
+	private void addUser(String login, String password, LocalDateTime dateOfRegistration)
+			throws GetConnectionException, HashPasswordException, CreateUserException {
+		UserController userController = UserController.getInstance();
+		HashingClass hashingClass = HashingClass.getInstance();
+		String hashPassword = hashingClass.hashPassword(password);
+		userController.addUser(UserFactory.createUser(login, hashPassword, dateOfRegistration));
+	}
 }

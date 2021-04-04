@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Get journals from database, marshal to xml and set session attribute to show journals on jsp
@@ -37,11 +38,12 @@ public class JournalsPageServlet extends HttpServlet {
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         String allJournalsXml = null;
         try {
-            List<JournalDTO> journalList = this.getAllJournals(userId);
-            allJournalsXml = this.parseJournalListToXml(journalList);
+            List<JournalDTO> journalList = getAllJournals(userId);
+            allJournalsXml = parseJournalListToXml(journalList);
         } catch (GetConnectionException | GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_JOURNALS, allJournalsXml);
         requestDispatcher.forward(req, resp);
@@ -52,25 +54,28 @@ public class JournalsPageServlet extends HttpServlet {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
         String login = req.getParameter(ServletConstants.PARAMETER_LOGIN);
         String password = req.getParameter(ServletConstants.PARAMETER_PASSWORD);
-        User user = null;
+        User user;
         try {
             user = this.getUser(login, password);
         } catch (GetConnectionException | HashPasswordException | GetUserByLoginException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
+            return;
         }
         if (user == null) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.ERROR_CHECK_USER);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
+            return;
         }
         int userId = user.getId();
         String allJournalsXml = null;
         try {
-            List<JournalDTO> journalList = this.getAllJournals(userId);
-            if (!journalList.isEmpty()) allJournalsXml = this.parseJournalListToXml(journalList);
+            List<JournalDTO> journalList = getAllJournals(userId);
+            if (!journalList.isEmpty()) allJournalsXml = parseJournalListToXml(journalList);
         } catch (GetConnectionException | GetAllJournalByUserIdException | ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_START).forward(req, resp);
+            return;
         }
         HttpSession httpSession = req.getSession();
         httpSession.setAttribute(ServletConstants.ATTRIBUTE_USER_ID, userId);

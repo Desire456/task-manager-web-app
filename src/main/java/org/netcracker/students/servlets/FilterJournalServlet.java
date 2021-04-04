@@ -37,14 +37,14 @@ public class FilterJournalServlet extends HttpServlet {
         int userId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_USER_ID);
         List<JournalDTO> journals = null;
         try {
-            journals = this.getFilteredJournals(userId, column, pattern, sortCriteria, equal);
+            journals = getFilteredJournals(userId, column, pattern, sortCriteria, equal);
         } catch (GetConnectionException | GetFilteredByEqualsJournalException | GetFilteredByPatternJournalException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
         }
         String journalsXml = null;
         try {
-            journalsXml = this.parseJournalListToXml(journals);
+            journalsXml = parseJournalListToXml(journals);
         } catch (ParseXMLException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);

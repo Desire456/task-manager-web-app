@@ -29,7 +29,7 @@ public class ExportJournalServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         RequestDispatcher requestDispatcher = req.getRequestDispatcher(ServletConstants.PATH_TO_VIEW_JOURNALS_PAGE);
-        List<Integer> journalIds = this.parseStrIds(req.getParameter(ServletConstants.PARAMETER_IDS));
+        List<Integer> journalIds = parseStrIds(req.getParameter(ServletConstants.PARAMETER_IDS));
         String xml = null;
         try {
             xml = exportImportBean.exportObjects(journalIds, new ArrayList<>());

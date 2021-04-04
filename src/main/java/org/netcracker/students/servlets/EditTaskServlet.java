@@ -37,37 +37,16 @@ public class EditTaskServlet extends HttpServlet {
         int journalId = (int) httpSession.getAttribute(ServletConstants.ATTRIBUTE_JOURNAL_ID);
         int taskId = Integer.parseInt(req.getParameter(ServletConstants.PARAMETER_ID));
         try {
-            this.editTask(name, description, plannedDate, journalId, taskId);
+            TaskController taskController = TaskController.getInstance();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
+            LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
+            taskController.editTask(TaskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
+                    null, ServletConstants.STATUS_PLANNED));
         } catch (GetConnectionException | UpdateTaskException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
             return;
         }
-        String allTasks;
-        try {
-            allTasks = this.parseTaskListToXml(journalId);
-        } catch (GetAllTaskException | ParseXMLException | GetConnectionException e) {
-            req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
-            requestDispatcher.forward(req, resp);
-            return;
-        }
-        httpSession.setAttribute(ServletConstants.ATTRIBUTE_NAME_OF_TASKS, allTasks);
         resp.sendRedirect(MappingConstants.TASKS_PAGE_MAPPING);
-    }
-
-    private void editTask(String name, String description, String plannedDate, int journalId, int taskId)
-            throws GetConnectionException, UpdateTaskException {
-        TaskController taskController = TaskController.getInstance();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(ServletConstants.TIME_PATTERN);
-        LocalDateTime parsedPlannedDate = LocalDateTime.parse(plannedDate, formatter);
-        taskController.editTask(TaskFactory.createTask(taskId, journalId, name, description, parsedPlannedDate,
-                null, ServletConstants.STATUS_PLANNED));
-    }
-
-    private String parseTaskListToXml(int journalId) throws GetAllTaskException, GetConnectionException,
-            ParseXMLException {
-        TaskController taskController = TaskController.getInstance();
-        XMLParser xmlParser = XMLParser.getInstance();
-        return xmlParser.toXML(new TaskXMLContainer(taskController.getAll(journalId)));
     }
 }

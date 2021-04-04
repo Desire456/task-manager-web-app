@@ -29,6 +29,7 @@ public class StartPageServlet extends HttpServlet {
         } catch (ExecuteSqlScriptException e) {
             req.setAttribute(ServletConstants.ATTRIBUTE_ERROR, ServletConstants.COMMON_ERROR);
             requestDispatcher.forward(req, resp);
+            return;
         }
         requestDispatcher.forward(req, resp);
     }
